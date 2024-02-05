@@ -3,6 +3,8 @@ Inventory tracking app for Center for New Americans
 
 
 ## Quick Start
-'' cd NewAmericans ''
-'' npm install expo ''
-'' npm start ''
+__NOTE: cd to the child NewAmericans directory before running commands__<br>
+NewAmericans<br>
+└── NewAmericans<br><br>
+`` npm install expo ``<br>
+`` npm start ``<br>
