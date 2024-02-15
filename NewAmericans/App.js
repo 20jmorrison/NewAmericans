@@ -2,11 +2,11 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Items from './Screens/Items';
-import Reports from './Screens/Reports';
-import Families from './Screens/Families';
 import Settings from './Screens/Settings';
-
+import Families from './Screens/Families';
+import Order from './Screens/Order';
+import Inventory from './Screens/Inventory';
+import Reports from './Screens/Reports';
 
 
 const Tab = createBottomTabNavigator();
@@ -15,10 +15,29 @@ const TabNavigator = () => {
   return (
     <NavigationContainer>
       <Tab.Navigator>
+
         <Tab.Screen
-          name="Items"
-          component={Items}
-          options={{ title: 'Items' }}
+          name="Settings"
+          component={Settings}
+          options={{ title: 'Settings' }}
+        />
+
+        <Tab.Screen
+          name="Families"
+          component={Families}
+          options={{ title: 'Families' }}
+        />
+
+        <Tab.Screen
+          name="Order"
+          component={Order}
+          options={{ title: 'Order' }}
+        />
+
+        <Tab.Screen
+          name="Inventory"
+          component={Inventory}
+          options={{ title: 'Inventory' }}
         />
         
         <Tab.Screen
@@ -27,17 +46,7 @@ const TabNavigator = () => {
           options={{ title: 'Reports' }}
         />
 
-        <Tab.Screen
-          name="Families"
-          component={Families}
-          options={{ title: 'Families' }}
-        />
         
-        <Tab.Screen
-          name="Settings"
-          component={Settings}
-          options={{ title: 'Settings' }}
-        />
 
       </Tab.Navigator>
     </NavigationContainer>
