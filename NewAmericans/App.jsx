@@ -12,7 +12,7 @@ import InventoryIcon from './assets/inventory.png';
 import FamilyIcon from './assets/family.png';
 import SettingsIcon from './assets/settings.png';
 import ReportsIcon from './assets/reports.png';
-
+import Logo from './assets/snhucfna.png'
 
 
 const Tab = createBottomTabNavigator();
@@ -47,6 +47,9 @@ const TabNavigator = () => {
               backgroundColor: 'rgba(8,34,65,1)',
             },
             headerTintColor: '#ffff',
+            headerLeft: () => (
+              <Image source={Logo} style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }} /> 
+            ),
 
           }}
         />
@@ -62,6 +65,9 @@ const TabNavigator = () => {
               backgroundColor: 'rgba(8,34,65,1)', // Change the header background color here
             },
             headerTintColor: '#ffff',
+            headerLeft: () => (
+              <Image source={Logo} style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }} /> 
+            ),
           }}
         />
 
@@ -76,6 +82,9 @@ const TabNavigator = () => {
               backgroundColor: 'rgba(8,34,65,1)', // Change the header background color here
             },
             headerTintColor: '#ffff',
+            headerLeft: () => (
+              <Image source={Logo} style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }} /> 
+            ),
           }}
         />
 
@@ -90,6 +99,9 @@ const TabNavigator = () => {
               backgroundColor: 'rgba(8,34,65,1)', // Change the header background color here
             },
             headerTintColor: '#ffff',
+            headerLeft: () => (
+              <Image source={Logo} style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }} /> 
+            ),
           }}
         />
 
@@ -104,6 +116,9 @@ const TabNavigator = () => {
               backgroundColor: 'rgba(8,34,65,1)', // Change the header background color here
             },
             headerTintColor: '#ffff',
+            headerLeft: () => (
+              <Image source={Logo} style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }} /> 
+            ),
           }}
         />
 
