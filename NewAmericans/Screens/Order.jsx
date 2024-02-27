@@ -43,8 +43,8 @@ const styles = StyleSheet.create({
   itemContainer: {
     flex: 1,
     margin: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
+    borderWidth: 2,
+    borderColor: '#F3D014',
     borderRadius: 8,
     overflow: 'hidden',
   },
