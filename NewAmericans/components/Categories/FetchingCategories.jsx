@@ -1,31 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 
-// Function to fetch student names
-const fetchStudents = async () => {
+// Function to fetch category names
+const fetchCategories = async () => {
   try {
-    const response = await fetch('http://50.187.63.220:3306/StudentData'); // Needs to be updated when IP is given
+    const response = await fetch('http://50.187.63.220:3306/CategoryData'); // Needs to be updated when IP is given
     if (response.ok) {
       const data = await response.json();
-      return data.students;
+      return data.categories;
     } else {
-      console.error('Failed to fetch student data');
+      console.error('Failed to fetch category data');
       return [];
     }
   } catch (error) {
-    console.error('Error fetching student data:', error);
+    console.error('Error fetching category data:', error);
     return [];
   }
 };
 
-const StudentList = () => {
-  const [students, setStudents] = useState([]);
+const CategoryList = () => {
+  const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const fetchedStudents = await fetchStudents();
-      setStudents(fetchedStudents);
+      const fetchedCategories = await fetchCategories();
+      setCategories(fetchedCategories);
       setIsLoading(false);
     };
 
@@ -42,12 +42,12 @@ const StudentList = () => {
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Student Names:</Text>
-      {students.map((student, index) => (
-        <Text key={index}>{student.name}</Text>
+      <Text>Category Names:</Text>
+      {categories.map((category, index) => (
+        <Text key={index}>{category.name}</Text>
       ))}
     </View>
   );
 };
 
-export { StudentList as default, fetchStudents };
+export { CategoryList as default, fetchCategories };

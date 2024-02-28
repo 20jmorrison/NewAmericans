@@ -1,31 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 
-// Function to fetch student names
-const fetchStudents = async () => {
+// Function to fetch admin data
+const fetchAdminData = async () => {
   try {
-    const response = await fetch('http://50.187.63.220:3306/StudentData'); // Needs to be updated when IP is given
+    const response = await fetch('http://50.187.63.220:3306/AdminData');
     if (response.ok) {
       const data = await response.json();
-      return data.students;
+      return data.admins;
     } else {
-      console.error('Failed to fetch student data');
+      console.error('Failed to fetch admin data');
       return [];
     }
   } catch (error) {
-    console.error('Error fetching student data:', error);
+    console.error('Error fetching admin data:', error);
     return [];
   }
 };
 
-const StudentList = () => {
-  const [students, setStudents] = useState([]);
+const AdminList = () => {
+  const [admins, setAdmins] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const fetchedStudents = await fetchStudents();
-      setStudents(fetchedStudents);
+      const fetchedAdmins = await fetchAdminData();
+      setAdmins(fetchedAdmins);
       setIsLoading(false);
     };
 
@@ -42,12 +42,12 @@ const StudentList = () => {
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Student Names:</Text>
-      {students.map((student, index) => (
-        <Text key={index}>{student.name}</Text>
+      <Text>Admin Names:</Text>
+      {admins.map((admin, index) => (
+        <Text key={index}>{admin.name}</Text>
       ))}
     </View>
   );
 };
 
-export { StudentList as default, fetchStudents };
+export { AdminList as default, fetchAdminData };

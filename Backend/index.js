@@ -21,18 +21,48 @@ connection.connect((err) => {
   
 });
 
+
+//Function For Fetching Student Names to Be used throughout the application
 app.get( '/StudentData',(req, res) => {
     const query = 'SELECT * FROM Students';
     connection.query(query, (error, studentData, fields) =>{
       if(error){
-        console.error('Error Fetching Student Data', error)
+        console.error('Error Fetching Student Data: ', error)
         res.status(500).json({error:'Internal Server Error'})
       }
       console.log('Fetched student data:', studentData);
-      res.json(studentData)
+      res.json(studentData);
     });
+})
+
+
+
+//Function for Fetching Category Data to be used throughout the application
+app.get('/CategoryData', (req,res)=>{
+  const query = 'SELECT * FROM Categories';
+  connection.query(query, (error, categoryData, fields) =>{
+    if(error){
+      console.error('Error Fetching Category Data: ', error)
+      res.status(500).json({error: 'Interal Server Error'})
+    }
+    console.log('Fetched Category Data: ', categoryData);
+    res.json(categoryData);
+  });
 });
 
+
+//Fetching Admin Data 
+app.get('/AdminData', (req,res)=>{
+  const query = 'SELECT * FROM Admin';
+  connection.query(query,(error, adminData, fields)=>{
+    if(error){
+      console.error('Error Fetching Admin Data: ', error)
+      res.status(500).json({error: 'Interal Server Error'})
+    }
+    console.log('Fetched Category Data: ', adminData);
+    res.json(adminData);
+  });
+});
 
 
 
