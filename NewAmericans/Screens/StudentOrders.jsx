@@ -2,11 +2,11 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 const StudentOrders = ({ route }) => {
-  const { studentName } = route.params;
+  const { student } = route.params;
   
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Display orders for {studentName}</Text>
+      <Text style={styles.text}>Display orders for {student.first_name} {student.last_name}</Text>
     </View>
   );
 };
