@@ -23,7 +23,7 @@ connection.connect((err) => {
 
 
 //Function For Fetching Student Names to Be used throughout the application
-app.get( '/StudentData',(req, res) => {
+app.get( 'http://50.187.63.220:3000/StudentData',(req, res) => {
     const query = 'SELECT * FROM Students';
     connection.query(query, (error, studentData, fields) =>{
       if(error){
