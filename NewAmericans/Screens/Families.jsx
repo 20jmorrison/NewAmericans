@@ -1,18 +1,10 @@
-// Families.js
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, TextInput, Button } from 'react-native';
-//import StudentList from '../components/Students/StudentFetching';  //Import Component
+import { fetchStudents } from '../components/Students/StudentFetching';
 
 const Families = () => {
-  const [students, setStudents] = useState([
-    { id: 1, firstName: 'John', lastName: 'Doe' },
-    { id: 2, firstName: 'Jane', lastName: 'Smith' },
-    { id: 3, firstName: 'Grace', lastName: 'Kim' },
-    { id: 4, firstName: 'Jared', lastName: 'Morrison' },
-    { id: 5, firstName: 'Ben', lastName: 'Levine' },
-  ]);
-
+  const [students, setStudents] = useState([]);
   const [isAddStudentModalVisible, setIsAddStudentModalVisible] = useState(false);
   const [isSortModalVisible, setIsSortModalVisible] = useState(false);
   const [newStudentFirstName, setNewStudentFirstName] = useState('');
@@ -21,8 +13,21 @@ const Families = () => {
 
   const navigation = useNavigation();
 
-  const handlePress = (studentName) => {
-    navigation.navigate('StudentOrders', { studentName })
+  useEffect(() => {
+    async function fetchStudentData() {
+      try {
+        const studentsData = await fetchStudents();
+        setStudents(studentsData);
+      } catch (error) {
+        console.error('Error fetching student data:', error);
+      }
+    }
+    
+    fetchStudentData();
+  }, []);
+
+  const handlePress = (student) => {
+    navigation.navigate('StudentOrders', { student })
   };
 
   const handleAddStudent = () => {
@@ -40,21 +45,21 @@ const Families = () => {
   const sortStudents = () => {
     const sortedStudents = [...students].sort((a, b) => {
       if (sortBy === 'firstName') {
-        return a.firstName.localeCompare(b.firstName);
+        if (a.first_name && b.first_name) {
+          return a.first_name.localeCompare(b.first_name);
+        }
       } else if (sortBy === 'lastName') {
-        return a.lastName.localeCompare(b.lastName);
+        if (a.last_name && b.last_name) {
+          return a.last_name.localeCompare(b.last_name);
+        }
       }
+      return 0;
     });
     setStudents(sortedStudents);
     setIsSortModalVisible(false);
   };
-
-  useEffect(() => {
-    if (sortBy) {
-      sortStudents();
-    }
-  }, [sortBy]);
   
+
   return (
     <View style={styles.container}>
       <Modal
@@ -63,6 +68,7 @@ const Families = () => {
         visible={isAddStudentModalVisible}
         onRequestClose={() => setIsAddStudentModalVisible(false)}
       >
+        {/* Modal content */}
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.text}>Add New Student</Text>
@@ -83,14 +89,15 @@ const Families = () => {
           </View>
         </View>
       </Modal>
-      
 
+      {/* Modal for sorting */}
       <Modal
         animationType="slide"
         transparent={true}
         visible={isSortModalVisible}
         onRequestClose={() => setIsSortModalVisible(false)}
       >
+        {/* Modal content */}
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <TouchableOpacity onPress={() => { setSortBy('firstName'); sortStudents(); }}>
@@ -103,28 +110,29 @@ const Families = () => {
           </View>
         </View>
       </Modal>
-      
-    <View style={styles.separator} /> 
+
+      {/* Separator */}
+      <View style={styles.separator} />
+
+      {/* ScrollView for displaying students */}
       <ScrollView>
         <View style={styles.buttonContainer}>
           <Button title="Add Student" onPress={() => setIsAddStudentModalVisible(true)} />
           <Button title="Sort" onPress={() => setIsSortModalVisible(true)} />
         </View>
-        {students.map((student, index) => (
-          <TouchableOpacity key={student.id} onPress={() => handlePress(student.firstName)}>
+        {/* Mapping over students and displaying them */}
+        {students.map((student) => (
+          <TouchableOpacity key={student.id} onPress={() => handlePress(student)}>
             <View style={styles.card}>
-              <Text style={styles.firstName}>{student.firstName}</Text>
-              <Text style={styles.lastName}>{student.lastName}</Text>
+              <Text style={styles.firstName}>{student.first_name}</Text>
+              <Text style={styles.lastName}>{student.last_name}</Text>
             </View>
           </TouchableOpacity>
         ))}
       </ScrollView>
     </View>
   );
-}
-
-
-export default Families;
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -137,11 +145,11 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   firstName: {
-    fontSize: 25,
+    fontSize: 15,
     width: 90, 
   },
   lastName: {
-    fontSize: 25,
+    fontSize: 15,
     left: 100, 
   },
   modalContainer: {
@@ -170,17 +178,6 @@ const styles = StyleSheet.create({
     color: 'blue',
     marginBottom: 10,
   },
-  item: {
-    padding: 15,
-    marginTop: 5,
-    borderBottomWidth: 1,
-    borderColor: 'gray',
-    flexDirection: 'row', 
-    alignItems: 'center',
-  },
-  text: {
-    fontSize: 25,
-  },
   separator: {
     borderBottomWidth: 1,
     borderColor: 'rgba(128, 128, 128, 0.5)',
@@ -202,3 +199,5 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
   },
 });
+
+export default Families;
