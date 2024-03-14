@@ -54,11 +54,11 @@ const Order = () => {
   }, []);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {categories.map((category, index) => (
-        <Item key={index} category={category} />
-      ))}
-    </ScrollView>
+<ScrollView contentContainerStyle={[styles.container, styles.scrollViewContent]}>
+  {categories.map((category, index) => (
+    <Item key={index} category={category} />
+  ))}
+</ScrollView>
   );
 };
 
@@ -69,23 +69,29 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     paddingHorizontal: 10,
     paddingVertical: 20,
+    justifyContent: 'space-between', // Add this to evenly distribute items horizontally
   },
   itemContainer: {
-    width: '50%',
+    width: '48%', // Adjust the width as needed to fit two items in a row
+    aspectRatio: 1, // Ensure aspect ratio is 1:1
     padding: 10,
+    marginBottom: 10, // Add some margin to separate the items
   },
   innerContainer: {
     borderWidth: 2,
     borderColor: '#F3D014',
     borderRadius: 8,
     overflow: 'hidden',
+    flex: 1, // Allow inner container to expand
   },
   imageContainer: {
     overflow: 'hidden',
+    flex: 1, // Allow image to expand
   },
   itemImage: {
     width: '100%',
-    height: 80,
+    height: '100%', // Adjust the height to fill the container
+    marginTop: 5,
     resizeMode: 'contain',
   },
   textContainer: {
@@ -95,6 +101,9 @@ const styles = StyleSheet.create({
   itemText: {
     textAlign: 'center',
     fontSize: 16,
+  },
+  scrollViewContent: {
+    paddingBottom: 100, // Add padding to the bottom of the ScrollView
   },
 });
 
