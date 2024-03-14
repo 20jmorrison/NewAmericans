@@ -17,6 +17,23 @@ import SettingsIcon from './assets/settings.png';
 import ReportsIcon from './assets/reports.png';
 import Logo from './assets/snhucfna.png'
 
+const OrderStack = createNativeStackNavigator();
+function OrderStackScreen(){
+  return (
+    <OrderStack.Navigator>
+        <OrderStack.Screen 
+        name="OrderList" 
+        component={Order}
+        options={{ headerShown: false }}
+       /> 
+        <OrderStack.Screen 
+        name="ProductsOrder" 
+        component={ProductsOrder}
+        options={{ headerTitle: 'Products' }}
+       /> 
+    </OrderStack.Navigator>
+  );
+}
 
 const Stack = createNativeStackNavigator();
 function FamiliesStackScreen(){
@@ -32,11 +49,6 @@ function FamiliesStackScreen(){
         component={StudentOrders}
         options={{ headerTitle: 'Student Orders' }} 
       /> 
-        <Stack.Screen 
-        name="ProductsOrder" 
-        component={ProductsOrder}
-        options={{ headerTitle: 'Products' }}
-       /> 
     </Stack.Navigator>
   );
 }
@@ -99,7 +111,7 @@ const TabNavigator = () => {
 
         <Tab.Screen
           name="Order"
-          component={Order}
+          component={OrderStackScreen}
           options={{
             title: 'Order', tabBarIcon: ({ color, size }) => (
               <Image source={OrderIcon} style={{ tintColor: color, width: size, height: size }} />

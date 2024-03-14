@@ -1,25 +1,17 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 
-const ProductsOrder = () => {
-  const route = useRoute();
+const ProductsOrder = ({ route }) => {
   const { categoryId } = route.params;
 
+  // Now you have access to the categoryId passed from the previous screen
   return (
-    <View style={styles.container}>
-      <Text>Products Order Screen</Text>
-      <Text>Category ID: {categoryId}</Text> {/* Displaying the received category ID */}
+    <View>
+      <Text>Category ID: {categoryId}</Text>
+      {/* Render your content based on the categoryId */}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default ProductsOrder;
