@@ -80,10 +80,10 @@ app.get('/ProductData', (req, res) => {
 });
 
 app.get('/TransactionData', (req, res) => {
-  const userID = req.query.userID;
+  const StudentID = req.query.StudentID;
   const query = 'SELECT * FROM Transactions WHERE StudentID = ?';
 
-  connection.query(query, [userID], (error, transactionData, fields)=>{
+  connection.query(query, [StudentID], (error, transactionData, fields)=>{
     if(error){
       console.error('Error fetching transaction data:', error);
       res.status(500).json({ error: 'Internal Server Error' });
