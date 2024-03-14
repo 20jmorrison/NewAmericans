@@ -64,6 +64,50 @@ app.get('/AdminData', (req,res)=>{
   });
 });
 
+app.get('/ProductData', (req, res) => {
+  const categoryId = req.query.categoryID; // Extracting the categoryID from query parameters
+  const query = 'SELECT * FROM products WHERE CategoryID = ?';
+  
+  connection.query(query, [categoryId], (error, productData, fields) => {
+    if (error) {
+      console.error('Error fetching product data:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      console.log('Fetched product data:', productData);
+      res.json(productData);
+    }
+  });
+});
+
+app.get('/TransactionData', (req, res) => {
+  const userID = req.query.userID;
+  const query = 'SELECT * FROM Transactions WHERE StudentID = ?';
+
+  connection.query(query, [userID], (error, transactionData, fields)=>{
+    if(error){
+      console.error('Error fetching transaction data:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }else{
+      console.log('Fetched transactionData data:', transactionData);
+      res.json(transactionData);
+    }
+  });
+});
+
+app.get('/TransactionItemData', (req, res)=>{
+  const TransactionID = req.query.TransactionID
+  const query = 'SELECT * FROM TransactionItems WHERE TransactionID = ?';
+
+  connection.query(query, [TransactionID], (error, transactionItemsData, fields)=>{
+   if(error){
+    console.error('Error fetching transaction item data:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+   }else{
+    console.log('Fetched transactionData data:', transactionItemsData);
+    res.json(transactionItemsData);
+   }
+  });
+});
 
 
 process.on('SIGINT', () => {
