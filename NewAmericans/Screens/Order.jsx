@@ -1,63 +1,100 @@
-// Order.js
-import React from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { fetchCategories } from '../components/Categories/FetchingCategories';
 
-const data = [
-  { id: 1, name: 'View All', image: require('../assets/cart.png') },
-  { id: 2, name: 'Clothes', image: require('../assets/clothes.png') },
-  { id: 3, name: 'Toiletries', image: require('../assets/toiletries.png') },
-  { id: 4, name: 'Hair Supplies', image: require('../assets/hair.png') },
-  { id: 5, name: 'Cleaning', image: require('../assets/cleaning.png') },
-  { id: 6, name: 'Baby Supplies', image: require('../assets/baby.png') },
-  { id: 7, name: 'School', image: require('../assets/school.png') },
-  { id: 8, name: 'Food', image: require('../assets/food.png') },
-  { id: 9, name: 'Other', image: require('../assets/other.png') },
-];
+const categoryImages = {
+  'View All': require('../assets/cart.png'),
+  'Clothes': require('../assets/clothes.png'),
+  'Toiletries': require('../assets/toiletries.png'),
+  'Hair Supplies': require('../assets/hair.png'),
+  'Cleaning Supplies': require('../assets/cleaning.png'),
+  'Baby Supplies': require('../assets/baby.png'),
+  'School Supplies': require('../assets/school.png'),
+  'Food': require('../assets/food.png'),
+  'Miscellaneous': require('../assets/other.png'),
+};
 
-const Item = ({ item }) => (
-  <TouchableOpacity style={styles.itemContainer}>
-    <Image source={item.image} style={styles.itemImage} />
-    <Text style={styles.itemText}>{item.name}</Text>
-  </TouchableOpacity>
-);
+const Item = ({ category }) => {
+  const navigation = useNavigation();
 
-const Order = () => {
+  const handlePress = () => {
+    navigation.navigate('ProductsOrder', { category});
+  };
+
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={data}
-        numColumns={2}
-        renderItem={({ item }) => <Item item={item} />}
-        keyExtractor={item => item.id.toString()}
-      />
-    </View>
+    <TouchableOpacity style={styles.itemContainer} onPress={handlePress}>
+      <View style={styles.innerContainer}>
+        <View style={styles.imageContainer}>
+          <Image source={categoryImages[category.category_name]} style={styles.itemImage} />
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.itemText}>{category.category_name}</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
   );
 };
 
+const Order = () => {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch categories
+        const categoriesData = await fetchCategories();
+        setCategories(categoriesData);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      {categories.map((category, index) => (
+        <Item key={index} category={category} />
+      ))}
+    </ScrollView>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingTop: 20,
+    flexGrow: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 10,
+    paddingVertical: 20,
   },
   itemContainer: {
-    flex: 1,
-    margin: 10,
+    width: '50%',
+    padding: 10,
+  },
+  innerContainer: {
     borderWidth: 2,
     borderColor: '#F3D014',
     borderRadius: 8,
     overflow: 'hidden',
   },
+  imageContainer: {
+    overflow: 'hidden',
+  },
   itemImage: {
     width: '100%',
-    height: 100,
-    marginTop: 15,
+    height: 80,
     resizeMode: 'contain',
+  },
+  textContainer: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
   },
   itemText: {
     textAlign: 'center',
     fontSize: 16,
-    padding: 10,
   },
 });
 

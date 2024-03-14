@@ -8,6 +8,7 @@ import Order from './Screens/Order';
 import Inventory from './Screens/Inventory';
 import Reports from './Screens/Reports';
 import StudentOrders from './Screens/StudentOrders';
+import ProductsOrder from './Screens/ProductsOrder';
 import { Image } from 'react-native'; // Import Image component from react-native
 import OrderIcon from './assets/order.png';
 import InventoryIcon from './assets/inventory.png';
@@ -24,11 +25,18 @@ function FamiliesStackScreen(){
       <Stack.Screen 
         name="FamilyList" 
         component={Families} 
-        options={{ headerTitle: 'Families' }} />
+        options={{ headerTitle: 'Families' }} 
+      />
       <Stack.Screen 
         name="StudentOrders" 
         component={StudentOrders}
-        options={{ headerTitle: 'Student Orders' }} /> 
+        options={{ headerTitle: 'Student Orders' }} 
+      /> 
+        <Stack.Screen 
+        name="ProductsOrder" 
+        component={ProductsOrder}
+        options={{ headerTitle: 'Products' }}
+       /> 
     </Stack.Navigator>
   );
 }
@@ -110,7 +118,7 @@ const TabNavigator = () => {
           name="Inventory"
           component={Inventory}
           options={{
-            title: 'Inventory', title: 'Inventory', tabBarIcon: ({ color, size }) => (
+            title: 'Inventory', tabBarIcon: ({ color, size }) => (
               <Image source={InventoryIcon} style={{ tintColor: color, width: size, height: size }} />
             ),
             headerStyle: {
