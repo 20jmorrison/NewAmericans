@@ -19,7 +19,7 @@ const Item = ({ category }) => {
   const navigation = useNavigation();
 
   const handlePress = () => {
-    navigation.navigate('ProductsOrder', { category});
+    navigation.navigate('ProductsOrder', {categoryId: category.CategoryID});
   };
 
   return (

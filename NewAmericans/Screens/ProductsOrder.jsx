@@ -1,46 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 import { useRoute } from '@react-navigation/native';
-import { fetchProducts } from '../components/Products/ProductFetching';
+import { fetchItems } from '../components/Categories/FetchingItems';
 
-const ProductsOrder = () => {
-  const route = useRoute();
+const ProductsOrder = ({ route }) => {
   const { categoryId } = route.params;
-  const [products, setProducts] = useState([]);
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchProducts(categoryId);
-        setProducts(data);
+        // Fetch categories
+        const itemsData = await fetchItems();
+        setItems(itemsData);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Error fetching itemsData:', error);
       }
     };
 
     fetchData();
-  }, [categoryId]);
+  }, []);
 
+  // Now you have access to the categoryId passed from the previous screen
   return (
-    <View style={styles.container}>
-      <Text>Products Order Screen</Text>
+    <View>
       <Text>Category ID: {categoryId}</Text>
-      <Text>Products:</Text>
-      <View>
-        {products.map(product => (
-          <Text key={product.id}>{product.name}</Text>
-        ))}
-      </View>
+      {/* Render your content based on the categoryId */}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default ProductsOrder;
