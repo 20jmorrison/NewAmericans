@@ -1,7 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { fetchProducts } from '../components/Products/ProductFetching';
+
+const Item = ({ item }) => {
+
+  return (
+    <TouchableOpacity style={styles.itemContainer}>
+
+      <View style={styles.innerContainer}>
+        <View style={styles.textContainer}>
+          <Text style={styles.itemText}>{item.ProductName} &#40;{item.ProductQuantity}&#41;</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+
+  );
+};
 
 const ProductsOrder = ({ route }) => {
   const { categoryId } = route.params;
@@ -21,16 +36,48 @@ const ProductsOrder = ({ route }) => {
     fetchData();
   }, [categoryId]); // Add categoryId to the dependency array so useEffect will run whenever categoryId changes
 
-  // Now you have access to the categoryId passed from the previous screen
   return (
-    <View>
-      <Text>Category ID: {categoryId}</Text>
-      {/* Render your content based on the fetched products */}
+    <ScrollView contentContainerStyle={[styles.container, styles.scrollViewContent]}>
       {items.map(item => (
-        <Text key={item.ProductID}>{item.ProductName}</Text>
+        <Item key={item.ProductID} item={item} />
       ))}
-    </View>
+    </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 10,
+    paddingVertical: 20,
+    justifyContent: 'space-between', // Add this to evenly distribute items horizontally
+  },
+  itemContainer: {
+    width: '48%', // Adjust the width as needed to fit two items in a row
+    aspectRatio: 1, // Ensure aspect ratio is 1:1
+    padding: 10,
+    marginBottom: 10, // Add some margin to separate the items
+  },
+  innerContainer: {
+    borderWidth: 2,
+    borderColor: '#F3D014',
+    borderRadius: 8,
+    overflow: 'hidden',
+    flex: 1, // Allow inner container to expand
+  },
+  textContainer: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  itemText: {
+    textAlign: 'center',
+    fontSize: 16,
+  },
+  scrollViewContent: {
+    paddingBottom: 100, // Add padding to the bottom of the ScrollView
+  },
+});
 
 export default ProductsOrder;
