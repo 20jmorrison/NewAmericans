@@ -9,6 +9,7 @@ import Inventory from './Screens/Inventory';
 import Reports from './Screens/Reports';
 import StudentOrders from './Screens/StudentOrders';
 import ProductsOrder from './Screens/ProductsOrder';
+import StudentOrdersItems from './Screens/StudentOrdersItems';
 import { Image } from 'react-native'; // Import Image component from react-native
 import OrderIcon from './assets/order.png';
 import InventoryIcon from './assets/inventory.png';
@@ -48,6 +49,11 @@ function FamiliesStackScreen(){
         name="StudentOrders" 
         component={StudentOrders}
         options={{ headerTitle: 'Student Orders' }} 
+      /> 
+        <Stack.Screen 
+        name="StudentOrdersItems" 
+        component={StudentOrdersItems}
+        options={{ headerTitle: 'Order Items' }} 
       /> 
     </Stack.Navigator>
   );
