@@ -23,7 +23,7 @@ connection.connect((err) => {
 
 
 //Function For Fetching Student Names to Be used throughout the application
-app.get( 'http://50.187.63.220:3000/StudentData',(req, res) => {
+app.get( '/StudentData',(req, res) => {
     const query = 'SELECT * FROM Students';
     connection.query(query, (error, studentData, fields) =>{
       if(error){
@@ -119,4 +119,7 @@ process.on('SIGINT', () => {
     console.log('Database connection closed');
     process.exit(0);
   });
+});
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
 });
