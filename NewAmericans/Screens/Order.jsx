@@ -19,7 +19,7 @@ const Item = ({ category }) => {
   const navigation = useNavigation();
 
   const handlePress = () => {
-    navigation.navigate('ProductsOrder', {categoryId: category.CategoryID});
+    navigation.navigate('ProductsOrder', { categoryId: category.CategoryID });
   };
 
   return (
@@ -54,11 +54,11 @@ const Order = () => {
   }, []);
 
   return (
-<ScrollView contentContainerStyle={[styles.container, styles.scrollViewContent]}>
-  {categories.map((category, index) => (
-    <Item key={index} category={category} />
-  ))}
-</ScrollView>
+    <ScrollView contentContainerStyle={[styles.container, styles.scrollViewContent]}>
+      {categories.map((category, index) => (
+        <Item key={index} category={category} />
+      ))}
+    </ScrollView>
   );
 };
 
