@@ -29,6 +29,12 @@ const Families = () => {
     fetchStudentData();
   }, []);
 
+  useEffect(() => {
+    if (sortBy) {
+      sortStudents();
+    }
+  }, [sortBy]);
+
   const handlePress = (student) => {
     navigation.navigate('StudentOrders', { student })
   };
