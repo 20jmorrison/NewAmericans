@@ -14,7 +14,7 @@ const Inventory = () => {
     { id: 9, item: 'Pens', quantity: 20, category: 'School Supplies' },
   ]);
 
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [categoryModalVisible, setCategoryModalVisible] = useState(false);
   const [sortModalVisible, setSortModalVisible] = useState(false);
   const [sortCriteria, setSortCriteria] = useState(null);
@@ -42,7 +42,13 @@ const Inventory = () => {
   };
 
   const sortInventory = () => {
-    let sortedInventory = [...inventory];
+    let filteredInventory = inventory;
+    if (selectedCategory !== 'All') {
+      filteredInventory = inventory.filter(item => item.category === selectedCategory);
+    }
+  
+    let sortedInventory = [...filteredInventory];  
+
     if (sortCriteria === 'alphabetical') {
       sortedInventory.sort((a, b) => a.item.localeCompare(b.item));
     } else if (sortCriteria === 'quantityLowToHigh') {
@@ -55,74 +61,79 @@ const Inventory = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.container}>
+        <TouchableOpacity style={styles.filterButton} onPress={() => setCategoryModalVisible(true)}>
+          <Text style={styles.filterButtonText}>Filter by Category</Text>
+        </TouchableOpacity>
 
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.filterButton} onPress={() => setCategoryModalVisible(true)}>
-        <Text style={styles.filterButtonText}>Filter by Category</Text>
-      </TouchableOpacity>
+      {/* Modal to select Category */}
 
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={categoryModalVisible}
-        onRequestClose={() => setCategoryModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <FlatList
-              data={categories}
-              renderItem={renderCategoryItem}
-              keyExtractor={(item) => item}
-            />
-            <TouchableOpacity onPress={() => setCategoryModalVisible(false)} style={styles.closeButton}>
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      <TouchableOpacity style={styles.sortButton} onPress={() => setSortModalVisible(true)}>
-        <Text style={styles.sortButtonText}>Sort</Text>
-      </TouchableOpacity>
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={sortModalVisible}
-        onRequestClose={() => setSortModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <TouchableOpacity onPress={() => handleSort('alphabetical')} style={styles.sortOption}>
-              <Text style={styles.sortOptionText}>Sort Alphabetically</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleSort('quantityLowToHigh')} style={styles.sortOption}>
-              <Text style={styles.sortOptionText}>Sort by Quantity (Low to High)</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleSort('quantityHighToLow')} style={styles.sortOption}>
-              <Text style={styles.sortOptionText}>Sort by Quantity (High to Low)</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => setSortModalVisible(false)} style={styles.closeButton}>
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      {sortInventory().map((item) => (
-        <View key={item.id} style={styles.card}>
-          <View style={styles.cardContent}>
-            <View style={styles.leftContent}>
-              <Text style={styles.item}>{item.item}</Text>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={categoryModalVisible}
+          onRequestClose={() => setCategoryModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <FlatList
+                data={categories}
+                renderItem={renderCategoryItem}
+                keyExtractor={(item) => item}
+              />
+              <TouchableOpacity onPress={() => setCategoryModalVisible(false)} style={styles.closeButton}>
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
             </View>
-            <Text style={styles.quantity}>QT: {item.quantity}</Text>
-            <TouchableOpacity style={styles.editButtonContainer} onPress={() => handleEdit(item.id)}>
-              <Text style={styles.editButton}>Edit</Text>
-            </TouchableOpacity>
           </View>
-        </View>
-      ))}
-    </View>
+        </Modal>
+
+        <TouchableOpacity style={styles.sortButton} onPress={() => setSortModalVisible(true)}>
+          <Text style={styles.sortButtonText}>Sort</Text>
+        </TouchableOpacity>
+
+      {/* Modal for selecting sort option  */}
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={sortModalVisible}
+          onRequestClose={() => setSortModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <TouchableOpacity onPress={() => handleSort('alphabetical')} style={styles.sortOption}>
+                <Text style={styles.sortOptionText}>Sort Alphabetically</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleSort('quantityLowToHigh')} style={styles.sortOption}>
+                <Text style={styles.sortOptionText}>Sort by Quantity (Low to High)</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleSort('quantityHighToLow')} style={styles.sortOption}>
+                <Text style={styles.sortOptionText}>Sort by Quantity (High to Low)</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setSortModalVisible(false)} style={styles.closeButton}>
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
+      {/* Displaying Inventory  */}
+
+        {sortInventory().map((item) => (
+          <View key={item.id} style={styles.card}>
+            <View style={styles.cardContent}>
+              <View style={styles.leftContent}>
+                <Text style={styles.item}>{item.item}</Text>
+              </View>
+              <Text style={styles.quantity}>QT: {item.quantity}</Text>
+              <TouchableOpacity style={styles.editButtonContainer} onPress={() => handleEdit(item.id)}>
+                <Text style={styles.editButton}>Edit</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ))}
+      </View>
     </ScrollView>
   );
 };
@@ -191,7 +202,7 @@ const styles = StyleSheet.create({
   },
   sortOption: {
     paddingVertical: 10,
-    borderBottomWidth: 1,
+    //borderBottomWidth: 1,
     borderBottomColor: '#ccc',
   },
   sortOptionText: {
