@@ -10,7 +10,8 @@ const Item = ({ item }) => {
 
       <View style={styles.innerContainer}>
         <View style={styles.textContainer}>
-          <Text style={styles.itemText}>{item.ProductName} &#40;{item.ProductQuantity}&#41;</Text>
+          <Text style={styles.itemText}>{item.ProductName}</Text>
+          <Text style = {styles.quantityText}>Quantity: {item.ProductQuantity}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -74,6 +75,11 @@ const styles = StyleSheet.create({
   itemText: {
     textAlign: 'center',
     fontSize: 16,
+  },
+  quantityText: {
+    textAlign: 'center',
+    fontSize: 14,
+    marginTop: 'auto', // Push the quantity text to the bottom
   },
   scrollViewContent: {
     paddingBottom: 100, // Add padding to the bottom of the ScrollView
