@@ -43,7 +43,7 @@ function FamiliesStackScreen(){
       <Stack.Screen 
         name="FamilyList" 
         component={Families} 
-        options={{ headerTitle: 'Families' }} 
+        options={{ headerShown: false }}
       />
       <Stack.Screen 
         name="StudentOrders" 
