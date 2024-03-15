@@ -10,6 +10,8 @@ const Families = () => {
   const [newStudentFirstName, setNewStudentFirstName] = useState('');
   const [newStudentLastName, setNewStudentLastName] = useState('');
   const [sortBy, setSortBy] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredStudents, setFilteredStudents] = useState([]);
 
   const navigation = useNavigation();
 
@@ -18,6 +20,7 @@ const Families = () => {
       try {
         const studentsData = await fetchStudents();
         setStudents(studentsData);
+        setFilteredStudents(studentsData); // Initialize filtered students with all students
       } catch (error) {
         console.error('Error fetching student data:', error);
       }
@@ -56,9 +59,19 @@ const Families = () => {
       return 0;
     });
     setStudents(sortedStudents);
+    setFilteredStudents(sortedStudents); // Update filtered students
     setIsSortModalVisible(false);
   };
-  
+
+  // Filter students based on search query
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    const filtered = students.filter(student =>
+      student.first_name.toLowerCase().includes(query.toLowerCase()) ||
+      student.last_name.toLowerCase().includes(query.toLowerCase())
+    );
+    setFilteredStudents(filtered);
+  };
 
   return (
     <View style={styles.container}>
@@ -111,6 +124,16 @@ const Families = () => {
         </View>
       </Modal>
 
+      {/* Search bar */}
+      <View style={styles.searchBarContainer}>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search by name..."
+          value={searchQuery}
+          onChangeText={handleSearch}
+        />
+      </View>
+
       {/* Separator */}
       <View style={styles.separator} />
 
@@ -120,11 +143,11 @@ const Families = () => {
           <Button title="Add Student" onPress={() => setIsAddStudentModalVisible(true)} />
           <Button title="Sort" onPress={() => setIsSortModalVisible(true)} />
         </View>
-        {/* Mapping over students and displaying them */}
-        {students.map((student) => (
+        {/* Mapping over filtered students and displaying them */}
+        {filteredStudents.map((student) => (
           <TouchableOpacity key={student.id} onPress={() => handlePress(student)}>
             <View style={styles.card}>
-              <Text style={styles.firstName}>{student.first_name}</Text>
+              <Text style={styles.firstName}>{student.first_name}  </Text>
               <Text style={styles.lastName}>{student.last_name}</Text>
             </View>
           </TouchableOpacity>
@@ -144,13 +167,21 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     marginVertical: 5,
   },
+  searchBarContainer: {
+    padding: 10,
+    backgroundColor: '#fff',
+  },
+  searchInput: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+  },
   firstName: {
     fontSize: 15,
-    width: 90, 
   },
   lastName: {
     fontSize: 15,
-    left: 100, 
   },
   modalContainer: {
     flex: 1,
