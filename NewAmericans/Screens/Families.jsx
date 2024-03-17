@@ -103,8 +103,8 @@ const Families = () => {
               value={newStudentLastName}
               onChangeText={(text) => setNewStudentLastName(text)}
             />
-            <Button title="Add Student" onPress={handleAddStudent} />
-            <Button title="Close" onPress={() => setIsAddStudentModalVisible(false)} />
+            <Button title="Add Student" onPress={handleAddStudent} color='black'/>
+            <Button title="Close" onPress={() => setIsAddStudentModalVisible(false)} color='#FA4616' />
           </View>
         </View>
       </Modal>
@@ -125,7 +125,7 @@ const Families = () => {
             <TouchableOpacity onPress={() => { setSortBy('lastName'); sortStudents(); }}>
               <Text style={styles.dropdownOption}>Sort by Last Name</Text>
             </TouchableOpacity>
-            <Button title="Cancel" onPress={() => setIsSortModalVisible(false)} />
+            <Button title="Cancel" onPress={() => setIsSortModalVisible(false)} color='#FA4616' />
           </View>
         </View>
       </Modal>
@@ -146,8 +146,8 @@ const Families = () => {
       {/* ScrollView for displaying students */}
       <ScrollView>
         <View style={styles.buttonContainer}>
-          <Button title="Add Student" onPress={() => setIsAddStudentModalVisible(true)} />
-          <Button title="Sort" onPress={() => setIsSortModalVisible(true)} />
+          <Button title="Add Student" onPress={() => setIsAddStudentModalVisible(true)} color='black' />
+          <Button title="Sort" onPress={() => setIsSortModalVisible(true)} color='black'/>
         </View>
         {/* Mapping over filtered students and displaying them */}
         {filteredStudents.map((student) => (
@@ -167,11 +167,15 @@ const styles = StyleSheet.create({
   container: {
     padding: 0,
     flex: 1,
+    backgroundColor: '#FFF',
+
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginVertical: 5,
+    backgroundColor: '#F3D014',
+
   },
   searchBarContainer: {
     padding: 10,
@@ -212,7 +216,7 @@ const styles = StyleSheet.create({
   },
   dropdownOption: {
     fontSize: 20,
-    color: 'blue',
+    color: 'black',
     marginBottom: 10,
   },
   separator: {
@@ -223,7 +227,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderRadius: 10,
     padding: 20,
-    marginBottom: 5,
+    marginBottom: 10,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
