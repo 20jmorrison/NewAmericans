@@ -165,10 +165,10 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
-    paddingVertical: 1,
+    paddingBottom: 100,
   },
   filterButton: {
-    backgroundColor: 'lightblue',
+    backgroundColor: '#F3D014',
     padding: 10,
     borderRadius: 5,
     marginBottom: 10,
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     marginTop: 20,
-    backgroundColor: 'lightblue',
+    backgroundColor: '#FA4616',
     padding: 10,
     borderRadius: 5,
     alignSelf: 'center',
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   sortButton: {
-    backgroundColor: 'lightblue',
+    backgroundColor: '#F3D014',
     padding: 10,
     borderRadius: 5,
     marginBottom: 10,
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   editButtonContainer: {
-    backgroundColor: 'lightblue',
+    backgroundColor: '#F3D014',
     padding: 8,
     borderRadius: 5,
   },

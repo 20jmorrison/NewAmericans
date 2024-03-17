@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 20,
     justifyContent: 'space-between', // Add this to evenly distribute items horizontally
+    backgroundColor: '#FFF',
   },
   itemContainer: {
     width: '48%', // Adjust the width as needed to fit two items in a row
