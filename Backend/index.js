@@ -64,6 +64,19 @@ app.get('/AdminData', (req,res)=>{
   });
 });
 
+//Fetching Item Data 
+app.get('/ItemData', (req,res)=>{
+  const query = 'SELECT * FROM Products';
+  connection.query(query,(error, itemData, fields)=>{
+    if(error){
+      console.error('Error Fetching Item Data: ', error)
+      res.status(500).json({error: 'Interal Server Error'})
+    }
+    console.log('Fetched Item Data: ', itemData);
+    res.json(itemData);
+  });
+});
+
 app.get('/ProductData', (req, res) => {
   const categoryId = req.query.categoryID; // Extracting the categoryID from query parameters
   const query = 'SELECT * FROM products WHERE CategoryID = ?';
