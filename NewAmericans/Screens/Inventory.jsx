@@ -1,23 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, FlatList, ScrollView } from 'react-native';
+import { fetchItems } from '../components/Categories/FetchingItems';
 
 const Inventory = () => {
-  const [inventory, setInventory] = useState([
-    { id: 1, item: 'Pants', quantity: 10, category: 'Clothes' },
-    { id: 2, item: 'Sweatshirt', quantity: 5, category: 'Clothes' },
-    { id: 3, item: 'Socks', quantity: 8, category: 'Clothes' },
-    { id: 4, item: 'Pasta', quantity: 15, category: 'Food' },
-    { id: 5, item: 'Cereal', quantity: 5, category: 'Food' },
-    { id: 6, item: 'Ramen', quantity: 4, category: 'Food' },
-    { id: 7, item: 'Paper', quantity: 9, category: 'School Supplies' },
-    { id: 8, item: 'Backpack', quantity: 3, category: 'School Supplies' },
-    { id: 9, item: 'Pens', quantity: 20, category: 'School Supplies' },
-  ]);
+  const [inventory, setInventory] = useState([]);
 
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [categoryModalVisible, setCategoryModalVisible] = useState(false);
   const [sortModalVisible, setSortModalVisible] = useState(false);
   const [sortCriteria, setSortCriteria] = useState(null);
+
+
+  useEffect(() => {
+    const fetchItemData = async () => {
+      try {
+        // Fetch all items
+        const items = await fetchItems();
+        setInventory(items);
+      } catch (error) {
+        console.error('Error fetching items:', error);
+      }
+    };
+
+    fetchItemData();
+  }, []);
+
+
 
   const handleEdit = (id) => {
     // Implement edit functionality here
@@ -34,7 +42,7 @@ const Inventory = () => {
     </TouchableOpacity>
   );
 
-  const categories = ['All', ...Array.from(new Set(inventory.map(item => item.category)))];
+  const categories = ['All', ...Array.from(new Set(inventory.map(item => item.CategoryID)))];
 
   const handleSort = (criteria) => {
     setSortCriteria(criteria);
@@ -44,21 +52,33 @@ const Inventory = () => {
   const sortInventory = () => {
     let filteredInventory = inventory;
     if (selectedCategory !== 'All') {
-      filteredInventory = inventory.filter(item => item.category === selectedCategory);
+      filteredInventory = inventory.filter(item => item.CategoryID === selectedCategory);
     }
   
     let sortedInventory = [...filteredInventory];  
-
+  
     if (sortCriteria === 'alphabetical') {
-      sortedInventory.sort((a, b) => a.item.localeCompare(b.item));
+      sortedInventory.sort((a, b) => {
+        const nameA = a.ProductName || ''; // Handle null or undefined values
+        const nameB = b.ProductName || ''; // Handle null or undefined values
+        return nameA.localeCompare(nameB);
+      });
     } else if (sortCriteria === 'quantityLowToHigh') {
-      sortedInventory.sort((a, b) => a.quantity - b.quantity);
+      sortedInventory.sort((a, b) => {
+        const qtyA = a.ProductQuantity || 0; // Handle null or undefined values
+        const qtyB = b.ProductQuantity || 0; // Handle null or undefined values
+        return qtyA - qtyB;
+      });
     } else if (sortCriteria === 'quantityHighToLow') {
-      sortedInventory.sort((a, b) => b.quantity - a.quantity);
+      sortedInventory.sort((a, b) => {
+        const qtyA = a.ProductQuantity || 0; // Handle null or undefined values
+        const qtyB = b.ProductQuantity || 0; // Handle null or undefined values
+        return qtyB - qtyA;
+      });
     }
     return sortedInventory;
   };
-
+  
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
@@ -121,13 +141,13 @@ const Inventory = () => {
       {/* Displaying Inventory  */}
 
         {sortInventory().map((item) => (
-          <View key={item.id} style={styles.card}>
+          <View key={item.ProductID} style={styles.card}>
             <View style={styles.cardContent}>
               <View style={styles.leftContent}>
-                <Text style={styles.item}>{item.item}</Text>
+                <Text style={styles.item}>{item.ProductName}</Text>
               </View>
-              <Text style={styles.quantity}>QT: {item.quantity}</Text>
-              <TouchableOpacity style={styles.editButtonContainer} onPress={() => handleEdit(item.id)}>
+              <Text style={styles.quantity}>QT: {item.ProductQuantity}</Text>
+              <TouchableOpacity style={styles.editButtonContainer} onPress={() => handleEdit(item.ProductID)}>
                 <Text style={styles.editButton}>Edit</Text>
               </TouchableOpacity>
             </View>
