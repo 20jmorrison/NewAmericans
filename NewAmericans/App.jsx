@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import Settings from './Screens/Settings';
+import Settings from './Screens/Admins';
 import Families from './Screens/Families';
 import Order from './Screens/Order';
 import Inventory from './Screens/Inventory';
@@ -14,7 +14,7 @@ import { Image } from 'react-native'; // Import Image component from react-nativ
 import OrderIcon from './assets/order.png';
 import InventoryIcon from './assets/inventory.png';
 import FamilyIcon from './assets/family.png';
-import SettingsIcon from './assets/settings.png';
+import AdminIcon from './assets/admin.png';
 import ReportsIcon from './assets/reports.png';
 import Logo from './assets/snhucfna.png'
 
@@ -81,11 +81,11 @@ const TabNavigator = () => {
 
 
         <Tab.Screen
-          name="Settings"
+          name="Admins"
           component={Settings}
           options={{
-            title: 'Settings', tabBarIcon: ({ color, size }) => (
-              <Image source={SettingsIcon} style={{ tintColor: color, width: size, height: size }} />
+            title: 'Admins', tabBarIcon: ({ color, size }) => (
+              <Image source={AdminIcon} style={{ tintColor: color, width: size, height: size }} />
             ),
             headerStyle: {
               backgroundColor: 'rgba(8,34,65,1)',
