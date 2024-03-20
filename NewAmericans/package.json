@@ -16,6 +16,7 @@
     "expo": "^50.0.13",
     "expo-status-bar": "~1.11.1",
     "node": "^21.6.1",
+    "primereact": "^10.5.3",
     "react": "18.2.0",
     "react-native": "0.73.2",
     "react-native-gesture-handler": "^2.14.1",
