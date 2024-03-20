@@ -1,5 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
+import { fetch } from '../components/Students/StudentFetching';
+
 
 const PasswordProtectedScreen = () => {
   return (
