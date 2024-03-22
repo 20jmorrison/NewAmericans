@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, FlatList, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, FlatList, ScrollView, TextInput } from 'react-native';
 import { fetchItems } from '../components/Categories/FetchingItems';
+import { fetchCategories } from '../components/Categories/FetchingCategories';
+
+
 
 const Inventory = () => {
   const [inventory, setInventory] = useState([]);
+  const [allCategories, setAllCategories] = useState([]);
 
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [categoryModalVisible, setCategoryModalVisible] = useState(false);
   const [sortModalVisible, setSortModalVisible] = useState(false);
   const [sortCriteria, setSortCriteria] = useState(null);
-
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editedItem, setEditedItem] = useState({});
 
   useEffect(() => {
     const fetchItemData = async () => {
@@ -25,10 +30,30 @@ const Inventory = () => {
     fetchItemData();
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch categories
+        const categoriesData = await fetchCategories();
+        setAllCategories(categoriesData);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
 
-  const handleEdit = (id) => {
-    // Implement edit functionality here
+
+  const handleEdit = (item) => {
+    setEditedItem(item);
+    setEditModalVisible(true);
+  };
+
+  const handleSaveChanges = () => {
+    // save edited item changes
+    setEditModalVisible(false);
   };
 
   const filterByCategory = (category) => {
@@ -37,12 +62,15 @@ const Inventory = () => {
   };
 
   const renderCategoryItem = ({ item }) => (
-    <TouchableOpacity onPress={() => filterByCategory(item)}>
-      <Text style={styles.categoryItem}>{item}</Text>
+    <TouchableOpacity onPress={() => filterByCategory(item.id)}>
+      <Text style={styles.categoryItem}>{item.name}</Text>
     </TouchableOpacity>
   );
 
-  const categories = ['All', ...Array.from(new Set(inventory.map(item => item.CategoryID)))];
+  const categories = [
+    { name: 'All', id: 0 },
+    ...allCategories.map(category => ({ name: category.category_name, id: category.CategoryID }))
+  ];
 
   const handleSort = (criteria) => {
     setSortCriteria(criteria);
@@ -50,8 +78,9 @@ const Inventory = () => {
   };
 
   const sortInventory = () => {
-    let filteredInventory = inventory;
-    if (selectedCategory !== 'All') {
+    let filteredInventory = [...inventory];
+
+    if (selectedCategory !== 0) {
       filteredInventory = inventory.filter(item => item.CategoryID === selectedCategory);
     }
   
@@ -99,7 +128,7 @@ const Inventory = () => {
               <FlatList
                 data={categories}
                 renderItem={renderCategoryItem}
-                keyExtractor={(item) => item}
+                keyExtractor={(item) => item.id}
               />
               <TouchableOpacity onPress={() => setCategoryModalVisible(false)} style={styles.closeButton}>
                 <Text style={styles.closeButtonText}>Close</Text>
@@ -113,7 +142,6 @@ const Inventory = () => {
         </TouchableOpacity>
 
       {/* Modal for selecting sort option  */}
-
         <Modal
           animationType="slide"
           transparent={true}
@@ -138,6 +166,57 @@ const Inventory = () => {
           </View>
         </Modal>
 
+        {/* Edit modal */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={editModalVisible}
+          onRequestClose={() => setEditModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <View style={styles.inputRow}>
+                <Text style={styles.modalTitle}>Name: </Text>
+                <TextInput
+                  style={styles.input}
+                  value={editedItem.ProductName}
+                  onChangeText={(text) =>
+                    setEditedItem({ ...editedItem, ProductName: text })
+                  }
+                  placeholder="Name"
+                />
+              </View>
+              <View style={styles.inputRow}>
+                <Text style={styles.modalTitle}>Quantity: </Text>
+                <TextInput
+                  style={styles.input}
+                  value={String(editedItem.ProductQuantity)}
+                  onChangeText={(text) =>
+                    setEditedItem({ ...editedItem, ProductQuantity: Number(text) })
+                  }
+                  placeholder="Quantity"
+                  keyboardType="numeric"
+                />
+              </View>
+              {/* Add category type input */}
+              <View style={styles.inputRow}>
+                <TouchableOpacity
+                  style={[styles.saveButton, styles.buttonLeft]}
+                  onPress={handleSaveChanges}
+                >
+                  <Text style={styles.saveButtonText}>Save Changes</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.closeButton, styles.buttonRight]}
+                  onPress={() => setEditModalVisible(false)}
+                >
+                  <Text style={styles.closeButtonText}>Close</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
       {/* Displaying Inventory  */}
 
         {sortInventory().map((item) => (
@@ -147,7 +226,7 @@ const Inventory = () => {
                 <Text style={styles.item}>{item.ProductName}</Text>
               </View>
               <Text style={styles.quantity}>QT: {item.ProductQuantity}</Text>
-              <TouchableOpacity style={styles.editButtonContainer} onPress={() => handleEdit(item.ProductID)}>
+              <TouchableOpacity style={styles.editButtonContainer} onPress={() => handleEdit(item)}>
                 <Text style={styles.editButton}>Edit</Text>
               </TouchableOpacity>
             </View>
@@ -163,10 +242,35 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 15,
   },
+  input: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+    marginTop: 10,
+    width: '100%',
+    flex: 1,
+    marginLeft: 10,
+  },
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   scrollContainer: {
     flexGrow: 1,
     paddingBottom: 100,
   },
+  buttonLeft: {
+    marginRight: 'auto',
+  },
+  buttonRight: {
+    marginLeft: 'auto',
+  },  
   filterButton: {
     backgroundColor: '#F3D014',
     padding: 10,
@@ -203,8 +307,22 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     alignSelf: 'center',
+    marginRight: 'auto',
   },
   closeButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  saveButton: {
+    marginTop: 20,
+    backgroundColor: '#00ab66',
+    padding: 10,
+    borderRadius: 5,
+    alignSelf: 'center',
+    marginLeft: 'auto',
+  },
+  saveButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
