@@ -122,6 +122,39 @@ app.get('/TransactionItemData', (req, res)=>{
   });
 });
 
+app.get('/ReportData', (req, res) => {
+  const query = `
+    SELECT
+        S.first_name AS Student_FirstName,
+        S.last_name AS Student_LastName,
+        P.ProductName,
+        TI.Quantity,
+        A.first_name AS Admin_FirstName,
+        A.last_name AS Admin_LastName,
+        T.DateCreated
+    FROM
+        Transactions T
+    LEFT JOIN
+        Students S ON T.StudentID = S.StudentID
+    LEFT JOIN
+        Admin A ON T.AdminID = A.AdminID
+    LEFT JOIN
+        TransactionItems TI ON T.TransactionID = TI.TransactionID
+    LEFT JOIN
+        Products P ON TI.ProductID = P.ProductID
+  `;
+  
+  connection.query(query, (error, reportData, fields) => {
+    if (error) {
+      console.error('Error Fetching Report Data: ', error);
+    } else {
+      console.log('Fetched Report Data: ', reportData)
+      res.json(reportData);
+    }
+  });
+});
+
+
 
 process.on('SIGINT', () => {
   connection.end((err) => {
