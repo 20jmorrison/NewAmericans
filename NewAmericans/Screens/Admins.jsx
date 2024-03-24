@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Keyboard } from 'r
 import { useNavigation } from '@react-navigation/native';
 import { fetchSuperuser } from '../components/Admins/FetchingSuperuser';
 
-const Admins = () => {
+const Superuser = () => {
   const [superuserPasscode, setSuperuserPasscode] = useState('');
   const [fetchedPasscode, setFetchedPasscode] = useState('');
   const navigation = useNavigation();
@@ -87,4 +87,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Admins;
+export default Superuser;
