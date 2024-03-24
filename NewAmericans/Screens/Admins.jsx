@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Keyboard } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Keyboard, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { fetchSuperuser } from '../components/Admins/FetchingSuperuser';
-
+import right_arrow from '../assets/right-arrow.png';
 const Superuser = () => {
   const [superuserPasscode, setSuperuserPasscode] = useState('');
   const [fetchedPasscode, setFetchedPasscode] = useState('');
@@ -39,21 +39,26 @@ const Superuser = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Enter Passcode</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="****"
-        value={superuserPasscode}
-        onChangeText={(text) => setSuperuserPasscode(text)}
-        keyboardType="numeric"
-        secureTextEntry={true}
-      />
-      <TouchableOpacity style={styles.button} onPress={handleCheckPasscode}>
-        <Text style={styles.buttonText}>Submit</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={handleDonePress}>
-        <Text style={styles.buttonText}>Done</Text>
-      </TouchableOpacity>
+      <View style={styles.textArea}>
+        <Text style={styles.headerText}>Admin Control</Text>
+        <Text style={styles.subText}>Please enter master passkey to continue.</Text>
+      </View>
+      <View style={styles.submissionArea}>
+        <TextInput
+          style={styles.input}
+          placeholder="****"
+          value={superuserPasscode}
+          onChangeText={(text) => setSuperuserPasscode(text)}
+          keyboardType="numeric"
+          secureTextEntry={true}
+        />
+        <View style={styles.buttonArea}>
+          <TouchableOpacity style={styles.button} onPress={handleCheckPasscode}>
+            <Text style={styles.buttonText}>Submit</Text>
+            <Image source={right_arrow} style={styles.right_arrow} />
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 };
@@ -64,9 +69,34 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  text: {
+  textArea: {
+    width: '100%',
+    height: '50%',
+  },
+  headerText: {
+    fontSize: 30,
+    fontFamily: 'Nunito-Bold',
+    textAlign: 'left',
+    paddingLeft: '5%',
+    paddingTop: '30%',
+  },
+  subText: {
     fontSize: 20,
-    marginBottom: 10,
+    color: 'grey',
+    fontFamily: 'Nunito-Regular',
+    textAlign: 'left',
+    paddingLeft: '5%',
+    paddingTop: '5%',
+  },
+  submissionArea: {
+    width: '100%',
+    height: '50%',
+    alignItems: 'center',
+  },
+  buttonArea: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
   input: {
     borderWidth: 1,
@@ -74,16 +104,29 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginBottom: 10,
-    width: 200, // Adjust the width as needed
+    width: '90%',
   },
   button: {
-    backgroundColor: 'blue',
-    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F3D014',
+    marginRight: '5%',
+    marginTop: '5%',
     borderRadius: 5,
+    width: '25%',
+    height: '100%',
+
   },
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  right_arrow: {
+    marginLeft: '15%',
+    width: 24,
+    height: 24,
   },
 });
 

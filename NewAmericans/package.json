@@ -14,6 +14,8 @@
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
     "expo": "^50.0.14",
+    "expo-app-loading": "^2.1.1",
+    "expo-font": "^11.10.3",
     "expo-status-bar": "~1.11.1",
     "node": "^21.6.1",
     "primereact": "^10.5.3",
