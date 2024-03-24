@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, TextInput,
 import { fetchAdminData } from '../components/Admins/FetchingAdmins';
 import { postNewAdmin } from '../components/Admins/PostingAdmin';
 import { putAdmin } from '../components/Admins/PuttingAdmin';
+import { removeAdmin } from '../components/Admins/RemoveAdmin';
 import edit from '../assets/edit.png';
 
 
@@ -41,6 +42,26 @@ const Admins = () => {
     setEditAdminModalVisible(true); // Open the edit admin modal
   }
 
+  const handleRemoveAdmin = async () => {
+    try {
+      // Remove the admin
+      await removeAdmin(selectedAdmin);
+      
+      // Fetch updated admin data
+      const updatedAdmins = await fetchAdminData();
+      
+      // Update the admin list in the state
+      setAdmins(updatedAdmins);
+      
+      // Close the edit admin modal
+      setEditAdminModalVisible(false);
+    } catch (error) {
+      console.error('Error removing admin:', error);
+      // Handle error, show message to user, etc.
+    }
+  };
+  
+
   const handleEditAdmin = () => {
     // Construct the updated admin object with edited values
     const updatedAdmin = {
@@ -65,16 +86,10 @@ const Admins = () => {
     setEditedLastName('');
     setEditedEmail('');
     setEditedPassword('');
-
-    // Optionally, you can also perform API call to update the admin data on the server
-    // updateAdminData(updatedAdmin);
   }
 
-
-
-  const handleAddAdmin = () => {
+  const handleAddAdmin = async () => {
     const newAdmin = {
-      AdminID: admins.length + 1,
       email: newEmail,
       password: newPassword,
       first_name: newFirstName,
@@ -83,6 +98,8 @@ const Admins = () => {
     console.log('New Admin: ', newAdmin);
     postNewAdmin(newAdmin);
     setAdmins((prevAdmins) => [...prevAdmins, newAdmin]);
+    const updatedAdmins = await fetchAdminData();      
+    setAdmins(updatedAdmins);
     setAdminModalVisible(false);
     setNewFirstName('');
     setNewLastName('');
@@ -171,7 +188,9 @@ const Admins = () => {
                 onChangeText={(text) => setEditedPassword(text)}
               />
               <Button title="Save" onPress={handleEditAdmin} color='black' />
-              <Button title="Close" onPress={() => setEditAdminModalVisible(false)} color='#FA4616' />
+              <Button title="Remove Admin" onPress={handleRemoveAdmin} color='#FA4616' />
+              <Button title="Close" onPress={() => setEditAdminModalVisible(false)} color='black' />
+
             </View>
           </View>
         </Modal>
