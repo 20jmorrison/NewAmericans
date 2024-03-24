@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Settings from './Screens/Admins';
+import Superuser from './Screens/Admins';
 import Families from './Screens/Families';
 import Order from './Screens/Order';
 import Inventory from './Screens/Inventory';
@@ -84,13 +84,13 @@ const TabNavigator = () => {
       await SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);
-  
+
   useEffect(() => {
     if (fontsLoaded) {
       onLayoutRootView();
     }
   }, [fontsLoaded]);
-  
+
   if (!fontsLoaded) {
     return null;
   }
@@ -108,11 +108,19 @@ const TabNavigator = () => {
             position: 'absolute',
             borderTopWidth: 0,
           },
+          tabBarLabelStyle: {
+            fontFamily: 'Nunito-Bold',
+            fontSize: 12,
+          },
+          headerTitleStyle: {
+            fontFamily: 'Nunito-Bold',
+            fontSize: 18,
+          }
         })}
       >
         <Tab.Screen
           name="Admins"
-          component={Settings}
+          component={Superuser}
           options={{
             title: 'Admins',
             tabBarIcon: ({ color, size }) => (

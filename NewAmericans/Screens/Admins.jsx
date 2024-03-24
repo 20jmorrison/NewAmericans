@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Keyboard, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Keyboard, Image, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { fetchSuperuser } from '../components/Admins/FetchingSuperuser';
 import right_arrow from '../assets/right-arrow.png';
@@ -19,11 +19,6 @@ const Superuser = () => {
     }
   };
 
-  const handleDonePress = () => {
-    console.log('Done pressed');
-    Keyboard.dismiss();
-  };
-
   useEffect(() => {
     const getRealPasscode = async () => {
       try {
@@ -37,29 +32,35 @@ const Superuser = () => {
     getRealPasscode();
   }, []);
 
+  const handlePressOutside = () => {
+    Keyboard.dismiss(); // Dismiss the keyboard when user presses outside of the input
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={styles.textArea}>
-        <Text style={styles.headerText}>Admin Control</Text>
-        <Text style={styles.subText}>Please enter master passkey to continue.</Text>
-      </View>
-      <View style={styles.submissionArea}>
-        <TextInput
-          style={styles.input}
-          placeholder="****"
-          value={superuserPasscode}
-          onChangeText={(text) => setSuperuserPasscode(text)}
-          keyboardType="numeric"
-          secureTextEntry={true}
-        />
-        <View style={styles.buttonArea}>
-          <TouchableOpacity style={styles.button} onPress={handleCheckPasscode}>
-            <Text style={styles.buttonText}>Submit</Text>
-            <Image source={right_arrow} style={styles.right_arrow} />
-          </TouchableOpacity>
+    <TouchableWithoutFeedback onPress={handlePressOutside}>
+      <View style={styles.container}>
+        <View style={styles.textArea}>
+          <Text style={styles.headerText}>Admin Control</Text>
+          <Text style={styles.subText}>Please enter master passkey to continue.</Text>
+        </View>
+        <View style={styles.submissionArea}>
+          <TextInput
+            style={styles.input}
+            placeholder="****"
+            value={superuserPasscode}
+            onChangeText={(text) => setSuperuserPasscode(text)}
+            keyboardType="numeric"
+            secureTextEntry={true}
+          />
+          <View style={styles.buttonArea}>
+            <TouchableOpacity style={styles.button} onPress={handleCheckPasscode}>
+              <Text style={styles.buttonText}>Submit</Text>
+              <Image source={right_arrow} style={styles.right_arrow} />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -68,10 +69,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
   },
   textArea: {
     width: '100%',
-    height: '50%',
+    height: '40%',
   },
   headerText: {
     fontSize: 30,
@@ -90,22 +92,34 @@ const styles = StyleSheet.create({
   },
   submissionArea: {
     width: '100%',
-    height: '50%',
+    height: '60%',
+    marginTop: '5%',
     alignItems: 'center',
   },
   buttonArea: {
     width: '100%',
+    height: '12%',
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
+
   input: {
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 5,
     padding: 10,
     marginBottom: 10,
     width: '90%',
+
+    backgroundColor: '#FFFFFF',
+    borderRadius: 3,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 2,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
+
   button: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -113,18 +127,27 @@ const styles = StyleSheet.create({
     backgroundColor: '#F3D014',
     marginRight: '5%',
     marginTop: '5%',
-    borderRadius: 5,
-    width: '25%',
+    borderRadius: 30,
+    width: '30%',
     height: '100%',
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 2,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
 
   },
   buttonText: {
+    fontFamily: 'Nunito-Bold',
+    fontSize: 15,
     color: 'white',
-    fontWeight: 'bold',
     textAlign: 'center',
   },
   right_arrow: {
-    marginLeft: '15%',
+    marginLeft: '10%',
     width: 24,
     height: 24,
   },
