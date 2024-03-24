@@ -1,61 +1,87 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import Settings from './Screens/Settings';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Superuser from './Screens/Admins';
 import Families from './Screens/Families';
 import Order from './Screens/Order';
+import Admins from './Screens/Admins'
 import Inventory from './Screens/Inventory';
 import Reports from './Screens/Reports';
 import StudentOrders from './Screens/StudentOrders';
 import ProductsOrder from './Screens/ProductsOrder';
 import StudentOrdersItems from './Screens/StudentOrdersItems';
-import { Image } from 'react-native'; // Import Image component from react-native
+import PasswordProtectedScreen from './Screens/PasswordProtectedScreen'; // Import the screen
+import { Image } from 'react-native';
 import OrderIcon from './assets/order.png';
 import InventoryIcon from './assets/inventory.png';
 import FamilyIcon from './assets/family.png';
-import SettingsIcon from './assets/settings.png';
+import AdminIcon from './assets/admin.png';
 import ReportsIcon from './assets/reports.png';
-import Logo from './assets/snhucfna.png'
+import Logo from './assets/snhucfna.png';
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+
+SplashScreen.preventAutoHideAsync();
+
+
+
 
 const OrderStack = createNativeStackNavigator();
-function OrderStackScreen(){
+function OrderStackScreen() {
   return (
     <OrderStack.Navigator>
-        <OrderStack.Screen 
-        name="OrderList" 
+      <OrderStack.Screen
+        name="OrderList"
         component={Order}
         options={{ headerShown: false }}
-       /> 
-        <OrderStack.Screen 
-        name="ProductsOrder" 
+      />
+      <OrderStack.Screen
+        name="ProductsOrder"
         component={ProductsOrder}
         options={{ headerTitle: 'Products' }}
-       /> 
+      />
     </OrderStack.Navigator>
   );
 }
 
-
-const Stack = createNativeStackNavigator();
-function FamiliesStackScreen(){
+const AdminStack = createNativeStackNavigator();
+function AdminStackScreen() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen 
-        name="FamilyList" 
-        component={Families} 
+    <AdminStack.Navigator>
+      <AdminStack.Screen
+        name="AdminsScreen"
+        component={Admins}
         options={{ headerShown: false }}
       />
-      <Stack.Screen 
-        name="StudentOrders" 
+      <AdminStack.Screen
+        name="PasswordProtectedScreen"
+        component={PasswordProtectedScreen}
+        options={{ headerShown: false }}
+      />
+    </AdminStack.Navigator>
+  );
+}
+
+const Stack = createNativeStackNavigator();
+function FamiliesStackScreen() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="FamilyList"
+        component={Families}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="StudentOrders"
         component={StudentOrders}
-        options={{ headerTitle: 'Student Orders' }} 
-      /> 
-        <Stack.Screen 
-        name="StudentOrdersItems" 
+        options={{ headerTitle: 'Student Orders' }}
+      />
+      <Stack.Screen
+        name="StudentOrdersItems"
         component={StudentOrdersItems}
-        options={{ headerTitle: 'Order Items' }} 
-      /> 
+        options={{ headerTitle: 'Order Items' }}
+      />
     </Stack.Navigator>
   );
 }
@@ -63,9 +89,34 @@ function FamiliesStackScreen(){
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
+
+  const [fontsLoaded] = useFonts({
+    'Nunito-Regular': require('./assets/Fonts/Nunito/static/Nunito-Regular.ttf'),
+    'Nunito-SemiBold': require('./assets/Fonts/Nunito/static/Nunito-SemiBold.ttf'),
+    'Nunito-Bold': require('./assets/Fonts/Nunito/static/Nunito-Bold.ttf'),
+    'Nunito-Black': require('./assets/Fonts/Nunito/static/Nunito-Black.ttf'),
+
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      onLayoutRootView();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
   return (
     <NavigationContainer>
       <Tab.Navigator
+        onLayout={onLayoutRootView}
         screenOptions={({ route }) => ({
           tabBarActiveTintColor: '#F3D014',
           tabBarStyle: {
@@ -76,26 +127,31 @@ const TabNavigator = () => {
             position: 'absolute',
             borderTopWidth: 0,
           },
-          
+          tabBarLabelStyle: {
+            fontFamily: 'Nunito-Bold',
+            fontSize: 12,
+          },
+          headerTitleStyle: {
+            fontFamily: 'Nunito-Bold',
+            fontSize: 18,
+          }
         })}
       >
-
-
         <Tab.Screen
-          name="Settings"
-          component={Settings}
+          name="Admins"
+          component={AdminStackScreen}
           options={{
-            title: 'Settings', tabBarIcon: ({ color, size }) => (
-              <Image source={SettingsIcon} style={{ tintColor: color, width: size, height: size }} />
+            title: 'Admins',
+            tabBarIcon: ({ color, size }) => (
+              <Image source={AdminIcon} style={{ tintColor: color, width: size, height: size }} />
             ),
             headerStyle: {
               backgroundColor: 'rgba(8,34,65,1)',
             },
             headerTintColor: '#ffff',
             headerLeft: () => (
-              <Image source={Logo} style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }} /> 
+              <Image source={Logo} style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }} />
             ),
-
           }}
         />
 
@@ -103,15 +159,16 @@ const TabNavigator = () => {
           name="Families"
           component={FamiliesStackScreen}
           options={{
-            title: 'Family', tabBarIcon: ({ color, size }) => (
+            title: 'Family',
+            tabBarIcon: ({ color, size }) => (
               <Image source={FamilyIcon} style={{ tintColor: color, width: size, height: size }} />
             ),
             headerStyle: {
-              backgroundColor: 'rgba(8,34,65,1)', // Change the header background color here
+              backgroundColor: 'rgba(8,34,65,1)',
             },
             headerTintColor: '#ffff',
             headerLeft: () => (
-              <Image source={Logo} style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }} /> 
+              <Image source={Logo} style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }} />
             ),
           }}
         />
@@ -120,15 +177,16 @@ const TabNavigator = () => {
           name="Order"
           component={OrderStackScreen}
           options={{
-            title: 'Order', tabBarIcon: ({ color, size }) => (
+            title: 'Order',
+            tabBarIcon: ({ color, size }) => (
               <Image source={OrderIcon} style={{ tintColor: color, width: size, height: size }} />
             ),
             headerStyle: {
-              backgroundColor: 'rgba(8,34,65,1)', // Change the header background color here
+              backgroundColor: 'rgba(8,34,65,1)',
             },
             headerTintColor: '#ffff',
             headerLeft: () => (
-              <Image source={Logo} style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }} /> 
+              <Image source={Logo} style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }} />
             ),
           }}
         />
@@ -137,15 +195,16 @@ const TabNavigator = () => {
           name="Inventory"
           component={Inventory}
           options={{
-            title: 'Inventory', tabBarIcon: ({ color, size }) => (
+            title: 'Inventory',
+            tabBarIcon: ({ color, size }) => (
               <Image source={InventoryIcon} style={{ tintColor: color, width: size, height: size }} />
             ),
             headerStyle: {
-              backgroundColor: 'rgba(8,34,65,1)', // Change the header background color here
+              backgroundColor: 'rgba(8,34,65,1)',
             },
             headerTintColor: '#ffff',
             headerLeft: () => (
-              <Image source={Logo} style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }} /> 
+              <Image source={Logo} style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }} />
             ),
           }}
         />
@@ -154,22 +213,32 @@ const TabNavigator = () => {
           name="Reports"
           component={Reports}
           options={{
-            title: 'Reports', title: 'Reports', tabBarIcon: ({ color, size }) => (
+            title: 'Reports',
+            tabBarIcon: ({ color, size }) => (
               <Image source={ReportsIcon} style={{ tintColor: color, width: size, height: size }} />
             ),
             headerStyle: {
-              backgroundColor: 'rgba(8,34,65,1)', // Change the header background color here
+              backgroundColor: 'rgba(8,34,65,1)',
             },
             headerTintColor: '#ffff',
             headerLeft: () => (
-              <Image source={Logo} style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }} /> 
+              <Image source={Logo} style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }} />
             ),
           }}
         />
 
+        {/* Add the PasswordProtectedScreen */}
+        <Tab.Screen
+          name="PasswordProtectedScreen"
+          component={PasswordProtectedScreen}
+          options={{
+            tabBarButton: () => null, // Hide the tab button for this screen
+            tabBarVisible: false, // Hide the tab bar when navigating to this screen
+          }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );
-};
+}
 
 export default TabNavigator;
