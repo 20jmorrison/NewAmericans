@@ -46,13 +46,13 @@ const Admins = () => {
     try {
       // Remove the admin
       await removeAdmin(selectedAdmin);
-      
+
       // Fetch updated admin data
       const updatedAdmins = await fetchAdminData();
-      
+
       // Update the admin list in the state
       setAdmins(updatedAdmins);
-      
+
       // Close the edit admin modal
       setEditAdminModalVisible(false);
     } catch (error) {
@@ -60,7 +60,7 @@ const Admins = () => {
       // Handle error, show message to user, etc.
     }
   };
-  
+
 
   const handleEditAdmin = () => {
     // Construct the updated admin object with edited values
@@ -98,7 +98,7 @@ const Admins = () => {
     console.log('New Admin: ', newAdmin);
     postNewAdmin(newAdmin);
     setAdmins((prevAdmins) => [...prevAdmins, newAdmin]);
-    const updatedAdmins = await fetchAdminData();      
+    const updatedAdmins = await fetchAdminData();
     setAdmins(updatedAdmins);
     setAdminModalVisible(false);
     setNewFirstName('');
@@ -123,32 +123,43 @@ const Admins = () => {
         >
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
-              <Text>New Admin</Text>
+              <Text style={styles.modalHeaderText}>New Admin</Text>
               <TextInput
                 style={styles.input}
+                placeholder="First Name"
+                placeholderTextColor='lightgrey'
                 value={newFirstName}
                 onChangeText={(text) => setNewFirstName(text)}
               />
               <TextInput
                 style={styles.input}
                 placeholder="Last Name"
+                placeholderTextColor='lightgrey'
                 value={newLastName}
                 onChangeText={(text) => setNewLastName(text)}
               />
               <TextInput
                 style={styles.input}
                 placeholder="Email"
+                placeholderTextColor='lightgrey'
                 value={newEmail}
                 onChangeText={(text) => setNewEmail(text)}
               />
               <TextInput
                 style={styles.input}
                 placeholder="Password"
+                keyboardType="numeric"
+                placeholderTextColor='lightgrey'
                 value={newPassword}
                 onChangeText={(text) => setNewPassword(text)}
               />
-              <Button title="Add Admin" onPress={handleAddAdmin} color='black' />
-              <Button title="Close" onPress={() => setAdminModalVisible(false)} color='#FA4616' />
+              <TouchableOpacity style={styles.button} onPress={handleAddAdmin}>
+                <Text style={styles.buttonText}>Add Admin</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.closeButton} onPress={() => setAdminModalVisible(false)}>
+                <Text style={styles.buttonText}>Close</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </Modal>
@@ -162,7 +173,7 @@ const Admins = () => {
         >
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
-              <Text>Edit Admin</Text>
+              <Text style={styles.modalHeaderText}>Edit Admin</Text>
               <TextInput
                 style={styles.input}
                 placeholder="First Name"
@@ -184,12 +195,19 @@ const Admins = () => {
               <TextInput
                 style={styles.input}
                 placeholder="Password"
+                keyboardType="numeric"
                 defaultValue={selectedAdmin && selectedAdmin.password ? selectedAdmin.password.toString() : ''}
                 onChangeText={(text) => setEditedPassword(text)}
               />
-              <Button title="Save" onPress={handleEditAdmin} color='black' />
-              <Button title="Remove Admin" onPress={handleRemoveAdmin} color='#FA4616' />
-              <Button title="Close" onPress={() => setEditAdminModalVisible(false)} color='black' />
+              <TouchableOpacity style={styles.button} onPress={handleEditAdmin}>
+                <Text style={styles.buttonText}>Save</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.closeButton} onPress={handleRemoveAdmin}>
+                <Text style={styles.buttonText}>Remove Admin</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.closeButton} onPress={() => setEditAdminModalVisible(false)}>
+                <Text style={styles.buttonText}>Close</Text>
+              </TouchableOpacity>
 
             </View>
           </View>
@@ -198,8 +216,8 @@ const Admins = () => {
         {admins.map((admin, index) => (
           <View key={index} style={styles.adminContainer}>
             <View style={styles.adminTextContainer}>
-              <Text>{admin.AdminID} {admin.last_name}</Text>
-              <Text>{admin.email}</Text>
+              <Text style={styles.textContainerBold}>{admin.first_name} {admin.last_name}</Text>
+              <Text style={styles.textContainer}>{admin.email}</Text>
             </View>
             <TouchableOpacity onPress={() => openEditAdmin(admin)} style={styles.editIconContainer}>
               <Image source={edit} style={styles.editIcon} />
@@ -209,7 +227,7 @@ const Admins = () => {
         ))}
 
       </ScrollView>
-    </View>
+    </View >
   );
 };
 
@@ -217,23 +235,46 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 15,
+    width: '100%',
   },
   scrollContainer: {
     flexGrow: 1,
     paddingBottom: 100,
+    width: '100%',
+    alignItems: 'center',
+  },
+  modalHeaderText: {
+    textAlign: 'center',
+    fontSize: 18,
+    marginBottom: 20,
+    fontFamily: 'Nunito-Black',
   },
   adminContainer: {
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: 'lightgray',
-    padding: 10,
+    marginTop: 20,
     flexDirection: 'row',
     alignItems: 'center',
+    width: '95%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 7,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 2,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
 
   },
   adminTextContainer: {
     width: '80%',
     flexDirection: 'column',
+  },
+  textContainer: {
+    fontFamily: 'Nunito-Bold',
+  },
+  textContainerBold: {
+    fontFamily: 'Nunito-Black',
   },
   editIconContainer: {
     width: '20%',
@@ -245,23 +286,29 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     marginBottom: 10,
+    width: '100%',
+
   },
   buttonText: {
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'Nunito-Bold',
+
   },
   closeButton: {
-    marginTop: 20,
     backgroundColor: '#FA4616',
     padding: 10,
     borderRadius: 5,
-    alignSelf: 'center',
+    marginBottom: 10,
+    width: '100%',
   },
   closeButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'Nunito-Bold',
+
   },
   modalContainer: {
     flex: 1,
@@ -275,6 +322,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: '80%',
     maxHeight: '80%',
+
   },
   input: {
     borderWidth: 1,

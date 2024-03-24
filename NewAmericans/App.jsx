@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Superuser from './Screens/Admins';
 import Families from './Screens/Families';
 import Order from './Screens/Order';
+import Admins from './Screens/Admins'
 import Inventory from './Screens/Inventory';
 import Reports from './Screens/Reports';
 import StudentOrders from './Screens/StudentOrders';
@@ -41,6 +42,24 @@ function OrderStackScreen() {
         options={{ headerTitle: 'Products' }}
       />
     </OrderStack.Navigator>
+  );
+}
+
+const AdminStack = createNativeStackNavigator();
+function AdminStackScreen() {
+  return (
+    <AdminStack.Navigator>
+      <AdminStack.Screen
+        name="AdminsScreen"
+        component={Admins}
+        options={{ headerShown: false }}
+      />
+      <AdminStack.Screen
+        name="PasswordProtectedScreen"
+        component={PasswordProtectedScreen}
+        options={{ headerShown: false }}
+      />
+    </AdminStack.Navigator>
   );
 }
 
@@ -120,7 +139,7 @@ const TabNavigator = () => {
       >
         <Tab.Screen
           name="Admins"
-          component={Superuser}
+          component={AdminStackScreen}
           options={{
             title: 'Admins',
             tabBarIcon: ({ color, size }) => (
