@@ -1,4 +1,4 @@
-const fetchAdminData = async () => {
+const fetchFamilyData = async () => {
     try {
       const response = await fetch('http://50.187.63.220:3000/FamilyData');
       if (response.ok) {
@@ -14,4 +14,4 @@ const fetchAdminData = async () => {
     }
   };
   
-  export { fetchAdminData };
+  export { fetchFamilyData };

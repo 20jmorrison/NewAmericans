@@ -1,66 +1,84 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Settings from './Screens/Settings';
 import Families from './Screens/Families';
 import Order from './Screens/Order';
 import Inventory from './Screens/Inventory';
 import Reports from './Screens/Reports';
-import StudentOrders from './Screens/StudentOrders';
-import ProductsOrder from './Screens/ProductsOrder';
-import StudentOrdersItems from './Screens/StudentOrdersItems';
 import FilteredReports from './Screens/FilteredReports';
-import { Image } from 'react-native'; 
+import { Image } from 'react-native';
 import OrderIcon from './assets/order.png';
 import InventoryIcon from './assets/inventory.png';
 import FamilyIcon from './assets/family.png';
 import SettingsIcon from './assets/settings.png';
+import ProductsOrder from './Screens/ProductsOrder';
+import StudentOrders from './Screens/StudentOrders';
+import StudentOrdersItems from './Screens/StudentOrdersItems';
 import ReportsIcon from './assets/reports.png';
-import Logo from './assets/snhucfna.png'
+import Logo from './assets/snhucfna.png';
 
 const OrderStack = createNativeStackNavigator();
-function OrderStackScreen(){
+function OrderStackScreen() {
   return (
     <OrderStack.Navigator>
-        <OrderStack.Screen 
-        name="OrderList" 
+      <OrderStack.Screen
+        name="OrderList"
         component={Order}
         options={{ headerShown: false }}
-       /> 
-        <OrderStack.Screen 
-        name="ProductsOrder" 
+      />
+      <OrderStack.Screen
+        name="ProductsOrder"
         component={ProductsOrder}
         options={{ headerTitle: 'Products' }}
-       /> 
+      />
     </OrderStack.Navigator>
   );
 }
 
-const Stack = createNativeStackNavigator();
-function FamiliesStackScreen(){
+const ReportsStack = createNativeStackNavigator();
+function ReportsStackScreen() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen 
-        name="FamilyList" 
-        component={Families} 
+    <ReportsStack.Navigator>
+      <ReportsStack.Screen
+        name="Reports"
+        component={Reports}
         options={{ headerShown: false }}
       />
-      <Stack.Screen 
-        name="StudentOrders" 
-        component={StudentOrders}
-        options={{ headerTitle: 'Student Orders' }} 
-      /> 
-        <Stack.Screen 
-        name="StudentOrdersItems" 
-        component={StudentOrdersItems}
-        options={{ headerTitle: 'Order Items' }} 
-      />
-        <Stack.Screen 
-        name="FilteredReports" 
+      <ReportsStack.Screen
+        name="FilteredReports"
         component={FilteredReports}
-        options={{ headerTitle: 'Filtered Reports'}} 
-      />  
+        options={{ headerTitle: 'Filtered Reports' }}
+      />
+    </ReportsStack.Navigator>
+  );
+}
+
+const Stack = createNativeStackNavigator();
+function FamiliesStackScreen() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="FamilyList"
+        component={Families}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="StudentOrders"
+        component={StudentOrders}
+        options={{ headerTitle: 'Student Orders' }}
+      />
+      <Stack.Screen
+        name="StudentOrdersItems"
+        component={StudentOrdersItems}
+        options={{ headerTitle: 'Order Items' }}
+      />
+      <Stack.Screen
+        name="FilteredReports"
+        component={FilteredReports}
+        options={{ headerTitle: 'Filtered Reports' }}
+      />
     </Stack.Navigator>
   );
 }
@@ -81,26 +99,29 @@ const TabNavigator = () => {
             position: 'absolute',
             borderTopWidth: 0,
           },
-          
         })}
       >
-
-
         <Tab.Screen
           name="Settings"
           component={Settings}
           options={{
-            title: 'Settings', tabBarIcon: ({ color, size }) => (
-              <Image source={SettingsIcon} style={{ tintColor: color, width: size, height: size }} />
+            title: 'Settings',
+            tabBarIcon: ({ color, size }) => (
+              <Image
+                source={SettingsIcon}
+                style={{ tintColor: color, width: size, height: size }}
+              />
             ),
             headerStyle: {
               backgroundColor: 'rgba(8,34,65,1)',
             },
             headerTintColor: '#ffff',
             headerLeft: () => (
-              <Image source={Logo} style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }} /> 
+              <Image
+                source={Logo}
+                style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }}
+              />
             ),
-
           }}
         />
 
@@ -108,15 +129,22 @@ const TabNavigator = () => {
           name="Families"
           component={FamiliesStackScreen}
           options={{
-            title: 'Family', tabBarIcon: ({ color, size }) => (
-              <Image source={FamilyIcon} style={{ tintColor: color, width: size, height: size }} />
+            title: 'Family',
+            tabBarIcon: ({ color, size }) => (
+              <Image
+                source={FamilyIcon}
+                style={{ tintColor: color, width: size, height: size }}
+              />
             ),
             headerStyle: {
-              backgroundColor: 'rgba(8,34,65,1)', // Change the header background color here
+              backgroundColor: 'rgba(8,34,65,1)',
             },
             headerTintColor: '#ffff',
             headerLeft: () => (
-              <Image source={Logo} style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }} /> 
+              <Image
+                source={Logo}
+                style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }}
+              />
             ),
           }}
         />
@@ -125,15 +153,22 @@ const TabNavigator = () => {
           name="Order"
           component={OrderStackScreen}
           options={{
-            title: 'Order', tabBarIcon: ({ color, size }) => (
-              <Image source={OrderIcon} style={{ tintColor: color, width: size, height: size }} />
+            title: 'Order',
+            tabBarIcon: ({ color, size }) => (
+              <Image
+                source={OrderIcon}
+                style={{ tintColor: color, width: size, height: size }}
+              />
             ),
             headerStyle: {
-              backgroundColor: 'rgba(8,34,65,1)', // Change the header background color here
+              backgroundColor: 'rgba(8,34,65,1)',
             },
             headerTintColor: '#ffff',
             headerLeft: () => (
-              <Image source={Logo} style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }} /> 
+              <Image
+                source={Logo}
+                style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }}
+              />
             ),
           }}
         />
@@ -142,36 +177,49 @@ const TabNavigator = () => {
           name="Inventory"
           component={Inventory}
           options={{
-            title: 'Inventory', tabBarIcon: ({ color, size }) => (
-              <Image source={InventoryIcon} style={{ tintColor: color, width: size, height: size }} />
+            title: 'Inventory',
+            tabBarIcon: ({ color, size }) => (
+              <Image
+                source={InventoryIcon}
+                style={{ tintColor: color, width: size, height: size }}
+              />
             ),
             headerStyle: {
-              backgroundColor: 'rgba(8,34,65,1)', // Change the header background color here
+              backgroundColor: 'rgba(8,34,65,1)',
             },
             headerTintColor: '#ffff',
             headerLeft: () => (
-              <Image source={Logo} style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }} /> 
+              <Image
+                source={Logo}
+                style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }}
+              />
             ),
           }}
         />
 
         <Tab.Screen
           name="Reports"
-          component={Reports}
+          component={ReportsStackScreen}
           options={{
-            title: 'Reports', title: 'Reports', tabBarIcon: ({ color, size }) => (
-              <Image source={ReportsIcon} style={{ tintColor: color, width: size, height: size }} />
+            title: 'Reports',
+            tabBarIcon: ({ color, size }) => (
+              <Image
+                source={ReportsIcon}
+                style={{ tintColor: color, width: size, height: size }}
+              />
             ),
             headerStyle: {
-              backgroundColor: 'rgba(8,34,65,1)', // Change the header background color here
+              backgroundColor: 'rgba(8,34,65,1)',
             },
             headerTintColor: '#ffff',
             headerLeft: () => (
-              <Image source={Logo} style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }} /> 
+              <Image
+                source={Logo}
+                style={{ width: '60%', height: 30, marginLeft: 10, marginBottom: 15 }}
+              />
             ),
           }}
         />
-
       </Tab.Navigator>
     </NavigationContainer>
   );

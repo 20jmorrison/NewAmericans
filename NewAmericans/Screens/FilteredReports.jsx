@@ -24,7 +24,7 @@ const FilteredReports = ({ route }) => {
           </View>
         ))}
       </View>
-      <Button title="Export to CSV" onPress={exportToCSV} />
+      <Button title="Export to CSV" />
     </View>
   );
 };

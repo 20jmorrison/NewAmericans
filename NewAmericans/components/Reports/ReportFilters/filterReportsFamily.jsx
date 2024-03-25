@@ -1,4 +1,4 @@
-export const filterReportDataByUserId = (reportData, familyID) => {
+export const filterReportDataByFamilyID= (reportData, familyID) => {
     return reportData.filter(item => {
       return item.FamilyID === familyID;
     });

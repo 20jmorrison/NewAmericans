@@ -64,6 +64,20 @@ app.get('/AdminData', (req,res)=>{
   });
 });
 
+app.get('/FamilyData', (req,res)=>{
+  const query = 'SELECT * FROM Family';
+  connection.query(query,(error, familyData, fields)=>{
+    if(error){
+      console.error('Error Fetching Admin Data: ', error)
+      res.status(500).json({error: 'Interal Server Error'})
+    }
+    console.log('Fetched Category Data: ', familyData);
+    res.json(adminData);
+  });
+});
+
+
+
 //Fetching Item Data 
 app.get('/ItemData', (req,res)=>{
   const query = 'SELECT * FROM Products';
