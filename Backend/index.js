@@ -64,6 +64,20 @@ app.get('/AdminData', (req,res)=>{
   });
 });
 
+app.get('/FamilyData', (req,res)=>{
+  const query = 'SELECT * FROM Family';
+  connection.query(query,(error, familyData, fields)=>{
+    if(error){
+      console.error('Error Fetching Admin Data: ', error)
+      res.status(500).json({error: 'Interal Server Error'})
+    }
+    console.log('Fetched Category Data: ', familyData);
+    res.json(adminData);
+  });
+});
+
+
+
 //Fetching Item Data 
 app.get('/ItemData', (req,res)=>{
   const query = 'SELECT * FROM Products';
@@ -124,24 +138,29 @@ app.get('/TransactionItemData', (req, res)=>{
 
 app.get('/ReportData', (req, res) => {
   const query = `
-    SELECT
-        S.first_name AS Student_FirstName,
-        S.last_name AS Student_LastName,
-        P.ProductName,
-        TI.Quantity,
-        A.first_name AS Admin_FirstName,
-        A.last_name AS Admin_LastName,
-        T.DateCreated
-    FROM
-        Transactions T
-    LEFT JOIN
-        Students S ON T.StudentID = S.StudentID
-    LEFT JOIN
-        Admin A ON T.AdminID = A.AdminID
-    LEFT JOIN
-        TransactionItems TI ON T.TransactionID = TI.TransactionID
-    LEFT JOIN
-        Products P ON TI.ProductID = P.ProductID
+  SELECT
+    T.TransactionID,
+    S.StudentID,
+    S.first_name AS Student_FirstName,
+    S.last_name AS Student_LastName,
+    A.AdminID,
+    A.first_name AS Admin_FirstName,
+    A.last_name AS Admin_LastName,
+    P.ProductID,
+    P.ProductName,
+    TI.TransactionID,
+    TI.Quantity,
+    T.DateCreated
+  FROM
+    Transactions T
+  LEFT JOIN
+    Students S ON T.StudentID = S.StudentID
+  LEFT JOIN
+    Admin A ON T.AdminID = A.AdminID
+  LEFT JOIN
+    TransactionItems TI ON T.TransactionID = TI.TransactionID
+  LEFT JOIN
+    Products P ON TI.ProductID = P.ProductID;
   `;
   
   connection.query(query, (error, reportData, fields) => {

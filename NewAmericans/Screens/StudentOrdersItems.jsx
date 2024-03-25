@@ -14,6 +14,7 @@ const StudentOrdersItems = ({ route }) => {
 
   // Combine student's first and last name with the formatted date
   const headerText = `${student.first_name} ${student.last_name}: ${formatDate(transaction.DateCreated)}`;
+  console.log(transaction)
 
   return (
     <View style={styles.container}>
