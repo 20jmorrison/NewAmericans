@@ -11,7 +11,7 @@ import StudentOrders from './Screens/StudentOrders';
 import ProductsOrder from './Screens/ProductsOrder';
 import StudentOrdersItems from './Screens/StudentOrdersItems';
 import FilteredReports from './Screens/FilteredReports';
-import { Image } from 'react-native'; // Import Image component from react-native
+import { Image } from 'react-native'; 
 import OrderIcon from './assets/order.png';
 import InventoryIcon from './assets/inventory.png';
 import FamilyIcon from './assets/family.png';

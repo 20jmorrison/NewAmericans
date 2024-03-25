@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Button, } from 'react-native';
 
 const FilteredReports = ({ route }) => {
-  const { filteredData} = route.params;
+  const { filteredData } = route.params;
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -10,6 +10,7 @@ const FilteredReports = ({ route }) => {
     const formattedDate = date.toLocaleDateString(undefined, options);
     return formattedDate;
   };
+
 
   return (
     <View style={styles.container}>
@@ -23,6 +24,7 @@ const FilteredReports = ({ route }) => {
           </View>
         ))}
       </View>
+      <Button title="Export to CSV" onPress={exportToCSV} />
     </View>
   );
 };

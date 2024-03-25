@@ -54,7 +54,7 @@ const Reports = () => {
     try {
       const filteredData = filterReportDataByUserId(reportData, selectedStudent);
       console.log('Filtered data by user:', filteredData);
-      navigation.navigate('FilteredReports', { filteredData});
+      navigation.navigate('FilteredReports', {filteredData});
     } catch (error) {
       console.error('Error filtering data by user:', error);
     }
