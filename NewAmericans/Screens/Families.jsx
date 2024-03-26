@@ -39,6 +39,7 @@ const Families = () => {
     navigation.navigate('StudentOrders', { student })
   };
 
+  // need to connect to backend
   const handleAddStudent = () => {
     const newStudent = {
       id: students.length + 1,
@@ -90,21 +91,35 @@ const Families = () => {
         {/* Modal content */}
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.text}>Add New Student</Text>
+            <Text style={styles.modalTitle}>Add New Student</Text>
             <TextInput
               style={styles.input}
               placeholder="First Name"
+              placeholderTextColor="#808080"
               value={newStudentFirstName}
               onChangeText={(text) => setNewStudentFirstName(text)}
             />
             <TextInput
               style={styles.input}
               placeholder="Last Name"
+              placeholderTextColor="#808080"
               value={newStudentLastName}
               onChangeText={(text) => setNewStudentLastName(text)}
             />
-            <Button title="Add Student" onPress={handleAddStudent} color='black'/>
-            <Button title="Close" onPress={() => setIsAddStudentModalVisible(false)} color='#FA4616' />
+            <View style={styles.inputRow}>
+              <TouchableOpacity
+                style={[styles.saveButton, styles.buttonLeft]}
+                onPress={handleAddStudent}
+              >
+                <Text style={styles.saveButtonText}>Add Student</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.closeButton, styles.buttonRight]}
+                onPress={() => setIsAddStudentModalVisible(false)}
+              >
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -125,7 +140,12 @@ const Families = () => {
             <TouchableOpacity onPress={() => { setSortBy('lastName'); sortStudents(); }}>
               <Text style={styles.dropdownOption}>Sort by Last Name</Text>
             </TouchableOpacity>
-            <Button title="Cancel" onPress={() => setIsSortModalVisible(false)} color='#FA4616' />
+            <TouchableOpacity
+                style={[styles.closeButton, styles.buttonRight]}
+                onPress={() => setIsSortModalVisible(false)}
+              >
+                <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -146,7 +166,7 @@ const Families = () => {
       {/* ScrollView for displaying students */}
       <ScrollView>
         <View style={styles.buttonContainer}>
-          <Button title="Add Student" onPress={() => setIsAddStudentModalVisible(true)} color='black' />
+          <Button title="Add Student" onPress={() => setIsAddStudentModalVisible(true)} color='black'/>
           <Button title="Sort" onPress={() => setIsSortModalVisible(true)} color='black'/>
         </View>
         {/* Mapping over filtered students and displaying them */}
@@ -177,6 +197,32 @@ const styles = StyleSheet.create({
     backgroundColor: '#F3D014',
 
   },
+  closeButton: {
+    marginTop: 20,
+    backgroundColor: '#FA4616',
+    padding: 10,
+    borderRadius: 5,
+    alignSelf: 'center',
+    marginRight: 'auto',
+  },
+  closeButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  saveButton: {
+    marginTop: 20,
+    backgroundColor: '#F3D014',
+    padding: 10,
+    borderRadius: 5,
+    alignSelf: 'center',
+    marginLeft: 'auto',
+  },
+  saveButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
   searchBarContainer: {
     padding: 10,
     backgroundColor: '#fff',
@@ -203,7 +249,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
-    alignItems: 'center',
+    width: '80%',
+    maxHeight: '80%',
   },
   input: {
     borderWidth: 1,
@@ -217,7 +264,7 @@ const styles = StyleSheet.create({
   dropdownOption: {
     fontSize: 20,
     color: 'black',
-    marginBottom: 10,
+    marginBottom: 20,
   },
   separator: {
     borderBottomWidth: 1,
@@ -239,6 +286,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
     alignItems: 'center', 
   },
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  buttonLeft: {
+    marginRight: 'auto',
+  },
+  buttonRight: {
+    marginLeft: 'auto',
+  },  
 });
 
 export default Families;
