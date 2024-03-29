@@ -12,7 +12,8 @@ import Reports from './Screens/Reports';
 import StudentOrders from './Screens/StudentOrders';
 import ProductsOrder from './Screens/ProductsOrder';
 import StudentOrdersItems from './Screens/StudentOrdersItems';
-import PasswordProtectedScreen from './Screens/PasswordProtectedScreen'; // Import the screen
+import PasswordProtectedScreen from './Screens/PasswordProtectedScreen';
+import CartScreen from './Screens/CartScreen';
 import { Image } from 'react-native';
 import OrderIcon from './assets/order.png';
 import InventoryIcon from './assets/inventory.png';
@@ -22,11 +23,10 @@ import ReportsIcon from './assets/reports.png';
 import Logo from './assets/snhucfna.png';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import { CartProvider } from './components/Cart/CartProvider';
+
 
 SplashScreen.preventAutoHideAsync();
-
-
-
 
 const OrderStack = createNativeStackNavigator();
 function OrderStackScreen() {
@@ -42,6 +42,12 @@ function OrderStackScreen() {
         component={ProductsOrder}
         options={{ headerTitle: 'Products' }}
       />
+      <OrderStack.Screen
+        name= "CartScreen"
+        component={CartScreen}
+        options={{headerTitle: 'Cart'}}  
+      />
+
     </OrderStack.Navigator>
   );
 }
@@ -131,29 +137,30 @@ const TabNavigator = () => {
     return null;
   }
   return (
-    <NavigationContainer>
-      <Tab.Navigator
-        onLayout={onLayoutRootView}
-        screenOptions={({ route }) => ({
-          tabBarActiveTintColor: '#F3D014',
-          tabBarStyle: {
-            height: 90,
-            paddingHorizontal: 5,
-            paddingTop: 0,
-            backgroundColor: 'rgba(8,34,65,1)',
-            position: 'absolute',
-            borderTopWidth: 0,
-          },
-          tabBarLabelStyle: {
-            fontFamily: 'Nunito-Bold',
-            fontSize: 12,
-          },
-          headerTitleStyle: {
-            fontFamily: 'Nunito-Bold',
-            fontSize: 18,
-          }
-        })}
-      >
+    <CartProvider>
+      <NavigationContainer>
+        <Tab.Navigator
+          onLayout={onLayoutRootView}
+          screenOptions={({ route }) => ({
+            tabBarActiveTintColor: '#F3D014',
+            tabBarStyle: {
+              height: 90,
+              paddingHorizontal: 5,
+              paddingTop: 0,
+              backgroundColor: 'rgba(8,34,65,1)',
+              position: 'absolute',
+              borderTopWidth: 0,
+            },
+            tabBarLabelStyle: {
+              fontFamily: 'Nunito-Bold',
+              fontSize: 12,
+            },
+            headerTitleStyle: {
+              fontFamily: 'Nunito-Bold',
+              fontSize: 18,
+            }
+          })}
+       >
         <Tab.Screen
           name="Admins"
           component={AdminStackScreen}
@@ -252,6 +259,7 @@ const TabNavigator = () => {
         />
       </Tab.Navigator>
     </NavigationContainer>
+  </CartProvider>
   );
 }
 

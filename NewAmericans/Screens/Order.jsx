@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { fetchCategories } from '../components/Categories/FetchingCategories';
+import { useCart } from '../components/Cart/CartProvider';
 
 const categoryImages = {
   'View All': require('../assets/cart.png'),
