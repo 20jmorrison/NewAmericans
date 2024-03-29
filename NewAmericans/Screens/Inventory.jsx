@@ -2,6 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, FlatList, ScrollView, TextInput } from 'react-native';
 import { fetchItems } from '../components/Categories/FetchingItems';
 import { fetchCategories } from '../components/Categories/FetchingCategories';
+import { postNewProduct } from '../components/Products/PostingProduct';
+import { putProduct } from '../components/Products/PuttingProduct';
+import { deleteProduct } from '../components/Products/DeleteProduct';
+
+
 
 
 
@@ -17,6 +22,13 @@ const Inventory = () => {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [editedItem, setEditedItem] = useState({});
+  const [newItemName, setNewItemName] = useState('');
+  const [newQuantity, setNewQuantity] = useState('');
+  const [newCategory, setNewCategory] = useState('');
+  const [editedProductName, setEditedProductName] = useState('');
+  const [editedQuantity, setEditedQuantity] = useState('');
+  const [editedCategory, setEditedCategory] = useState('');
+  const [refreshDataTrigger, setRefreshDataTrigger] = useState(false);
   //const [searchCategoryQuery, setSearchCategoryQuery] = useState('');
   //const [filteredCategories, setFilteredCategories] = useState([]);
 
@@ -31,10 +43,12 @@ const Inventory = () => {
       } catch (error) {
         console.error('Error fetching items:', error);
       }
-    };
+    }; 
 
     fetchItemData();
-  }, []);
+  }, [refreshDataTrigger]);
+
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,17 +68,74 @@ const Inventory = () => {
 
   const handleEdit = (item) => {
     setEditedItem(item);
+    setEditedProductName(item.ProductName);
+    setEditedQuantity(String(item.ProductQuantity));
+    const category = allCategories.find(cat => cat.CategoryID === item.CategoryID);
+    setEditedCategory(category ? category.category_name : null); 
     setEditModalVisible(true);
   };
 
-  const handleSaveChanges = () => {
-    // save edited item changes
-    setEditModalVisible(false);
+  const getCategoryIDByName = (categoryName) => {
+    const category = allCategories.find(cat => cat.category_name === categoryName);
+    return category ? category.CategoryID : null;
   };
 
-  const handleAddItem = () => {
-    // save new item
+  const handleSaveChanges = async () => {
+    //implement error checking for categories or option to add new category
+    const updatedCategoryID = getCategoryIDByName(editedCategory);
+    const updatedProduct = {
+      ...editedItem,
+      ProductName: editedProductName !== '' ? editedProductName : editedItem.ProductName,
+      ProductQuantity: editedQuantity !== '' ? editedQuantity : editedItem.ProductQuantity,
+      CategoryID: updatedCategoryID !== '' ? updatedCategoryID : editedItem.CategoryID,
+    };
+
+    putProduct(updatedProduct);
+    const updatedInventory = await fetchItems();
+    setInventory(updatedInventory);
+    setEditModalVisible(false);
+
+    setRefreshDataTrigger(t => !t);
+    setEditedProductName('');
+    setEditedQuantity('');
+    setEditedCategory('');
+  };
+
+
+
+  const handleAddItem = async () => {
+    //implement error checking for categories or option to add new category
+    const newCategoryID = getCategoryIDByName(newCategory);
+
+    const newItem = {
+      ProductName: newItemName,
+      ProductQuantity: newQuantity,
+      CategoryID: newCategoryID,
+    };
+    console.log('New Item: ', newItem);
+    postNewProduct(newItem);
+    const updatedInventory = await fetchItems();
+    setInventory(updatedInventory);
     setAddModalVisible(false);
+    setRefreshDataTrigger(t => !t);
+    setNewItemName('');
+    setNewQuantity('');
+    setNewCategory('');
+  }
+
+  const handleRemoveItem = async () => {
+    try {
+      // Remove the item
+      await deleteProduct(editedItem);
+
+      const updatedInventory = await fetchItems();
+      setInventory(updatedInventory);
+
+      setEditModalVisible(false);
+
+    } catch (error) {
+      console.error('Error removing item:', error);
+    }
   };
 
   const filterByCategory = (category) => {
@@ -206,9 +277,7 @@ const Inventory = () => {
                 <Text style={styles.modalTitle}>Name: </Text>
                 <TextInput
                   style={styles.input}
-                  onChangeText={(text) =>
-                    setEditedItem({ ...editedItem, ProductName: text })
-                  }
+                  onChangeText={(text) => setNewItemName(text)}
                   placeholder="Product Name"
                   placeholderTextColor="#808080"
                 />
@@ -217,9 +286,7 @@ const Inventory = () => {
                 <Text style={styles.modalTitle}>Quantity: </Text>
                 <TextInput
                   style={styles.input}
-                  onChangeText={(text) =>
-                    setEditedItem({ ...editedItem, ProductQuantity: Number(text) })
-                  }
+                  onChangeText={(text) => setNewQuantity(text)}
                   placeholder="Quantity"
                   placeholderTextColor="#808080"
                   keyboardType="numeric"
@@ -230,22 +297,20 @@ const Inventory = () => {
                 <Text style={styles.modalTitle}>Category: </Text>
                 <TextInput
                   style={styles.input}
-                  onChangeText={(text) =>
-                    setEditedItem({ ...editedItem, CategoryID: text })
-                  }
+                  onChangeText={(text) => setNewCategory(text)}
                   placeholder="Category"
                   placeholderTextColor="#808080"
                 />
               </View>
               <View style={styles.inputRow}>
                 <TouchableOpacity
-                  style={[styles.saveButton, styles.buttonLeft]}
+                  style={[styles.saveButton, styles.buttonLeft, styles.halfButton]}
                   onPress={handleAddItem}
                 >
                   <Text style={styles.saveButtonText}>Add Item</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={[styles.closeButton, styles.buttonRight]}
+                  style={[styles.closeButton, styles.buttonRight, styles.halfButton]}
                   onPress={() => {
                     setEditedItem({ ProductName: '', ProductQuantity: '', CategoryID: '' });
                     setAddModalVisible(false)}}
@@ -270,10 +335,8 @@ const Inventory = () => {
                 <Text style={styles.modalTitle}>Name: </Text>
                 <TextInput
                   style={styles.input}
-                  value={editedItem.ProductName}
-                  onChangeText={(text) =>
-                    setEditedItem({ ...editedItem, ProductName: text })
-                  }
+                  value={editedProductName}
+                  onChangeText={(text) => setEditedProductName(text)}
                   placeholder="Name"
                 />
               </View>
@@ -281,10 +344,8 @@ const Inventory = () => {
                 <Text style={styles.modalTitle}>Quantity: </Text>
                 <TextInput
                   style={styles.input}
-                  value={String(editedItem.ProductQuantity)}
-                  onChangeText={(text) =>
-                    setEditedItem({ ...editedItem, ProductQuantity: Number(text) })
-                  }
+                  value={String(editedQuantity)}
+                  onChangeText={(text) => setEditedQuantity(text)}
                   placeholder="Quantity"
                   keyboardType="numeric"
                 />
@@ -294,22 +355,24 @@ const Inventory = () => {
                 <Text style={styles.modalTitle}>Category: </Text>
                 <TextInput
                   style={styles.input}
-                  value={String(editedItem.CategoryID)}
-                  onChangeText={(text) =>
-                    setEditedItem({ ...editedItem, CategoryID: text })
-                  }
+                  value={String(editedCategory)}
+                  onChangeText={(text) => setEditedCategory(text)}
                   placeholder="CategoryID"
                 />
               </View>
+              <TouchableOpacity style={[styles.closeButton]} onPress={handleRemoveItem}>
+                <Text style={styles.closeButtonText}>Delete Item</Text>
+              </TouchableOpacity>
+             
               <View style={styles.inputRow}>
                 <TouchableOpacity
-                  style={[styles.saveButton, styles.buttonLeft]}
+                  style={[styles.saveButton, styles.buttonLeft, styles.halfButton]}
                   onPress={handleSaveChanges}
                 >
                   <Text style={styles.saveButtonText}>Save Changes</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={[styles.closeButton, styles.buttonRight]}
+                  style={[styles.closeButton, styles.buttonRight, styles.halfButton]}
                   onPress={() => setEditModalVisible(false)}
                 >
                   <Text style={styles.closeButtonText}>Close</Text>

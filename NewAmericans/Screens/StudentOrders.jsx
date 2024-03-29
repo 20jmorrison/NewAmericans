@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Button, TextInput, Modal } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { fetchTransactions } from '../components/Transactions/TransactionFetching';
+import { putStudent } from '../components/Students/PuttingStudent';
+import { deleteStudent } from '../components/Students/DeleteStudent';
+
 
 const StudentOrders = ({ route }) => {
-  const { student } = route.params;
+  const [student, setStudent] = useState(route.params.student);
+
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [editedFirstName, setEditedFirstName] = useState(student.first_name);
+  const [editedLastName, setEditedLastName] = useState(student.last_name);
   const [transactions, setTransactions] = useState([]);
   const navigation = useNavigation();
 
@@ -32,9 +39,88 @@ const StudentOrders = ({ route }) => {
     navigation.navigate('StudentOrdersItems', { student: student, transaction: transaction });
   };
 
+  const handleSaveChanges = async () => {
+    const updatedStudent = {
+      ...student,
+      first_name: editedFirstName !== '' ? editedFirstName : student.first_name,
+      last_name: editedLastName !== '' ? editedLastName : student.last_name,
+    };
+
+    putStudent(updatedStudent);
+    setStudent(updatedStudent);
+    setIsEditModalVisible(false);
+
+    setEditedFirstName(updatedStudent.first_name);
+    setEditedLastName(updatedStudent.last_name);
+  };
+
+  const handleDeleteStudent = async () => {
+    try {
+      await deleteStudent(student);
+      navigation.goBack();
+
+    } catch (error) {
+      console.error('Error removing student:', error);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>{student.first_name} {student.last_name}</Text>
+      <View style={styles.rowContainer}>
+        <Text style={styles.header}>{student.first_name} {student.last_name}</Text>
+        <TouchableOpacity style={styles.editButtonContainer} onPress={() => setIsEditModalVisible(true)}>
+          <Text style={styles.editButton}>Edit</Text>
+        </TouchableOpacity>
+      </View>
+      {/* Modal to edit student */}
+      <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isEditModalVisible}
+          onRequestClose={() => setIsEditModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <View style={styles.inputRow}>
+                <Text style={styles.modalTitle}>First Name: </Text>
+                <TextInput
+                  style={styles.input}
+                  value={editedFirstName}
+                  onChangeText={(text) => setEditedFirstName(text)}
+                  placeholder="First Name"
+                />
+              </View>
+              <View style={styles.inputRow}>
+                <Text style={styles.modalTitle}>Last Name: </Text>
+                <TextInput
+                  style={styles.input}
+                  value={editedLastName}
+                  onChangeText={(text) => setEditedLastName(text)}
+                  placeholder="Last Name"
+                />
+              </View>
+              <TouchableOpacity style={styles.closeButton} onPress={handleDeleteStudent}>
+                <Text style={styles.closeButtonText}>Delete Student</Text>
+              </TouchableOpacity>
+              <View style={styles.inputRow}>
+                <TouchableOpacity
+                  style={[styles.saveButton, styles.halfButton, styles.buttonLeft]}
+                  onPress={handleSaveChanges}
+                >
+                  <Text style={styles.saveButtonText}>Save Changes</Text>
+                </TouchableOpacity>
+                <View style={{ width: 10 }} />
+                <TouchableOpacity
+                  style={[styles.closeButton, styles.halfButton, styles.buttonRight]}
+                  onPress={() => setIsEditModalVisible(false)}
+                >
+                  <Text style={styles.closeButtonText}>Close</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
       {/* Render the fetched transactions */}
       {transactions.map(transaction => (
         <TouchableOpacity
@@ -57,11 +143,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
   },
+  rowContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
   header: {
     fontSize: 27,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
+    marginRight: 15,
   },
   dateContainer: {
     alignSelf: 'flex-start',
@@ -75,6 +168,88 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
   },
+  editButtonContainer: {
+    backgroundColor: '#F3D014',
+    padding: 8,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  editButton: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  closeButton: {
+    marginTop: 20,
+    backgroundColor: '#FA4616',
+    padding: 10,
+    borderRadius: 5,
+    alignSelf: 'center',
+    marginRight: 'auto',
+  },
+  closeButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  saveButton: {
+    marginTop: 20,
+    backgroundColor: '#F3D014',
+    padding: 10,
+    borderRadius: 5,
+    alignSelf: 'center',
+    marginLeft: 'auto',
+    marginRight: 20,
+  },
+  saveButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+    marginTop: 10,
+    width: '100%',
+    flex: 1,
+    marginLeft: 10,
+  },
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    maxHeight: '80%',
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  halfButton: {
+    flex: 0.5,
+    marginRight: 5,
+  },
+  buttonLeft: {
+    marginRight: 'auto',
+  },
+  buttonRight: {
+    marginLeft: 'auto',
+  },  
 });
 
 export default StudentOrders;
