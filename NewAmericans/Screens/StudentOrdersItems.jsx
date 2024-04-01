@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { fetchTransactionsWithDate } from '../components/Transactions/TransactionFetchingWIthDate';
 
 const StudentOrdersItems = ({ route }) => {
@@ -24,7 +24,7 @@ const StudentOrdersItems = ({ route }) => {
 
   // Function to format the date
   const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
@@ -33,13 +33,23 @@ const StudentOrdersItems = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>{headerText}</Text>
+      <View style={styles.centeredContainer}>
+        <Text style={styles.header}>{headerText}</Text>
+      </View>
       {/* Render the fetched transactions */}
-      {transactions.map(transaction => (
-        <Text key={transaction.TransactionID}>
-          Transaction ID: {transaction.TransactionID}, Amount: {transaction.Amount}
-        </Text>
-      ))}
+      <ScrollView style={styles.scrollView}>
+        {transactions.map((transaction, index) => (
+          <View key={index} style={styles.itemContainer}>
+            <View style={styles.transactionContainer}>
+              <Text style={styles.boldText}>Product: {transaction.ProductName}</Text>
+              <Text style={styles.transactionText}>Quantity: {transaction.Quantity}</Text>
+            </View>
+            <View style={styles.adminContainer}>
+              <Text style={styles.adminText}>Admin: {transaction.Admin_FirstName} {transaction.Admin_LastName}</Text>
+            </View>
+          </View>
+        ))}
+      </ScrollView>
     </View>
   );
 };
@@ -50,11 +60,44 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingTop: 20,
+    paddingHorizontal: 20,
+    backgroundColor: '#fff',
+  },
+  centeredContainer: {
+    alignItems: 'center',
   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
+    marginBottom: 20,
+  },
+  scrollView: {
+    width: '100%',
+  },
+  itemContainer: {
+    borderWidth: 2,
+    borderColor: '#F3D014',
+    padding: 10,
+    marginBottom: 10,
+    borderRadius: 10,
+  },
+  transactionContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 5,
+  },
+  adminContainer: {
+    marginTop: 10,
+  },
+  boldText: {
+    fontWeight: 'bold',
+  },
+  transactionText: {
+    marginLeft: 5,
+  },
+  adminText: {
+    fontWeight: 'bold',
   },
 });
 
