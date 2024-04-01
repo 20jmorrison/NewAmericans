@@ -1,6 +1,16 @@
 const fetchTransactionsWithDate = async (studentID, date) => {
     try {
-      const response = await fetch(`http://50.187.63.220:3000/TransactionDataWithDate?StudentID=${studentID}&DateCreated=${date}`);
+      // Format the date in the required format
+      const formattedDate = new Date(date);
+      const year = formattedDate.getFullYear();
+      const month = String(formattedDate.getMonth() + 1).padStart(2, '0');
+      const day = String(formattedDate.getDate()).padStart(2, '0');
+      const hours = String(formattedDate.getHours()).padStart(2, '0');
+      const minutes = String(formattedDate.getMinutes()).padStart(2, '0');
+      const seconds = String(formattedDate.getSeconds()).padStart(2, '0');
+      const formattedDateString = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  
+      const response = await fetch(`http://50.187.63.220:3000/TransactionDataWithDate?StudentID=${studentID}&DateCreated=${formattedDateString}`);
       if (response.ok) {
         const data = await response.json();
         return data || []; 
@@ -13,6 +23,6 @@ const fetchTransactionsWithDate = async (studentID, date) => {
       return [];
     }
   };
-  
+    
   export { fetchTransactionsWithDate };
   

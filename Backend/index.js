@@ -172,6 +172,41 @@ app.get('/ReportData', (req, res) => {
     }
   });
 });
+app.get('/TransactionDataWithDate', (req, res) => {
+  const { StudentID, DateCreated } = req.query;
+
+  // SQL query to fetch transaction data
+  const query = `
+    SELECT
+        TI.TransactionID,
+        TI.Quantity,
+        P.ProductName,
+        A.first_name AS Admin_FirstName,
+        A.last_name AS Admin_LastName
+    FROM
+        Transactions T
+    LEFT JOIN
+        TransactionItems TI ON T.TransactionID = TI.TransactionID
+    LEFT JOIN
+        Products P ON TI.ProductID = P.ProductID
+    LEFT JOIN
+        Admin A ON T.AdminID = A.AdminID
+    WHERE
+        T.StudentID = ? AND
+        T.DateCreated = ?;
+  `;
+
+  // Execute the query
+  connection.query(query, [StudentID, DateCreated], (error, results) => {
+    if (error) {
+      console.error('Error fetching transaction data:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      console.log('Fetched transaction data:', results);
+      res.json(results);
+    }
+  });
+});
 
 
 //Sumbit Order Function

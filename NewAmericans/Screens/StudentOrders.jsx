@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Button, TextInput, Modal } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Modal, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { fetchTransactions } from '../components/Transactions/TransactionFetching';
 import { putStudent } from '../components/Students/PuttingStudent';
@@ -121,16 +121,22 @@ const StudentOrders = ({ route }) => {
           </View>
         </Modal>
 
+
+      <View>
+      <Text style={styles.ordersText}>Orders</Text>
+      </View>
       {/* Render the fetched transactions */}
-      {transactions.map(transaction => (
-        <TouchableOpacity
-          key={transaction.TransactionID}
-          style={styles.dateContainer}
-          onPress={() => handlePress(transaction)}
-        >
-          <Text style={styles.dateText}>{formatDate(transaction.DateCreated)}</Text>
-        </TouchableOpacity>
-      ))}
+      <ScrollView style={styles.scrollView}>
+        {transactions.map(transaction => (
+          <TouchableOpacity
+            key={transaction.TransactionID}
+            style={styles.dateContainer}
+            onPress={() => handlePress(transaction)}
+          >
+            <Text style={styles.dateText}>{formatDate(transaction.DateCreated)}</Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
     </View>
   );
 };
@@ -250,6 +256,15 @@ const styles = StyleSheet.create({
   buttonRight: {
     marginLeft: 'auto',
   },  
+  ordersText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  scrollView: {
+    width: '100%',
+    maxHeight: '50%',
+  },
 });
 
 export default StudentOrders;
