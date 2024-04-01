@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, TextInput, Button } from 'react-native';
 import { fetchStudents } from '../components/Students/StudentFetching';
+import { postNewStudent } from '../components/Students/PostingStudent';
+
 
 const Families = () => {
   const [students, setStudents] = useState([]);
@@ -12,6 +14,8 @@ const Families = () => {
   const [sortBy, setSortBy] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredStudents, setFilteredStudents] = useState([]);
+  const [refreshDataTrigger, setRefreshDataTrigger] = useState(false);
+
 
   const navigation = useNavigation();
 
@@ -27,7 +31,27 @@ const Families = () => {
     }
     
     fetchStudentData();
-  }, []);
+  }, [refreshDataTrigger]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchData = async () => {
+        try {
+          const updatedStudents = await fetchStudents();
+          setStudents(updatedStudents);
+          setFilteredStudents(updatedStudents);
+        } catch (error) {
+          console.error('Error fetching student data:', error);
+        }
+      };
+  
+      fetchData();
+  
+      return () => {
+
+      };
+    }, [])
+  );
 
   useEffect(() => {
     if (sortBy) {
@@ -35,21 +59,26 @@ const Families = () => {
     }
   }, [sortBy]);
 
-  const handlePress = (student) => {
-    navigation.navigate('StudentOrders', { student });
+  const handlePress = async (student) => {
+    navigation.navigate('StudentOrders', { student })
+    const updatedStudents = await fetchStudents();
+    setStudents(updatedStudents);
   };
 
-  // need to connect to backend
-  const handleAddStudent = () => {
+  const handleAddStudent = async () => {
     const newStudent = {
-      id: students.length + 1,
-      firstName: newStudentFirstName,
-      lastName: newStudentLastName,
+      first_name: newStudentFirstName,
+      last_name: newStudentLastName,
     };
-    setStudents((prevStudents) => [...prevStudents, newStudent]);    
+
+    console.log('New Student: ', newStudent);
+    postNewStudent(newStudent);
+    const updatedStudents = await fetchStudents();
+    setStudents(updatedStudents); 
     setIsAddStudentModalVisible(false);
     setNewStudentFirstName('');
     setNewStudentLastName('');
+    setRefreshDataTrigger(t => !t);
   };
 
   const sortStudents = () => {
@@ -108,13 +137,13 @@ const Families = () => {
             />
             <View style={styles.inputRow}>
               <TouchableOpacity
-                style={[styles.saveButton, styles.buttonLeft]}
+                style={[styles.saveButton, styles.buttonLeft, styles.halfButton]}
                 onPress={handleAddStudent}
               >
                 <Text style={styles.saveButtonText}>Add Student</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.closeButton, styles.buttonRight]}
+                style={[styles.closeButton, styles.buttonRight, styles.halfButton]}
                 onPress={() => setIsAddStudentModalVisible(false)}
               >
                 <Text style={styles.closeButtonText}>Close</Text>
@@ -300,6 +329,10 @@ const styles = StyleSheet.create({
   buttonRight: {
     marginLeft: 'auto',
   },  
+  halfButton: {
+    flex: 0.5,
+    marginRight: 5,
+  },
 });
 
 export default Families;
