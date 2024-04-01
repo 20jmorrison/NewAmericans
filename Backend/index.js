@@ -174,6 +174,41 @@ app.get('/ReportData', (req, res) => {
 });
 
 
+//Sumbit Order Function
+app.post('/SubmitOrder', (req, res) => {
+  const { AdminID, StudentID, orderItems } = req.body;
+  try {
+    const transactionSql = 'INSERT INTO Transactions (AdminID, StudentID) VALUES (?, ?)';
+    connection.query(transactionSql, [AdminID, StudentID], (transactionErr, transactionResult) => {
+      if (transactionErr) {
+        console.error('Error inserting transaction:', transactionErr);
+        res.status(500).json({ error: 'Failed to submit order' });
+      } else {
+        // Get the inserted TransactionID
+        const transactionID = transactionResult.insertId;
+
+        // Then, insert each order item along with TransactionID into Orders table
+        const orderSql = 'INSERT INTO TransactionItems (TransactionID, ProductID, Quantity) VALUES (?, ?, ?)';
+        orderItems.forEach(item => {
+          const { ProductID, Quantity } = item;
+          connection.query(orderSql, [transactionID, ProductID, Quantity], (orderErr, orderResult) => {
+            if (orderErr) {
+              console.error('Error inserting order:', orderErr);
+              res.status(500).json({ error: 'Failed to submit order' });
+            }
+          });
+        });
+
+        console.log('Order submitted successfully');
+        res.status(200).json({ message: 'Order submitted successfully', transactionID });
+      }
+    });
+  } catch (error) {
+    console.error('An error occurred while processing the order:', error);
+    res.status(500).json({ error: 'Failed to submit order' });
+  }
+});
+
 
 process.on('SIGINT', () => {
   connection.end((err) => {

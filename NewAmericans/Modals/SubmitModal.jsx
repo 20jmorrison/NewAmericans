@@ -2,8 +2,9 @@ import React, { useState, useEffect,} from 'react';
 import { View, Text, Modal, StyleSheet, TouchableOpacity, ScrollView, TextInput, Alert } from 'react-native';
 import { fetchStudents } from '../components/Students/StudentFetching';
 import { fetchAdminData } from '../components/Admins/FetchingAdmins';
+import { SubmitOrder } from '../components/Orders/SubmitOrder';
 
-const SubmitModal = ({ visible, onClose, orderItems }) => {
+const SubmitModal = ({ visible, onClose, cartItemsWithQuantity }) => {
     const [students, setStudents] = useState([]);
     const [admins, setAdmins] = useState([]);
     const [selectedStudent, setSelectedStudent] = useState(null);
@@ -33,16 +34,14 @@ const SubmitModal = ({ visible, onClose, orderItems }) => {
         admin.last_name.toLowerCase().includes(adminSearchText.toLowerCase())
     );
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (!selectedStudent || !selectedAdmin) {
             // Alert the user if either selectedStudent or selectedAdmin is null
-            alert('Please make sure to select both a student and an admin.');
+            Alert.alert('Please make sure to select both a student and an admin.');
             return;
         }
-        console.log('Selected Admin:', selectedAdmin);
-        console.log('Selected Student:', selectedStudent);
-        console.log('Order Items:', orderItems);
-    
+        console.log(cartItemsWithQuantity)
+        SubmitOrder(selectedAdmin, selectedStudent, cartItemsWithQuantity);
         onClose();
     };
     
@@ -132,12 +131,6 @@ const SubmitModal = ({ visible, onClose, orderItems }) => {
                             <Text>Submit</Text>
                         </TouchableOpacity>
                     </View>
-
-                    {/* Render order items */}
-                    {orderItems && orderItems.map((item, index) => (
-                        <Text key={index}>{item.name}</Text>
-                        // Assuming each item in the order has a 'name' property
-                    ))}
                 </View>
             </View>
         </Modal>

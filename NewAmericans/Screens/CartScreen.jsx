@@ -7,13 +7,19 @@ import SubmitModal from '../Modals/SubmitModal'; // Import SubmitModal
 const CartScreen = () => {
     const { cartItems, clearCart, removeFromCart } = useCart(); // Import removeFromCart from CartProvider
     const [modalVisible, setModalVisible] = useState(false); // State for modal visibility
+    const [cartItemsWithQuantity, setCartItemsWithQuantity] = useState([]); // Define cartItemsWithQuantity state
 
     const handleClearCart = () => {
         clearCart(); 
     };
 
     const handleSubmitOrder = () => {
-        console.log(cartItems);
+        const updatedCartItemsWithQuantity = cartItems.map(item => ({
+            ProductID: item.ProductID,
+            Quantity: 1, 
+        }));
+        setCartItemsWithQuantity(updatedCartItemsWithQuantity); // Update cartItemsWithQuantity state
+        console.log(cartItemsWithQuantity);
         setModalVisible(true); // Open modal when submitting order
     };
 
@@ -51,11 +57,10 @@ const CartScreen = () => {
             <View style={styles.reservedSpace}></View>
 
             {/* Modal for order submission */}
-            <SubmitModal visible={modalVisible} onClose={() => setModalVisible(false)} orderItems={cartItems} />
+            <SubmitModal visible={modalVisible} onClose={() => setModalVisible(false)} cartItemsWithQuantity={cartItemsWithQuantity} />
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
