@@ -40,7 +40,7 @@ const SubmitModal = ({ visible, onClose, cartItemsWithQuantity }) => {
             Alert.alert('Please make sure to select both a student and an admin.');
             return;
         }
-        console.log(cartItemsWithQuantity)
+        console.log("Cart Items with Quantity:", cartItemsWithQuantity); // Log the cart items with quantity
         SubmitOrder(selectedAdmin, selectedStudent, cartItemsWithQuantity);
         onClose();
     };

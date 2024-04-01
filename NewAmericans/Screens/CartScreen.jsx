@@ -1,37 +1,61 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useCart } from '../components/Cart/CartProvider';
-import SubmitModal from '../Modals/SubmitModal'; // Import SubmitModal
+import SubmitModal from '../Modals/SubmitModal';
 
 const CartScreen = () => {
-    const { cartItems, clearCart, removeFromCart } = useCart(); // Import removeFromCart from CartProvider
-    const [modalVisible, setModalVisible] = useState(false); // State for modal visibility
-    const [cartItemsWithQuantity, setCartItemsWithQuantity] = useState([]); // Define cartItemsWithQuantity state
+    const { cartItems, clearCart, removeFromCart } = useCart();
+    const [modalVisible, setModalVisible] = useState(false);
+    const [cartItemsWithQuantity, setCartItemsWithQuantity] = useState([]);
+
+    // Update cartItemsWithQuantity whenever cartItems changes
+    useEffect(() => {
+        // Map over cartItems to include Quantity property
+        const updatedCartItemsWithQuantity = cartItems.map(item => ({
+            ...item,
+            Quantity: 1 // Default quantity
+        }));
+        setCartItemsWithQuantity(updatedCartItemsWithQuantity);
+    }, [cartItems]);
 
     const handleClearCart = () => {
         clearCart(); 
     };
 
     const handleSubmitOrder = () => {
-        const updatedCartItemsWithQuantity = cartItems.map(item => ({
-            ProductID: item.ProductID,
-            Quantity: 1, 
-        }));
-        setCartItemsWithQuantity(updatedCartItemsWithQuantity); // Update cartItemsWithQuantity state
-        console.log(cartItemsWithQuantity);
-        setModalVisible(true); // Open modal when submitting order
+        setModalVisible(true);
+    };
+
+    const handleInputChange = (text, itemId) => {
+        const updatedCartItemsWithQuantity = cartItemsWithQuantity.map(item => {
+            if (item.ProductID === itemId) {
+                // Convert text to a number and ensure it's between 1 and 10
+                const quantity = Math.min(Math.max(parseInt(text) || 0, 1), 10);
+                return {
+                    ...item,
+                    Quantity: quantity
+                };
+            }
+            return item;
+        });
+        setCartItemsWithQuantity(updatedCartItemsWithQuantity);
     };
 
     const handleRemoveItem = (itemId) => {
         removeFromCart(itemId); 
     };
 
-    // Map cart items to JSX elements
-    const cartItemComponents = cartItems.map(item => (
+    const cartItemComponents = cartItemsWithQuantity.map(item => (
         <View key={item.ProductID} style={[styles.itemContainer, { borderColor: '#F3D014', borderWidth: 2 }]}>
             <View style={styles.itemInfo}>
                 <Text style={styles.itemName}>{item.ProductName}</Text>
+                <TextInput
+                    style={styles.input}
+                    keyboardType='numeric'
+                    placeholder="Quantity"
+                    onChangeText={(text) => handleInputChange(text, item.ProductID)}
+                />
             </View>
             <TouchableOpacity style={styles.deleteButton} onPress={() => handleRemoveItem(item.ProductID)}>
                 <Ionicons name="trash-bin-outline" size={24} color="white" />
@@ -53,14 +77,12 @@ const CartScreen = () => {
                     <Text style={styles.buttonText}>Submit Order</Text>
                 </TouchableOpacity>
             </View>
-            {/* Reserved space above the tab navigator */}
             <View style={styles.reservedSpace}></View>
-
-            {/* Modal for order submission */}
             <SubmitModal visible={modalVisible} onClose={() => setModalVisible(false)} cartItemsWithQuantity={cartItemsWithQuantity} />
         </View>
     );
 };
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -76,28 +98,22 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: 10,
-        borderRadius: 8, // Add border radius for rounded corners
-        padding: 10, // Add padding to create space between border and content
+        borderRadius: 8,
+        padding: 10,
     },
     itemInfo: {
         flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     itemName: {
         fontSize: 16,
-    },
-    itemPrice: {
-        fontSize: 14,
-        color: 'gray',
     },
     deleteButton: {
         backgroundColor: '#F3D014',
         paddingVertical: 5,
         paddingHorizontal: 10,
         borderRadius: 5,
-    },
-    deleteButtonText: {
-        color: 'white',
-        fontWeight: 'bold',
     },
     buttonContainer: {
         flexDirection: 'row',
@@ -115,7 +131,16 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     reservedSpace: {
-        height: 80, // Adjust the height as needed
+        height: 80,
+    },
+    input: {
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        borderRadius: 5,
+        paddingHorizontal: 10,
+        marginLeft: 10, // Add some margin between the name and the input
     },
 });
+
 export default CartScreen;

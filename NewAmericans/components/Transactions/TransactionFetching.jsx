@@ -1,4 +1,5 @@
 const fetchTransactions = async (StudentID) => {
+  console.log(StudentID)
   try {
     const response = await fetch(`http://50.187.63.220:3000/TransactionData?StudentID=${StudentID}`);
     if (response.ok) {
