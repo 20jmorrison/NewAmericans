@@ -77,7 +77,7 @@ const Reports = () => {
   const handleFilterByAdmin = () => {
     try {
       const filteredData = filterReportDataByAdminID(reportData, selectedAdmin);
-      console.log('Filtered data by admin:', filteredData);
+      //console.log('Filtered data by admin:', filteredData);
       navigation.navigate('FilteredReports', { filteredData });
     } catch (error) {
       console.error('Error filtering data by admin:', error);
