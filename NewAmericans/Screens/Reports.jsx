@@ -97,7 +97,7 @@ const Reports = () => {
   const handleFilterByFamily = () => {
     try {
       const filteredData = filterReportDataByFamilyID(reportData, selectedFamily);
-      console.log('Filtered data by year:', filteredData);
+      console.log('Filtered data by family:', filteredData);
       navigation.navigate('FilteredReports', { filteredData });
     } catch (error) {
       console.error('Error filtering data by family:', error);
@@ -114,6 +114,7 @@ const Reports = () => {
           style={styles.picker}
           selectedValue={selectedStudent}
           onValueChange={(itemValue, itemIndex) => setSelectedStudent(itemValue)}
+          itemStyle={{height: 115}}
         >
           <Picker.Item label="Select Student" value="" />
           {students.map(student => (
@@ -129,6 +130,7 @@ const Reports = () => {
           style={styles.picker}
           selectedValue={selectedAdmin}
           onValueChange={(itemValue, itemIndex) => setSelectedAdmin(itemValue)}
+          itemStyle={{height: 115}}
         >
           <Picker.Item label="Select Admin" value="" />
           {admins.map(admin => (
@@ -144,6 +146,7 @@ const Reports = () => {
           style={styles.picker}
           selectedValue={selectedFamily}
           onValueChange={(itemValue, itemIndex) => setSelectedFamily(itemValue)}
+          itemStyle={{height: 115}}
         >
           <Picker.Item label="Select Family" value="" />
           {families.map(family => (
@@ -159,6 +162,7 @@ const Reports = () => {
           style={styles.picker}
           selectedValue={selectedYear}
           onValueChange={(itemValue, itemIndex) => setSelectedYear(itemValue)}
+          itemStyle={{height: 115}}
         >
           <Picker.Item label="Select Year" value="" />
           {Array.from({ length: new Date().getFullYear() - 2019 }, (_, index) => (
@@ -173,19 +177,16 @@ const Reports = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     paddingHorizontal: 20,
   },
   inputContainer: {
-    marginBottom: 20,
+    marginTop: 20,
     width: '100%',
   },
   button: {
     backgroundColor: '#F3D014',
     padding: 10,
     borderRadius: 5,
-    marginBottom: 10,
   },
   buttonText: {
     fontSize: 16,
@@ -193,10 +194,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   picker: {
-    height: 50, // Adjust the height as needed
     width: '100%',
     backgroundColor: '#ffffff',
-    marginBottom: 10,
     borderRadius: 5,
     paddingHorizontal: 10,
   },
