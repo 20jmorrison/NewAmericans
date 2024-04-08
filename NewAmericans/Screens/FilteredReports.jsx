@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Button, TouchableOpacity } from 'react-native';
-import createCSV from '../components/Admins/CreateCSV';
+import createCSV from '../components/Reports/CreateCSV';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 

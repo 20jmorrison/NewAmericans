@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Picker } from '@react-native-picker/picker'; 
+import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import { fetchReportData } from '../components/Reports/FetchingReportInfo';
 import { fetchStudents } from '../components/Students/StudentFetching';
 import { fetchAdminData } from '../components/Admins/FetchingAdmins';
-import { fetchFamilyData }  from '../components/Families/fetchFamilyData';
-import {filterReportDataByAdminID} from '../components/Reports/ReportFilters/filterReportAdmin'
-import {filterReportDataByFamilyID} from '../components/Reports/ReportFilters/filterReportsFamily'
-import {filterReportDataByUserId} from '../components/Reports/ReportFilters/filterReportUser'
-import {filterReportDataByYear} from '../components/Reports/ReportFilters/filterReportYear'
+import { fetchFamilyData } from '../components/Families/fetchFamilyData';
+import { filterReportDataByAdminID } from '../components/Reports/ReportFilters/filterReportAdmin'
+import { filterReportDataByFamilyID } from '../components/Reports/ReportFilters/filterReportsFamily'
+import { filterReportDataByUserId } from '../components/Reports/ReportFilters/filterReportUser'
+import { filterReportDataByYear } from '../components/Reports/ReportFilters/filterReportYear'
 
 
 const Reports = () => {
   const [reportData, setReportData] = useState([]);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
   const [admins, setAdmins] = useState([]);
   const [students, setStudents] = useState([]);
   const [families, setFamilies] = useState([]);
@@ -114,7 +114,7 @@ const Reports = () => {
           style={styles.picker}
           selectedValue={selectedStudent}
           onValueChange={(itemValue, itemIndex) => setSelectedStudent(itemValue)}
-          itemStyle={{height: 115}}
+          itemStyle={{ height: 115, fontFamily: 'Nunito-Bold' }}
         >
           <Picker.Item label="Select Student" value="" />
           {students.map(student => (
@@ -130,7 +130,7 @@ const Reports = () => {
           style={styles.picker}
           selectedValue={selectedAdmin}
           onValueChange={(itemValue, itemIndex) => setSelectedAdmin(itemValue)}
-          itemStyle={{height: 115}}
+          itemStyle={{ height: 115, fontFamily: 'Nunito-Bold' }}
         >
           <Picker.Item label="Select Admin" value="" />
           {admins.map(admin => (
@@ -146,7 +146,7 @@ const Reports = () => {
           style={styles.picker}
           selectedValue={selectedFamily}
           onValueChange={(itemValue, itemIndex) => setSelectedFamily(itemValue)}
-          itemStyle={{height: 115}}
+          itemStyle={{ height: 115, fontFamily: 'Nunito-Bold' }}
         >
           <Picker.Item label="Select Family" value="" />
           {families.map(family => (
@@ -162,7 +162,7 @@ const Reports = () => {
           style={styles.picker}
           selectedValue={selectedYear}
           onValueChange={(itemValue, itemIndex) => setSelectedYear(itemValue)}
-          itemStyle={{height: 115}}
+          itemStyle={{ height: 115, fontFamily: 'Nunito-Bold' }}
         >
           <Picker.Item label="Select Year" value="" />
           {Array.from({ length: new Date().getFullYear() - 2019 }, (_, index) => (
@@ -184,13 +184,22 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   button: {
-    backgroundColor: '#F3D014',
     padding: 10,
+    backgroundColor: '#F3D014',
     borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 2,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+
   },
   buttonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Nunito-Bold',
+    fontSize: 15,
+    color: 'black',
     textAlign: 'center',
   },
   picker: {
@@ -198,6 +207,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderRadius: 5,
     paddingHorizontal: 10,
+    fontFamily: 'Nunito-Bold',
+    fontSize: 15,
   },
 });
 
