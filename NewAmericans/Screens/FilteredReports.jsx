@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Button, } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Button } from 'react-native';
 
 const FilteredReports = ({ route }) => {
   const { filteredData } = route.params;
@@ -11,19 +11,20 @@ const FilteredReports = ({ route }) => {
     return formattedDate;
   };
 
-
   return (
     <View style={styles.container}>
-      <View style={styles.dataContainer}>
-        <Text style={styles.dataTitle}>Filtered</Text>
-        {filteredData.map((item, index) => (
-          <View key={index} style={styles.itemContainer}>
-            <Text>{item.Student_FirstName} {item.Student_LastName}: {item.ProductName} ({item.Quantity}) </Text>
-            <Text>{formatDate(item.DateCreated)}</Text>
-            <Text>Admin: {item.Admin_FirstName} {item.Admin_LastName}</Text>
-          </View>
-        ))}
-      </View>
+      <ScrollView style={styles.scrollContainer}>
+        <View style={styles.dataContainer}>
+          <Text style={styles.dataTitle}>Filtered</Text>
+          {filteredData.map((item, index) => (
+            <View key={index} style={styles.itemContainer}>
+              <Text>{item.Student_FirstName} {item.Student_LastName}: {item.ProductName} ({item.Quantity}) </Text>
+              <Text>{formatDate(item.DateCreated)}</Text>
+              <Text>Admin: {item.Admin_FirstName} {item.Admin_LastName}</Text>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
       <Button title="Export to CSV" />
     </View>
   );
@@ -35,8 +36,12 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#fff',
   },
-  dataContainer: {
+  scrollContainer: {
     flex: 1,
+  },
+  dataContainer: {
+    flexGrow: 1,
+    marginBottom: 50,
   },
   dataTitle: {
     fontSize: 18,
