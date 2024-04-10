@@ -14,6 +14,8 @@ import ProductsOrder from './Screens/ProductsOrder';
 import StudentOrdersItems from './Screens/StudentOrdersItems';
 import PasswordProtectedScreen from './Screens/PasswordProtectedScreen';
 import CartScreen from './Screens/CartScreen';
+import FamilyView from './Screens/FamilyView';
+import SelectedFamily from './Screens/SelectedFamily';
 import { Image } from 'react-native';
 import OrderIcon from './assets/order.png';
 import InventoryIcon from './assets/inventory.png';
@@ -94,6 +96,16 @@ function FamiliesStackScreen() {
         name="FamilyList"
         component={Families}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen 
+      name="FamilyView" 
+      component={FamilyView} 
+      options={{ headerShown: false }}
+      />
+      <Stack.Screen 
+      name="SelectedFamily" 
+      component={SelectedFamily} 
+      options={{ headerShown: false }}
       />
       <Stack.Screen
         name="StudentOrders"
