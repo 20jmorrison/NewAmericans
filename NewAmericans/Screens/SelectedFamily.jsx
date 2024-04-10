@@ -6,6 +6,8 @@ import { fetchStudents } from '../components/Students/StudentFetching';
 import { UpdateStudentFamily } from '../components/Families/UpdateStudentFamily';
 import { putFamily } from '../components/Families/PuttingFamily';
 import { deleteFamily } from '../components/Families/DeleteFamily';
+import { fetchTransactions } from '../components/Transactions/TransactionFetching';
+
 
 
 
@@ -27,6 +29,29 @@ const SelectedFamily = () => {
   const [refreshDataTrigger, setRefreshDataTrigger] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [editedName, setEditedName] = useState(family.family_name);
+  const [transactions, setTransactions] = useState([]);
+
+
+  useEffect(() => {
+    const fetchStudentTransactions = async () => {
+      try {
+        const transactionsArray = await Promise.all(
+          familyStudents.map(async (student) => {
+            const studentTransactions = await fetchTransactions(student.StudentID);
+            return studentTransactions;
+          })
+        );
+  
+        const flattenedTransactions = transactionsArray.flatMap(studentTransactions => studentTransactions);
+        setTransactions(flattenedTransactions);
+      } catch (error) {
+        console.error('Error fetching student transactions:', error);
+      }
+    };
+  
+    fetchStudentTransactions();
+  }, [familyStudents]);
+  
 
 
 
@@ -128,11 +153,29 @@ const SelectedFamily = () => {
     setStudentSearchText(`${student.first_name} ${student.last_name}`);
   };
 
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+
+  const handlePress = async (transaction) => {
+    try {
+      const student = familyStudents.find(student => student.StudentID === transaction.StudentID);
+      
+      navigation.navigate('StudentOrdersItems', { student: student, transaction: transaction });
+    } catch (error) {
+      console.error('Error navigating:', error);
+    }
+  };
+
+  const sortedTransactions = transactions.slice().sort((a, b) => new Date(b.DateCreated) - new Date(a.DateCreated));
+
 
   return (
     <View style={styles.container}>
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={[styles.filterButton, styles.halfButton]} onPress={() => setAddStudentModal(true)}>
+        <TouchableOpacity style={[styles.filterButton, styles.halfButton, { marginBottom: 10 }]} onPress={() => setAddStudentModal(true)}>
           <Text style={styles.filterButtonText}>Add Student</Text>
         </TouchableOpacity>
       </View>
@@ -237,7 +280,7 @@ const SelectedFamily = () => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <View style={styles.inputRow}>
-              <Text style={{ fontWeight: 'bold' }}>Family Name: </Text>
+              <Text style={{ fontWeight: 'bold', fontSize: 18 }}>Family: </Text>
               <TextInput
                 style={styles.input}
                 value={editedName}
@@ -284,6 +327,20 @@ const SelectedFamily = () => {
           </View>
         ))}
       </View>
+
+      {/* display transactions */}
+      <ScrollView style={styles.scrollView}>
+        <Text style={styles.ordersText}>Orders</Text>
+        {transactions && sortedTransactions.map(transaction => (
+          <TouchableOpacity
+            key={transaction.TransactionID}
+            style={styles.dateContainer}
+            onPress={() => handlePress(transaction)}
+          >
+            <Text style={styles.dateText}>{formatDate(transaction.DateCreated)}</Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
     </View>
 
   );
@@ -295,7 +352,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     paddingHorizontal: 20,
-    paddingTop: 10,
+    paddingTop: 5,
   },
   studentsContainer: {
     alignSelf: 'stretch',
@@ -357,13 +414,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20,
+    marginBottom: 15,
+    marginTop: 10,
   },
   header: {
     fontSize: 27,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
     marginRight: 15,
   },
   modalHeader: {
@@ -437,7 +495,7 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 5,
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
   },
   editButton: {
     fontSize: 16,
@@ -458,6 +516,28 @@ const styles = StyleSheet.create({
   inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  dateContainer: {
+    alignSelf: 'flex-start',
+    borderColor: '#F3D014',
+    borderWidth: 2,
+    borderRadius: 5,
+    padding: 10,
+    marginVertical: 5,
+  },
+  dateText: {
+    color: 'black',
+    fontWeight: 'bold',
+  },
+  scrollView: {
+    width: '100%',
+    maxHeight: '50%',
+  },
+  ordersText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
   },
 });
 

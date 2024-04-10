@@ -36,16 +36,16 @@ const StudentOrdersItems = ({ route }) => {
       <View style={styles.centeredContainer}>
         <Text style={styles.header}>{headerText}</Text>
       </View>
+      <View style={styles.adminContainer}>
+        <Text style={styles.adminText}>Admin: {transactions.length > 0 ? `${transactions[0].Admin_FirstName} ${transactions[0].Admin_LastName}` : 'N/A'}</Text>
+      </View>
       {/* Render the fetched transactions */}
       <ScrollView style={styles.scrollView}>
         {transactions.map((transaction, index) => (
           <View key={index} style={styles.itemContainer}>
             <View style={styles.transactionContainer}>
-              <Text style={styles.boldText}>Product: {transaction.ProductName}</Text>
+              <Text style={styles.boldText}>{transaction.ProductName}</Text>
               <Text style={styles.transactionText}>Quantity: {transaction.Quantity}</Text>
-            </View>
-            <View style={styles.adminContainer}>
-              <Text style={styles.adminText}>Admin: {transaction.Admin_FirstName} {transaction.Admin_LastName}</Text>
             </View>
           </View>
         ))}
@@ -85,19 +85,24 @@ const styles = StyleSheet.create({
   transactionContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 5,
+    marginBottom: 3,
+    justifyContent: 'space-between',
+    marginRight: 40,
   },
   adminContainer: {
-    marginTop: 10,
+    marginBottom: 15,
   },
   boldText: {
     fontWeight: 'bold',
+    fontSize: 15,
   },
   transactionText: {
     marginLeft: 5,
+    fontSize: 15,
   },
   adminText: {
     fontWeight: 'bold',
+    fontSize: 18,
   },
 });
 
