@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, ScrollView } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { fetchStudents } from '../components/Students/StudentFetching';
 import { fetchFamilyData } from '../components/Families/fetchFamilyData';
@@ -12,6 +12,8 @@ const FamilyView = () => {
   const [newFamilyName, setNewFamilyName] = useState('');
   const [addFamilyModal, setAddFamilyModal] = useState(false);
   const [refreshDataTrigger, setRefreshDataTrigger] = useState(false);
+  const [filteredFamilies, setFilteredFamilies] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
 
 
@@ -26,7 +28,7 @@ const FamilyView = () => {
         console.error('Error fetching student data:', error);
       }
     }
-    
+
     fetchStudentData();
   }, []);
 
@@ -39,10 +41,10 @@ const FamilyView = () => {
         console.error('Error fetching families:', error);
       }
     };
-  
+
     fetchData();
   }, [refreshDataTrigger]);
-  
+
 
   useFocusEffect(
     React.useCallback(() => {
@@ -54,9 +56,9 @@ const FamilyView = () => {
           console.error('Error fetching family data:', error);
         }
       };
-  
+
       fetchData();
-  
+
       return () => {
 
       };
@@ -80,14 +82,25 @@ const FamilyView = () => {
     navigation.navigate('SelectedFamily', { family })
   };
 
+  const sortedFamilies = [...families].sort((a, b) => a.family_name.localeCompare(b.family_name));
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    const filtered = sortedFamilies.filter(family =>
+      family.family_name.toLowerCase().includes(query.toLowerCase())
+    );
+    setFilteredFamilies(filtered);
+  };
+
+  let displayedFamilies = sortedFamilies; 
+
+  if (searchQuery.trim()) {
+    displayedFamilies = filteredFamilies;
+  }
+
   return (
     <View style={styles.container}>
-        <View style={styles.buttonRow}>
-          <TouchableOpacity style={[styles.filterButton, styles.halfButton]}  onPress={() => setAddFamilyModal(true)}>
-            <Text style={styles.filterButtonText}>Add Family</Text>
-          </TouchableOpacity>
-        </View>
-       {/* Modal to add family */}
+      {/* Modal to add family */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -122,28 +135,62 @@ const FamilyView = () => {
           </View>
         </View>
       </Modal>
+      {/* Search bar */}
+      <View style={styles.searchBarContainer}>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search by name..."
+          value={searchQuery}
+          onChangeText={handleSearch}
+        />
+      </View>
 
-      {families.map((family, index) => (
-        <TouchableOpacity key={family.FamilyID} onPress={() => handlePress(family)}>
-            <View style={styles.card}>
-            <Text style={styles.familyName}>{family.family_name}</Text>
-            </View>
-        </TouchableOpacity>
-      ))}
+      {/* Separator */}
+      <View style={styles.separator} />
+
+      <View style={{ flex: 1 }}>
+        <ScrollView contentContainerStyle={styles.scrollViewContent}>
+          <View style={styles.buttonRow}>
+            <TouchableOpacity style={[styles.filterButton, styles.fullButton]} onPress={() => setAddFamilyModal(true)}>
+              <Text style={styles.filterButtonText}>Add Family</Text>
+            </TouchableOpacity>
+          </View>
+          {/* Display Families */}
+          {displayedFamilies.map((family, index) => (
+            <TouchableOpacity key={family.FamilyID} onPress={() => handlePress(family)}>
+              <View style={styles.card}>
+                <Text style={styles.familyName}>{family.family_name}</Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
     </View>
+
   );
 };
 
 const styles = StyleSheet.create({
+  scrollViewContent: {
+    paddingHorizontal: 5, 
+    paddingTop: 5, 
+    paddingBottom: 10, 
+  },
   container: {
     flex: 1,
     width: '100%',
     //alignItems: 'center',
     //justifyContent: 'center',
-    padding: 10,
+    //padding: 10,
+    backgroundColor: '#fff',
+
   },
   halfButton: {
     flex: 0.5,
+    marginRight: 5,
+  },
+  fullButton: {
+    flex: 1,
     marginRight: 5,
   },
   filterButton: {
@@ -223,7 +270,7 @@ const styles = StyleSheet.create({
   },
   buttonRight: {
     marginLeft: 'auto',
-  },  
+  },
   card: {
     backgroundColor: '#ffffff',
     borderRadius: 10,
@@ -238,12 +285,26 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     width: '100%',
-    flexDirection: 'row', 
-    alignItems: 'center', 
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   familyName: {
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  searchBarContainer: {
+    padding: 10,
+    backgroundColor: '#fff',
+  },
+  searchInput: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+  },
+  separator: {
+    borderBottomWidth: 1,
+    borderColor: 'rgba(128, 128, 128, 0.5)',
   },
 });
 
