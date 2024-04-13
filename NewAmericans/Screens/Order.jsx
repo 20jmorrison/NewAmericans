@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { fetchCategories } from '../components/Categories/FetchingCategories';
+import { Ionicons } from '@expo/vector-icons'; // Import Ionicons for icons
 import { useCart } from '../components/Cart/CartProvider';
 
 const categoryImages = {
@@ -38,6 +39,7 @@ const Item = ({ category }) => {
 };
 
 const Order = () => {
+  const navigation = useNavigation();
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -59,6 +61,14 @@ const Order = () => {
       {categories.map((category, index) => (
         <Item key={index} category={category} />
       ))}
+      <View style={styles.cartIconContainer}>
+        <Ionicons
+          name="cart"
+          size={36}
+          color="black"
+          onPress={() => navigation.navigate('CartScreen')}
+        />
+      </View>
     </ScrollView>
   );
 };
@@ -105,7 +115,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   scrollViewContent: {
+    paddingTop: 50, // Adjust the padding top to create space for the icons
     paddingBottom: 100, // Add padding to the bottom of the ScrollView
+  },
+  cartIconContainer: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent background
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
