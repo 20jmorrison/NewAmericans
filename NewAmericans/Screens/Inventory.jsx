@@ -5,16 +5,13 @@ import { fetchCategories } from '../components/Categories/FetchingCategories';
 import { postNewProduct } from '../components/Products/PostingProduct';
 import { putProduct } from '../components/Products/PuttingProduct';
 import { deleteProduct } from '../components/Products/DeleteProduct';
-
-
-
-
+import CameraComponent from '../components/Camera/Camera';
+import { useNavigation } from '@react-navigation/native';
 
 
 const Inventory = () => {
   const [inventory, setInventory] = useState([]);
   const [allCategories, setAllCategories] = useState([]);
-
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [categoryModalVisible, setCategoryModalVisible] = useState(false);
   const [sortModalVisible, setSortModalVisible] = useState(false);
@@ -29,6 +26,12 @@ const Inventory = () => {
   const [editedQuantity, setEditedQuantity] = useState('');
   const [editedCategory, setEditedCategory] = useState('');
   const [refreshDataTrigger, setRefreshDataTrigger] = useState(false);
+  const [cameraModalVisible, setCameraModalVisible] = useState(false);
+  const [capturedImageUri, setCapturedImageUri] = useState(null); // State to store captured image URI
+  const navigation = useNavigation();
+
+
+
   //const [searchCategoryQuery, setSearchCategoryQuery] = useState('');
   //const [filteredCategories, setFilteredCategories] = useState([]);
 
@@ -65,6 +68,20 @@ const Inventory = () => {
   }, []);
 
 
+  const handleOpenCamera = () => {
+    navigation.navigate('CameraComponent', {
+      handleImageCapture: handleImageCapture
+    });
+    setEditModalVisible(false);
+    setAddModalVisible(false);
+  };
+
+  const handleImageCapture = (uri) => {
+    setCapturedImageUri(uri);
+    setCameraModalVisible(false); // Close the camera modal after capturing image
+  };
+  useEffect(() => {
+  }, [capturedImageUri]); // Log whenever capturedImageUri changes
 
   const handleEdit = (item) => {
     setEditedItem(item);
@@ -88,9 +105,11 @@ const Inventory = () => {
       ProductName: editedProductName !== '' ? editedProductName : editedItem.ProductName,
       ProductQuantity: editedQuantity !== '' ? editedQuantity : editedItem.ProductQuantity,
       CategoryID: updatedCategoryID !== '' ? updatedCategoryID : editedItem.CategoryID,
+      PictureURI: capturedImageUri
     };
 
     putProduct(updatedProduct);
+    setCapturedImageUri(null);
     const updatedInventory = await fetchItems();
     setInventory(updatedInventory);
     setEditModalVisible(false);
@@ -111,11 +130,13 @@ const Inventory = () => {
       ProductName: newItemName,
       ProductQuantity: newQuantity,
       CategoryID: newCategoryID,
+      PictureURI: capturedImageUri
     };
     console.log('New Item: ', newItem);
     postNewProduct(newItem);
     const updatedInventory = await fetchItems();
     setInventory(updatedInventory);
+    setCapturedImageUri(null)
     setAddModalVisible(false);
     setRefreshDataTrigger(t => !t);
     setNewItemName('');
@@ -215,9 +236,14 @@ const Inventory = () => {
             <Text style={styles.sortButtonText}>Sort</Text>
           </TouchableOpacity>
         </View>
-
-      {/* Modal to select Category */}
-
+        <TouchableOpacity 
+          style={[styles.cameraButton, { width: '100%', }]}
+          onPress={handleOpenCamera}
+        >
+          <Text style={styles.cameraButtonText}>
+            {capturedImageUri ? 'Photo Taken' : 'Open Camera'}
+          </Text>
+        </TouchableOpacity>
         <Modal
           animationType="slide"
           transparent={true}
@@ -263,64 +289,65 @@ const Inventory = () => {
           </View>
         </Modal>
 
-        {/* Add New Item Modal */}
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={addModalVisible}
-          onRequestClose={() => setAddModalVisible(false)}
+       {/* Add New Item Modal */}
+<Modal
+  animationType="slide"
+  transparent={true}
+  visible={addModalVisible}
+  onRequestClose={() => setAddModalVisible(false)}
+>
+  <View style={styles.modalContainer}>
+    <View style={styles.modalContent}>
+      <Text style={styles.modalTitle}>Add New Item</Text>
+      <View style={styles.inputRow}>
+        <Text style={styles.modalTitle}>Name: </Text>
+        <TextInput
+          style={styles.input}
+          onChangeText={(text) => setNewItemName(text)}
+          placeholder="Product Name"
+          placeholderTextColor="#808080"
+        />
+      </View>
+      <View style={styles.inputRow}>
+        <Text style={styles.modalTitle}>Quantity: </Text>
+        <TextInput
+          style={styles.input}
+          onChangeText={(text) => setNewQuantity(text)}
+          placeholder="Quantity"
+          placeholderTextColor="#808080"
+          keyboardType="numeric"
+        />
+      </View>
+      {/* Category selection -- need to fix */}
+      <View style={styles.inputRow}> 
+        <Text style={styles.modalTitle}>Category: </Text>
+        <TextInput
+          style={styles.input}
+          onChangeText={(text) => setNewCategory(text)}
+          placeholder="Category"
+          placeholderTextColor="#808080"
+        />
+      </View>
+      <View style={styles.inputRow}>
+        <TouchableOpacity
+          style={[styles.saveButton, styles.buttonLeft, styles.halfButton]}
+          onPress={handleAddItem}
         >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Add New Item</Text>
-              <View style={styles.inputRow}>
-                <Text style={styles.modalTitle}>Name: </Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={(text) => setNewItemName(text)}
-                  placeholder="Product Name"
-                  placeholderTextColor="#808080"
-                />
-              </View>
-              <View style={styles.inputRow}>
-                <Text style={styles.modalTitle}>Quantity: </Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={(text) => setNewQuantity(text)}
-                  placeholder="Quantity"
-                  placeholderTextColor="#808080"
-                  keyboardType="numeric"
-                />
-              </View>
-              {/* Category selection -- need to fix */}
-              <View style={styles.inputRow}> 
-                <Text style={styles.modalTitle}>Category: </Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={(text) => setNewCategory(text)}
-                  placeholder="Category"
-                  placeholderTextColor="#808080"
-                />
-              </View>
-              <View style={styles.inputRow}>
-                <TouchableOpacity
-                  style={[styles.saveButton, styles.buttonLeft, styles.halfButton]}
-                  onPress={handleAddItem}
-                >
-                  <Text style={styles.saveButtonText}>Add Item</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.closeButton, styles.buttonRight, styles.halfButton]}
-                  onPress={() => {
-                    setEditedItem({ ProductName: '', ProductQuantity: '', CategoryID: '' });
-                    setAddModalVisible(false)}}
-                >
-                  <Text style={styles.closeButtonText}>Close</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </Modal>
+          <Text style={styles.saveButtonText}>Add Item</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.closeButton, styles.buttonRight, styles.halfButton]}
+          onPress={() => {
+            setEditedItem({ ProductName: '', ProductQuantity: '', CategoryID: '' });
+            setAddModalVisible(false)}}
+        >
+          <Text style={styles.closeButtonText}>Close</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  </View>
+</Modal>
+
 
         {/* Edit modal */}
         <Modal
@@ -362,8 +389,7 @@ const Inventory = () => {
               </View>
               <TouchableOpacity style={[styles.closeButton]} onPress={handleRemoveItem}>
                 <Text style={styles.closeButtonText}>Delete Item</Text>
-              </TouchableOpacity>
-             
+              </TouchableOpacity>     
               <View style={styles.inputRow}>
                 <TouchableOpacity
                   style={[styles.saveButton, styles.buttonLeft, styles.halfButton]}
@@ -425,7 +451,7 @@ const styles = StyleSheet.create({
   buttonRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: 0,
   },
   halfButton: {
     flex: 0.5,
@@ -557,6 +583,18 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   editButton: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  cameraButton: {
+    backgroundColor: '#F3D014',
+    padding: 10,
+    borderRadius: 5,
+    alignSelf: 'center',
+    marginBottom: 0, // Adjust this value as needed
+  },
+  cameraButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',

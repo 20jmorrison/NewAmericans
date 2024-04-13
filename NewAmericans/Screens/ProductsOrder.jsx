@@ -4,7 +4,7 @@ import { useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import { fetchProducts } from '../components/Products/ProductFetching';
 import { useCart } from '../components/Cart/CartProvider';
-import CartScreen from './CartScreen';
+import { Ionicons } from '@expo/vector-icons'; // Import Ionicons for icons
 
 const Item = ({ item }) => {
   const { addToCart } = useCart(); 
@@ -19,6 +19,7 @@ const Item = ({ item }) => {
   return (
     <TouchableOpacity style={styles.itemContainer} onPress={() => setShowModal(true)}>
       <View style={styles.innerContainer}>
+        <Image source={{ uri: item.PictureURI }} style={styles.itemImage} />
         <View style={styles.textContainer}>
           <Text style={styles.itemText}>{item.ProductName}</Text>
           <Text style={styles.quantityText}>Quantity: {item.ProductQuantity}</Text>
@@ -59,7 +60,7 @@ const ProductsOrder = ({ route }) => {
     };
 
     fetchData();
-  }, [categoryId]); // Add categoryId to the dependency array so useEffect will run whenever categoryId changes
+  }, [categoryId]);
 
   return (
     <ScrollView contentContainerStyle={[styles.container, styles.scrollViewContent]}>
@@ -67,8 +68,14 @@ const ProductsOrder = ({ route }) => {
         <Item key={item.ProductID} item={item} />
       ))}
 
-      <Button onPress={() => navigation.navigate('CartScreen')} title="Go to Cart Screen" />
-
+      <View style={styles.cartIconContainer}>
+        <Ionicons
+          name="cart"
+          size={36}
+          color="black"
+          onPress={() => navigation.navigate('CartScreen')}
+        />
+      </View>
     </ScrollView>
   );
 };
@@ -85,7 +92,7 @@ const styles = StyleSheet.create({
   itemContainer: {
     width: '48%',
     aspectRatio: 1,
-    padding: 10,
+    padding: 0,
     marginBottom: 10,
     borderWidth: 2,
     borderColor: '#F3D014',
@@ -109,9 +116,9 @@ const styles = StyleSheet.create({
     marginTop: 'auto',
   },
   scrollViewContent: {
-    paddingBottom: 100,
-  },
-  modalContainer: {
+    paddingTop: 60, // Adjust the padding top to create space for the icons
+    paddingBottom: 100,  },
+    modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -140,6 +147,22 @@ const styles = StyleSheet.create({
   modalButtonText: {
     fontSize: 16,
     color: 'white',
+  },
+  itemImage: {
+    width: '100%',
+    height: '70%', // Adjust the height as needed
+    resizeMode: 'cover',
+  },
+  cartIconContainer: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent background
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

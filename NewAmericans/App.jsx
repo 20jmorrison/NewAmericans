@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -26,6 +27,7 @@ import Logo from './assets/snhucfna.png';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { CartProvider } from './components/Cart/CartProvider';
+import CameraComponent from './components/Camera/Camera';
 
 
 SplashScreen.preventAutoHideAsync();
@@ -35,9 +37,9 @@ function OrderStackScreen() {
   return (
     <OrderStack.Navigator>
       <OrderStack.Screen
-        name="OrderList"
+        name="Categories"
         component={Order}
-        options={{ headerShown: false }}
+        options={{ HeaderTitle: false }}
       />
       <OrderStack.Screen
         name="ProductsOrder"
@@ -87,7 +89,23 @@ function AdminStackScreen() {
     </AdminStack.Navigator>
   );
 }
-
+const InventoryToCameraStack = createNativeStackNavigator();
+function InventoryToCameraStackScreen() {
+  return (
+    <InventoryToCameraStack.Navigator>
+      <InventoryToCameraStack.Screen
+        name="InventoryScreen"
+        component={Inventory}
+        options={{ headerShown: false }}
+      />
+      <InventoryToCameraStack.Screen
+        name="CameraComponent"
+        component={CameraComponent}
+        options={{ headerShown: false }}
+      />
+    </InventoryToCameraStack.Navigator>
+  );
+}
 const Stack = createNativeStackNavigator();
 function FamiliesStackScreen() {
   return (
@@ -150,7 +168,7 @@ const TabNavigator = () => {
   }
   return (
     <CartProvider>
-      <NavigationContainer>
+      <NavigationContainer ignoreSerializableWarnings={true}>
         <Tab.Navigator
           onLayout={onLayoutRootView}
           screenOptions={({ route }) => ({
@@ -227,7 +245,7 @@ const TabNavigator = () => {
         />
         <Tab.Screen
           name="Inventory"
-          component={Inventory}
+          component={InventoryToCameraStackScreen}
           options={{
             title: 'Inventory',
             tabBarIcon: ({ color, size }) => (
