@@ -67,7 +67,7 @@ function ReportsStackScreen() {
       <ReportsStack.Screen
         name="FilteredReports"
         component={FilteredReports}
-        options={{ headerTitle: 'Filtered Reports' }}
+        options={{ headerShown: false }}
       />
     </ReportsStack.Navigator>
 )}

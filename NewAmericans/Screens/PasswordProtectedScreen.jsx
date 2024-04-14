@@ -294,7 +294,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     fontFamily: 'Nunito-Bold',
-
   },
   closeButton: {
     backgroundColor: '#FA4616',
