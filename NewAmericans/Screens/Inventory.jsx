@@ -5,9 +5,9 @@ import { fetchCategories } from '../components/Categories/FetchingCategories';
 import { postNewProduct } from '../components/Products/PostingProduct';
 import { putProduct } from '../components/Products/PuttingProduct';
 import { deleteProduct } from '../components/Products/DeleteProduct';
-import CameraComponent from '../components/Camera/Camera';
 import { useNavigation } from '@react-navigation/native';
 import edit from '../assets/edit.png';
+import * as ImagePicker from 'expo-image-picker';
 
 
 const Inventory = () => {
@@ -27,15 +27,8 @@ const Inventory = () => {
   const [editedQuantity, setEditedQuantity] = useState('');
   const [editedCategory, setEditedCategory] = useState('');
   const [refreshDataTrigger, setRefreshDataTrigger] = useState(false);
-  const [cameraModalVisible, setCameraModalVisible] = useState(false);
-  const [capturedImageUri, setCapturedImageUri] = useState(null); // State to store captured image URI
+  const [selectedImage, setSelectedImage] = useState(null);
   const navigation = useNavigation();
-
-
-
-  //const [searchCategoryQuery, setSearchCategoryQuery] = useState('');
-  //const [filteredCategories, setFilteredCategories] = useState([]);
-
 
 
   useEffect(() => {
@@ -68,22 +61,6 @@ const Inventory = () => {
     fetchData();
   }, []);
 
-
-  const handleOpenCamera = () => {
-    navigation.navigate('CameraComponent', {
-      handleImageCapture: handleImageCapture
-    });
-    setEditModalVisible(false);
-    setAddModalVisible(false);
-  };
-
-  const handleImageCapture = (uri) => {
-    setCapturedImageUri(uri);
-    setCameraModalVisible(false); // Close the camera modal after capturing image
-  };
-  useEffect(() => {
-  }, [capturedImageUri]); // Log whenever capturedImageUri changes
-
   const handleEdit = (item) => {
     setEditedItem(item);
     setEditedProductName(item.ProductName);
@@ -110,7 +87,6 @@ const Inventory = () => {
     };
 
     putProduct(updatedProduct);
-    setCapturedImageUri(null);
     const updatedInventory = await fetchItems();
     setInventory(updatedInventory);
     setEditModalVisible(false);
@@ -119,9 +95,24 @@ const Inventory = () => {
     setEditedProductName('');
     setEditedQuantity('');
     setEditedCategory('');
+    setSelectedImage(null);
   };
 
+  const handleSelectImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
+    console.log(result.assets[0].uri);
+
+    if (!result.canceled) {
+      setSelectedImage(result.assets[0].uri);
+    }
+  };
 
   const handleAddItem = async () => {
     //implement error checking for categories or option to add new category
@@ -131,13 +122,13 @@ const Inventory = () => {
       ProductName: newItemName,
       ProductQuantity: newQuantity,
       CategoryID: newCategoryID,
-      PictureURI: capturedImageUri
+      PictureURI: selectedImage,
     };
     console.log('New Item: ', newItem);
     postNewProduct(newItem);
     const updatedInventory = await fetchItems();
     setInventory(updatedInventory);
-    setCapturedImageUri(null)
+    setSelectedImage(null)
     setAddModalVisible(false);
     setRefreshDataTrigger(t => !t);
     setNewItemName('');
@@ -228,14 +219,7 @@ const Inventory = () => {
         <TouchableOpacity style={styles.filterButton} onPress={() => setAddModalVisible(true)}>
           <Text style={styles.filterButtonText}>Add New Item</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.filterButton]}
-          onPress={handleOpenCamera}
-        >
-          <Text style={styles.cameraButtonText}>
-            {capturedImageUri ? 'Photo Taken' : 'Open Camera'}
-          </Text>
-        </TouchableOpacity>
+        
         <View style={styles.buttonRow}>
           <TouchableOpacity style={[styles.filterButton, styles.halfButton]} onPress={() => setCategoryModalVisible(true)}>
             <Text style={styles.filterButtonText}>Filter</Text>
@@ -373,6 +357,9 @@ const Inventory = () => {
                   placeholder="CategoryID"
                 />
               </View>
+              <TouchableOpacity style={[styles.saveButton]} onPress={handleSelectImage}>
+                <Text style={styles.saveButtonText}>Select Image</Text>
+              </TouchableOpacity>
               <TouchableOpacity style={[styles.saveButton]} onPress={handleSaveChanges}>
                 <Text style={styles.saveButtonText}>Save Changes</Text>
               </TouchableOpacity>
