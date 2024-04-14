@@ -7,6 +7,7 @@ import { putProduct } from '../components/Products/PuttingProduct';
 import { deleteProduct } from '../components/Products/DeleteProduct';
 import { useNavigation } from '@react-navigation/native';
 import edit from '../assets/edit.png';
+import * as ImagePicker from 'expo-image-picker';
 
 
 const Inventory = () => {
@@ -97,7 +98,21 @@ const Inventory = () => {
     setSelectedImage(null);
   };
 
+  const handleSelectImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
+    console.log(result.assets[0].uri);
+
+    if (!result.canceled) {
+      setSelectedImage(result.assets[0].uri);
+    }
+  };
 
   const handleAddItem = async () => {
     //implement error checking for categories or option to add new category
@@ -342,6 +357,9 @@ const Inventory = () => {
                   placeholder="CategoryID"
                 />
               </View>
+              <TouchableOpacity style={[styles.saveButton]} onPress={handleSelectImage}>
+                <Text style={styles.saveButtonText}>Select Image</Text>
+              </TouchableOpacity>
               <TouchableOpacity style={[styles.saveButton]} onPress={handleSaveChanges}>
                 <Text style={styles.saveButtonText}>Save Changes</Text>
               </TouchableOpacity>
