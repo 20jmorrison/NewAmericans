@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, FlatList, ScrollView, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, FlatList, ScrollView, TextInput, Image } from 'react-native';
 import { fetchItems } from '../components/Categories/FetchingItems';
 import { fetchCategories } from '../components/Categories/FetchingCategories';
 import { postNewProduct } from '../components/Products/PostingProduct';
@@ -7,6 +7,7 @@ import { putProduct } from '../components/Products/PuttingProduct';
 import { deleteProduct } from '../components/Products/DeleteProduct';
 import CameraComponent from '../components/Camera/Camera';
 import { useNavigation } from '@react-navigation/native';
+import edit from '../assets/edit.png';
 
 
 const Inventory = () => {
@@ -46,12 +47,12 @@ const Inventory = () => {
       } catch (error) {
         console.error('Error fetching items:', error);
       }
-    }; 
+    };
 
     fetchItemData();
   }, [refreshDataTrigger]);
 
-  
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -88,7 +89,7 @@ const Inventory = () => {
     setEditedProductName(item.ProductName);
     setEditedQuantity(String(item.ProductQuantity));
     const category = allCategories.find(cat => cat.CategoryID === item.CategoryID);
-    setEditedCategory(category ? category.category_name : null); 
+    setEditedCategory(category ? category.category_name : null);
     setEditModalVisible(true);
   };
 
@@ -163,7 +164,7 @@ const Inventory = () => {
     setSelectedCategory(category);
     setCategoryModalVisible(false);
   };
-  
+
 
   const renderCategoryItem = ({ item }) => (
     <TouchableOpacity onPress={() => filterByCategory(item.id)}>
@@ -187,9 +188,9 @@ const Inventory = () => {
     if (selectedCategory !== 'All' && selectedCategory !== 0) {
       filteredInventory = inventory.filter(item => item.CategoryID === selectedCategory);
     }
-  
-    let sortedInventory = [...filteredInventory];  
-  
+
+    let sortedInventory = [...filteredInventory];
+
     if (sortCriteria === 'alphabetical') {
       sortedInventory.sort((a, b) => {
         const nameA = a.ProductName || ''; // Handle null or undefined values
@@ -220,30 +221,30 @@ const Inventory = () => {
     );
     setFilteredCategories(filtered);
   };
-  
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
         <TouchableOpacity style={styles.filterButton} onPress={() => setAddModalVisible(true)}>
           <Text style={styles.filterButtonText}>Add New Item</Text>
         </TouchableOpacity>
-        <View style={styles.buttonRow}>
-          <TouchableOpacity style={[styles.filterButton, styles.halfButton]}  onPress={() => setCategoryModalVisible(true)}>
-            <Text style={styles.filterButtonText}>Filter by Category</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={[styles.filterButton, styles.halfButton]}  onPress={() => setSortModalVisible(true)}>
-            <Text style={styles.sortButtonText}>Sort</Text>
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity 
-          style={[styles.cameraButton, { width: '100%', }]}
+        <TouchableOpacity
+          style={[styles.filterButton]}
           onPress={handleOpenCamera}
         >
           <Text style={styles.cameraButtonText}>
             {capturedImageUri ? 'Photo Taken' : 'Open Camera'}
           </Text>
         </TouchableOpacity>
+        <View style={styles.buttonRow}>
+          <TouchableOpacity style={[styles.filterButton, styles.halfButton]} onPress={() => setCategoryModalVisible(true)}>
+            <Text style={styles.filterButtonText}>Filter</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.filterButton, styles.halfButton]} onPress={() => setSortModalVisible(true)}>
+            <Text style={styles.sortButtonText}>Sort</Text>
+          </TouchableOpacity>
+        </View>
         <Modal
           animationType="slide"
           transparent={true}
@@ -264,7 +265,7 @@ const Inventory = () => {
           </View>
         </Modal>
 
-      {/* Modal for selecting sort option  */}
+        {/* Modal for selecting sort option  */}
         <Modal
           animationType="slide"
           transparent={true}
@@ -289,64 +290,52 @@ const Inventory = () => {
           </View>
         </Modal>
 
-       {/* Add New Item Modal */}
-<Modal
-  animationType="slide"
-  transparent={true}
-  visible={addModalVisible}
-  onRequestClose={() => setAddModalVisible(false)}
->
-  <View style={styles.modalContainer}>
-    <View style={styles.modalContent}>
-      <Text style={styles.modalTitle}>Add New Item</Text>
-      <View style={styles.inputRow}>
-        <Text style={styles.modalTitle}>Name: </Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setNewItemName(text)}
-          placeholder="Product Name"
-          placeholderTextColor="#808080"
-        />
-      </View>
-      <View style={styles.inputRow}>
-        <Text style={styles.modalTitle}>Quantity: </Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setNewQuantity(text)}
-          placeholder="Quantity"
-          placeholderTextColor="#808080"
-          keyboardType="numeric"
-        />
-      </View>
-      {/* Category selection -- need to fix */}
-      <View style={styles.inputRow}> 
-        <Text style={styles.modalTitle}>Category: </Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setNewCategory(text)}
-          placeholder="Category"
-          placeholderTextColor="#808080"
-        />
-      </View>
-      <View style={styles.inputRow}>
-        <TouchableOpacity
-          style={[styles.saveButton, styles.buttonLeft, styles.halfButton]}
-          onPress={handleAddItem}
+        {/* Add New Item Modal */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={addModalVisible}
+          onRequestClose={() => setAddModalVisible(false)}
         >
-          <Text style={styles.saveButtonText}>Add Item</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.closeButton, styles.buttonRight, styles.halfButton]}
-          onPress={() => {
-            setEditedItem({ ProductName: '', ProductQuantity: '', CategoryID: '' });
-            setAddModalVisible(false)}}
-        >
-          <Text style={styles.closeButtonText}>Close</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  </View>
-</Modal>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Add New Item</Text>
+              <View style={styles.inputRow}>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={(text) => setNewItemName(text)}
+                  placeholder="Product Name"
+                  placeholderTextColor="#808080"
+                />
+              </View>
+              <View style={styles.inputRow}>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={(text) => setNewQuantity(text)}
+                  placeholder="Quantity"
+                  placeholderTextColor="#808080"
+                  keyboardType="numeric"
+                />
+              </View>
+              {/* Category selection -- need to fix */}
+              <View style={styles.inputRow}>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={(text) => setNewCategory(text)}
+                  placeholder="Category"
+                  placeholderTextColor="#808080"
+                />
+              </View>
+              <TouchableOpacity style={[styles.saveButton]} onPress={handleAddItem}>
+                <Text style={styles.saveButtonText}>Add Item</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={[styles.closeButton]} onPress={() => { setEditedItem({ ProductName: '', ProductQuantity: '', CategoryID: '' }); setAddModalVisible(false) }}>
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
 
 
         {/* Edit modal */}
@@ -359,7 +348,6 @@ const Inventory = () => {
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <View style={styles.inputRow}>
-                <Text style={styles.modalTitle}>Name: </Text>
                 <TextInput
                   style={styles.input}
                   value={editedProductName}
@@ -368,7 +356,6 @@ const Inventory = () => {
                 />
               </View>
               <View style={styles.inputRow}>
-                <Text style={styles.modalTitle}>Quantity: </Text>
                 <TextInput
                   style={styles.input}
                   value={String(editedQuantity)}
@@ -378,8 +365,7 @@ const Inventory = () => {
                 />
               </View>
               {/* Category selection -- need to fix */}
-              <View style={styles.inputRow}> 
-                <Text style={styles.modalTitle}>Category: </Text>
+              <View style={styles.inputRow}>
                 <TextInput
                   style={styles.input}
                   value={String(editedCategory)}
@@ -387,28 +373,22 @@ const Inventory = () => {
                   placeholder="CategoryID"
                 />
               </View>
+              <TouchableOpacity style={[styles.saveButton]} onPress={handleSaveChanges}>
+                <Text style={styles.saveButtonText}>Save Changes</Text>
+              </TouchableOpacity>
+
               <TouchableOpacity style={[styles.closeButton]} onPress={handleRemoveItem}>
                 <Text style={styles.closeButtonText}>Delete Item</Text>
-              </TouchableOpacity>     
-              <View style={styles.inputRow}>
-                <TouchableOpacity
-                  style={[styles.saveButton, styles.buttonLeft, styles.halfButton]}
-                  onPress={handleSaveChanges}
-                >
-                  <Text style={styles.saveButtonText}>Save Changes</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.closeButton, styles.buttonRight, styles.halfButton]}
-                  onPress={() => setEditModalVisible(false)}
-                >
-                  <Text style={styles.closeButtonText}>Close</Text>
-                </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={[styles.closeButton]} onPress={() => setEditModalVisible(false)}>
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </Modal>
 
-      {/* Displaying Inventory  */}
+        {/* Displaying Inventory  */}
 
         {sortInventory().map((item) => (
           <View key={item.ProductID} style={styles.card}>
@@ -418,7 +398,7 @@ const Inventory = () => {
               </View>
               <Text style={styles.quantity}>QT: {item.ProductQuantity}</Text>
               <TouchableOpacity style={styles.editButtonContainer} onPress={() => handleEdit(item)}>
-                <Text style={styles.editButton}>Edit</Text>
+                <Image source={edit} style={styles.editIcon} />
               </TouchableOpacity>
             </View>
           </View>
@@ -442,11 +422,14 @@ const styles = StyleSheet.create({
     marginTop: 10,
     width: '100%',
     flex: 1,
-    marginLeft: 10,
   },
   inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  editIcon: {
+    width: 24,
+    height: 24,
   },
   buttonRow: {
     flexDirection: 'row',
@@ -458,19 +441,23 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   modalTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Nunito-Bold',
+    fontSize: 15,
+    color: 'black',
+    textAlign: 'center',
   },
   scrollContainer: {
     flexGrow: 1,
     paddingBottom: 100,
+    width: '100%',
+    alignItems: 'center',
   },
   buttonLeft: {
     marginRight: 'auto',
   },
   buttonRight: {
     marginLeft: 'auto',
-  },  
+  },
   filterButton: {
     backgroundColor: '#F3D014',
     padding: 10,
@@ -478,8 +465,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   filterButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Nunito-Black',
+    fontSize: 15,
+    color: 'black',
     textAlign: 'center',
   },
   modalContainer: {
@@ -502,29 +490,29 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ccc',
   },
   closeButton: {
-    marginTop: 20,
     backgroundColor: '#FA4616',
     padding: 10,
     borderRadius: 5,
-    alignSelf: 'center',
-    marginRight: 'auto',
+    marginBottom: 10,
+    width: '100%',
   },
   closeButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Nunito-Bold',
+    fontSize: 15,
+    color: 'black',
     textAlign: 'center',
   },
   saveButton: {
-    marginTop: 20,
     backgroundColor: '#F3D014',
     padding: 10,
     borderRadius: 5,
-    alignSelf: 'center',
-    marginLeft: 'auto',
+    marginBottom: 10,
+    width: '100%',
   },
   saveButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Nunito-Bold',
+    fontSize: 15,
+    color: 'black',
     textAlign: 'center',
   },
   sortButton: {
@@ -534,8 +522,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   sortButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Nunito-Black',
+    fontSize: 15,
+    color: 'black',
     textAlign: 'center',
   },
   sortOption: {
@@ -544,21 +533,27 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ccc',
   },
   sortOptionText: {
-    fontSize: 16,
+    fontFamily: 'Nunito-Bold',
+    fontSize: 15,
+    color: 'black',
+    textAlign: 'center',
   },
   card: {
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
+    marginTop: 20,
+    flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 10,
-    elevation: 3,
-    shadowOffset: { width: 1, height: 1 },
-    shadowColor: '#333',
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
+    width: '95%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 7,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 2,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+
   },
   cardContent: {
     flexDirection: 'row',
@@ -566,37 +561,44 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   leftContent: {
-    flex: 1,
+    width: "70%",
   },
   item: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'Nunito-Bold',
+    fontSize: 15,
+    color: 'black',
+    textAlign: 'left',
+    paddingLeft: '5%',
   },
   quantity: {
     flex: 1,
-    fontSize: 17,
-    textAlign: 'center',
+    fontFamily: 'Nunito-Bold',
+    fontSize: 15,
+    color: 'black',
+    textAlign: 'left',
   },
-  editButtonContainer: {
-    backgroundColor: '#F3D014',
-    padding: 8,
-    borderRadius: 5,
+  editIconContainer: {
+    width: '20%',
+    flexDirection: 'row',
+    justifyContent: "flex-end"
   },
   editButton: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Nunito-Bold',
+    fontSize: 15,
+    color: 'black',
     textAlign: 'center',
   },
   cameraButton: {
     backgroundColor: '#F3D014',
     padding: 10,
     borderRadius: 5,
-    alignSelf: 'center',
-    marginBottom: 0, // Adjust this value as needed
+    marginBottom: 10,
+    width: '100%',
   },
   cameraButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Nunito-Black',
+    fontSize: 15,
+    color: 'black',
     textAlign: 'center',
   },
 });
