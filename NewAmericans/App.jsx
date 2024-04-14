@@ -27,7 +27,6 @@ import Logo from './assets/snhucfna.png';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { CartProvider } from './components/Cart/CartProvider';
-import CameraComponent from './components/Camera/Camera';
 
 
 SplashScreen.preventAutoHideAsync();
@@ -96,11 +95,6 @@ function InventoryToCameraStackScreen() {
       <InventoryToCameraStack.Screen
         name="InventoryScreen"
         component={Inventory}
-        options={{ headerShown: false }}
-      />
-      <InventoryToCameraStack.Screen
-        name="CameraComponent"
-        component={CameraComponent}
         options={{ headerShown: false }}
       />
     </InventoryToCameraStack.Navigator>
