@@ -265,6 +265,10 @@ const styles = StyleSheet.create({
     width: '100%',
     maxHeight: '50%',
   },
+  modalTitle: {
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
 });
 
 export default StudentOrders;

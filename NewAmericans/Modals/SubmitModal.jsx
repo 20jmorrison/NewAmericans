@@ -55,7 +55,7 @@ const SubmitModal = ({ visible, onClose, cartItemsWithQuantity }) => {
                     
                     {/* Student dropdown */}
                     <TouchableOpacity style={[styles.button, styles.showButton]} onPress={() => setStudentDropdownVisible(!studentDropdownVisible)}>
-                        <Text style={styles.buttonText}>Students</Text>
+                        <Text style={styles.buttonText}>Student</Text>
                     </TouchableOpacity>
                     {studentDropdownVisible && (
                         <View>
@@ -84,7 +84,7 @@ const SubmitModal = ({ visible, onClose, cartItemsWithQuantity }) => {
 
                     {/* Admin dropdown */}
                     <TouchableOpacity style={[styles.button, styles.showButton]} onPress={() => setAdminDropdownVisible(!adminDropdownVisible)}>
-                        <Text style={styles.buttonText}>Admins</Text>
+                        <Text style={styles.buttonText}>Admin</Text>
                     </TouchableOpacity>
                     {adminDropdownVisible && (
                         <View>
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         fontSize: 14, // Adjust text size as needed
-        color: 'black', // Add this line to ensure text visibility
+        color: 'black', // Set text color to black for better visibility
 
     },
     showButton: {

@@ -25,6 +25,7 @@ const Families = () => {
         const studentsData = await fetchStudents();
         setStudents(studentsData);
         setFilteredStudents(studentsData); // Initialize filtered students with all students
+
       } catch (error) {
         console.error('Error fetching student data:', error);
       }
@@ -63,6 +64,10 @@ const Families = () => {
     navigation.navigate('StudentOrders', { student })
     const updatedStudents = await fetchStudents();
     setStudents(updatedStudents);
+  };
+
+  const navigateToFamilyView = () => {
+    navigation.navigate('FamilyView');
   };
 
   const handleAddStudent = async () => {
@@ -194,13 +199,20 @@ const Families = () => {
 
       {/* ScrollView for displaying students */}
       <ScrollView>
-        <View style={styles.buttonContainer}>
-          <Button title="Add Student" onPress={() => setIsAddStudentModalVisible(true)} color='black'/>
-          <Button title="Sort" onPress={() => setIsSortModalVisible(true)} color='black'/>
+        <TouchableOpacity onPress={navigateToFamilyView} style={styles.buttonContainer}>
+          <Text style={styles.saveButtonText}>View Families</Text>
+        </TouchableOpacity>
+        <View style={styles.buttonRow}>
+          <TouchableOpacity style={[styles.filterButton, styles.halfButton, styles.leftPadding]}  onPress={() => setIsAddStudentModalVisible(true)}>
+            <Text style={styles.filterButtonText}>Add Student</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.filterButton, styles.halfButton]}  onPress={() => setIsSortModalVisible(true)}>
+            <Text style={styles.filterButtonText}>Sort</Text>
+          </TouchableOpacity>
         </View>
         {/* Mapping over filtered students and displaying them */}
         {filteredStudents.map((student) => (
-          <TouchableOpacity key={student.StudentID} onPress={() => handlePress(student)}>
+          <TouchableOpacity key={student.id} onPress={() => handlePress(student)}>
             <View style={styles.card}>
               <Text style={styles.firstName}>{student.first_name}  </Text>
               <Text style={styles.lastName}>{student.last_name}</Text>
@@ -222,7 +234,8 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginVertical: 5,
+    marginVertical: 1,
+    padding: 8,
     backgroundColor: '#F3D014',
 
   },
@@ -333,6 +346,23 @@ const styles = StyleSheet.create({
     flex: 0.5,
     marginRight: 5,
   },
+  filterButton: {
+    backgroundColor: '#F3D014',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 5,
+  },
+  filterButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 5,
+  },
+  
 });
 
 export default Families;
