@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { fetchCategories } from '../components/Categories/FetchingCategories';
-import { Ionicons } from '@expo/vector-icons'; // Import Ionicons for icons
-import { useCart } from '../components/Cart/CartProvider';
+import checkout from '../assets/checkout.png';
+
 
 const categoryImages = {
   'View All': require('../assets/cart.png'),
@@ -58,22 +58,45 @@ const Order = () => {
 
   return (
     <ScrollView contentContainerStyle={[styles.container, styles.scrollViewContent]}>
+      <TouchableOpacity onPress={() => navigation.navigate('CartScreen')} style={styles.checkout}>
+          <Text style={styles.buttonText}>Checkout</Text>
+          <Image source={checkout} style={styles.checkoutIcon} />
+      </TouchableOpacity>
       {categories.map((category, index) => (
         <Item key={index} category={category} />
       ))}
-      <View style={styles.cartIconContainer}>
-        <Ionicons
-          name="cart"
-          size={36}
-          color="black"
-          onPress={() => navigation.navigate('CartScreen')}
-        />
-      </View>
+
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  checkout: {
+    flexDirection: 'row',
+    padding: 10,
+    backgroundColor: '#F3D014',
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 2,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    width: '100%',
+    justifyContent: 'center',
+  },
+  checkoutIcon: {
+    width: 24,
+    height: 24,
+    marginLeft: 20,
+  },
+  buttonText: {
+    fontFamily: 'Nunito-Bold',
+    fontSize: 15,
+    color: 'black',
+    textAlign: 'center',
+  },
   container: {
     flexGrow: 1,
     flexDirection: 'row',
@@ -111,11 +134,13 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   itemText: {
+    fontFamily: 'Nunito-Bold',
+    fontSize: 15,
+    color: 'black',
     textAlign: 'center',
-    fontSize: 16,
   },
   scrollViewContent: {
-    paddingTop: 50, // Adjust the padding top to create space for the icons
+    paddingTop: 10, // Adjust the padding top to create space for the icons
     paddingBottom: 100, // Add padding to the bottom of the ScrollView
   },
   cartIconContainer: {
