@@ -28,6 +28,7 @@ const Inventory = () => {
   const [editedCategory, setEditedCategory] = useState('');
   const [refreshDataTrigger, setRefreshDataTrigger] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [searchCategoryQuery, setSearchCategoryQuery] = useState('');
   const navigation = useNavigation();
 
 
@@ -83,7 +84,7 @@ const Inventory = () => {
       ProductName: editedProductName !== '' ? editedProductName : editedItem.ProductName,
       ProductQuantity: editedQuantity !== '' ? editedQuantity : editedItem.ProductQuantity,
       CategoryID: updatedCategoryID !== '' ? updatedCategoryID : editedItem.CategoryID,
-      PictureURI: capturedImageUri
+      PictureURI: selectedImage !== '' ? selectedImage : editedItem.PictureURI,
     };
 
     putProduct(updatedProduct);
@@ -204,21 +205,35 @@ const Inventory = () => {
     return sortedInventory;
   };
 
-  // Filter categories based on search query
-  const handleSearch = (query) => {
-    setSearchCategoryQuery(query);
-    const filtered = categories.filter(categories =>
-      categories.name.toLowerCase().includes(query.toLowerCase())
-    );
-    setFilteredCategories(filtered);
+  // Filter categories based on search text
+  const filteredCategories = allCategories.filter(category =>
+    category.category_name.toLowerCase().includes(searchCategoryQuery.toLowerCase())
+  );
+
+  const handleEditedCategorySelect = (category) => {
+    setEditedCategory(`${category.category_name}`);
   };
+  const handleNewCategorySelect = (category) => {
+    setNewCategory(`${category.category_name}`);
+  };
+
+
+  const navigateToCategoryView = () => {
+    navigation.navigate('Categories');
+  };
+
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
-        <TouchableOpacity style={styles.filterButton} onPress={() => setAddModalVisible(true)}>
+      <View style={styles.buttonRow}>
+        <TouchableOpacity style={[styles.filterButton, styles.halfButton]} onPress={() => setAddModalVisible(true)}>
           <Text style={styles.filterButtonText}>Add New Item</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={[styles.filterButton, styles.halfButton]} onPress={navigateToCategoryView}>
+            <Text style={styles.filterButtonText}>Edit Categories</Text>
+          </TouchableOpacity>
+          </View>
         
         <View style={styles.buttonRow}>
           <TouchableOpacity style={[styles.filterButton, styles.halfButton]} onPress={() => setCategoryModalVisible(true)}>
@@ -301,20 +316,41 @@ const Inventory = () => {
                   keyboardType="numeric"
                 />
               </View>
-              {/* Category selection -- need to fix */}
               <View style={styles.inputRow}>
                 <TextInput
                   style={styles.input}
-                  onChangeText={(text) => setNewCategory(text)}
+                  value={String(newCategory)}
+                  onChangeText={(text) => {
+                    setSearchCategoryQuery(text)
+                    setNewCategory(text)}}
                   placeholder="Category"
                   placeholderTextColor="#808080"
                 />
               </View>
+              <ScrollView style={styles.scrollView}>
+                {filteredCategories.map(category => (
+                  <TouchableOpacity
+                    key={category.CategoryID}
+                    style={styles.itemButton}
+                    onPress={() => handleNewCategorySelect(category)}
+                  >
+                    <Text>{category.category_name}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+              <TouchableOpacity style={[styles.saveButton]} onPress={handleSelectImage}>
+                <Text style={styles.saveButtonText}>Select Image</Text>
+              </TouchableOpacity>
               <TouchableOpacity style={[styles.saveButton]} onPress={handleAddItem}>
                 <Text style={styles.saveButtonText}>Add Item</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={[styles.closeButton]} onPress={() => { setEditedItem({ ProductName: '', ProductQuantity: '', CategoryID: '' }); setAddModalVisible(false) }}>
+              <TouchableOpacity style={[styles.closeButton]} onPress={() => { 
+                setNewCategory('')
+                setNewItemName('')
+                setNewQuantity('')
+                setSearchCategoryQuery('')
+                setAddModalVisible(false) }}>
                 <Text style={styles.closeButtonText}>Close</Text>
               </TouchableOpacity>
             </View>
@@ -348,15 +384,27 @@ const Inventory = () => {
                   keyboardType="numeric"
                 />
               </View>
-              {/* Category selection -- need to fix */}
               <View style={styles.inputRow}>
                 <TextInput
                   style={styles.input}
                   value={String(editedCategory)}
-                  onChangeText={(text) => setEditedCategory(text)}
-                  placeholder="CategoryID"
+                  onChangeText={(text) => {
+                    setSearchCategoryQuery(text)
+                    setEditedCategory(text)}}
+                  placeholder="Category"
                 />
               </View>
+              <ScrollView style={styles.scrollView}>
+                {filteredCategories.map(category => (
+                  <TouchableOpacity
+                    key={category.CategoryID}
+                    style={styles.itemButton}
+                    onPress={() => handleEditedCategorySelect(category)}
+                  >
+                    <Text>{category.category_name}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
               <TouchableOpacity style={[styles.saveButton]} onPress={handleSelectImage}>
                 <Text style={styles.saveButtonText}>Select Image</Text>
               </TouchableOpacity>
@@ -364,7 +412,7 @@ const Inventory = () => {
                 <Text style={styles.saveButtonText}>Save Changes</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={[styles.closeButton]} onPress={handleRemoveItem}>
+              <TouchableOpacity style={[styles.closeButton, { marginBottom: 10 }]} onPress={handleRemoveItem}>
                 <Text style={styles.closeButtonText}>Delete Item</Text>
               </TouchableOpacity>
 
@@ -465,10 +513,10 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: 'white',
-    padding: 20,
+    padding: 10,
     borderRadius: 10,
     width: '80%',
-    maxHeight: '80%',
+    maxHeight: '75%',
   },
   categoryItem: {
     fontSize: 16,
@@ -480,7 +528,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FA4616',
     padding: 10,
     borderRadius: 5,
-    marginBottom: 10,
+    //marginBottom: 10,
     width: '100%',
   },
   closeButtonText: {
@@ -588,6 +636,19 @@ const styles = StyleSheet.create({
     color: 'black',
     textAlign: 'center',
   },
+  itemButton: {
+    padding: 6,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    marginBottom: 5,
+  },
+  scrollView: {
+    width: '100%',
+    maxHeight: '16%',
+    marginBottom: 10,
+  },
+
 });
 
 export default Inventory;

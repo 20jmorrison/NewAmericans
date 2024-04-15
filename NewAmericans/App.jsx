@@ -17,6 +17,7 @@ import PasswordProtectedScreen from './Screens/PasswordProtectedScreen';
 import CartScreen from './Screens/CartScreen';
 import FamilyView from './Screens/FamilyView';
 import SelectedFamily from './Screens/SelectedFamily';
+import Categories from './Screens/Categories';
 import { Image } from 'react-native';
 import OrderIcon from './assets/order.png';
 import InventoryIcon from './assets/inventory.png';
@@ -95,6 +96,11 @@ function InventoryToCameraStackScreen() {
       <InventoryToCameraStack.Screen
         name="InventoryScreen"
         component={Inventory}
+        options={{ headerShown: false }}
+      />
+      <InventoryToCameraStack.Screen
+        name="Categories"
+        component={Categories}
         options={{ headerShown: false }}
       />
     </InventoryToCameraStack.Navigator>
