@@ -84,14 +84,14 @@ const Inventory = () => {
       ProductName: editedProductName !== '' ? editedProductName : editedItem.ProductName,
       ProductQuantity: editedQuantity !== '' ? editedQuantity : editedItem.ProductQuantity,
       CategoryID: updatedCategoryID !== '' ? updatedCategoryID : editedItem.CategoryID,
-      PictureURI: selectedImage !== '' ? selectedImage : editedItem.PictureURI,
+      PictureURI: selectedImage
     };
 
     putProduct(updatedProduct);
     const updatedInventory = await fetchItems();
     setInventory(updatedInventory);
     setEditModalVisible(false);
-
+    setSelectedImage(null)
     setRefreshDataTrigger(t => !t);
     setEditedProductName('');
     setEditedQuantity('');
