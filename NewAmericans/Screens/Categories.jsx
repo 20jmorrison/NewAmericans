@@ -6,6 +6,7 @@ import edit from '../assets/edit.png';
 import { postNewCategory } from '../components/Categories/PostingCategory';
 import { putCategory } from '../components/Categories/PuttingCategory';
 import { deleteCategory } from '../components/Categories/DeleteCategory';
+import { fetchItems } from '../components/Categories/FetchingItems';
 
 
 
@@ -13,16 +14,12 @@ import { deleteCategory } from '../components/Categories/DeleteCategory';
 
 const CategoriesScreen = () => {
   const [categories, setCategories] = useState([]);
+  const [inventory, setInventory] = useState([]);
   const [editedCategory, setEditedCategory] = useState({});
   const [editedCategoryName, setEditedCategoryName] = useState('');
   const [newCategoryName, setNewCategoryName] = useState('');
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [addModalVisible, setAddModalVisible] = useState(false);
-
-
-
-
-
 
 
 
@@ -47,11 +44,25 @@ const CategoriesScreen = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const fetchItemData = async () => {
+      try {
+        // Fetch all items
+        const items = await fetchItems();
+        setInventory(items);
+      } catch (error) {
+        console.error('Error fetching items:', error);
+      }
+    };
+
+    fetchItemData();
+  }, []);
+
 
   const handleAddCategory = async () => {
 
     const newCategory = {
-      category_name : newCategoryName,
+      category_name: newCategoryName,
       // add PictureURI here ?
     };
     console.log('New Category: ', newCategory);
@@ -65,50 +76,43 @@ const CategoriesScreen = () => {
 
 
   const handleSaveChanges = async () => {
-    /*
-    const updatedCategoryID = getCategoryIDByName(editedCategory);
-    const updatedProduct = {
-      ...editedItem,
-      ProductName: editedProductName !== '' ? editedProductName : editedItem.ProductName,
-      ProductQuantity: editedQuantity !== '' ? editedQuantity : editedItem.ProductQuantity,
-      CategoryID: updatedCategoryID !== '' ? updatedCategoryID : editedItem.CategoryID,
-      PictureURI: capturedImageUri
+    const updatedCategory = {
+      ...editedCategory,
+      category_name: editedCategoryName !== '' ? editedCategoryName : editedCategory.category_name,
     };
 
 
-    putProduct(updatedProduct);
-    setCapturedImageUri(null);
-    const updatedInventory = await fetchItems();
-    setInventory(updatedInventory);
+    putCategory(updatedCategory);
+    const updatedCategories = await fetchCategories();
+    setCategories(updatedCategories);
     setEditModalVisible(false);
 
-
-    setRefreshDataTrigger(t => !t);
-    setEditedProductName('');
-    setEditedQuantity('');
-    setEditedCategory('');
-    setSearchCategoryQuery('');
-    */
+    setEditedCategoryName('');
   };
 
 
   const handleDeleteCategory = async () => {
-    /*
+    const isCategoryUsed = inventory.some(item => item.CategoryID === editedCategory.CategoryID);
+
+    if (isCategoryUsed) {
+      alert('Items in this category must be reassigned before deleting.');
+      return;
+    }
+
+
     try {
-      await deleteProduct(editedItem);
+      await deleteCategory(editedCategory);
 
 
-      const updatedInventory = await fetchItems();
-      setInventory(updatedInventory);
+      const updatedCategories = await fetchCategories();
+      setCategories(updatedCategories);
 
 
       setEditModalVisible(false);
 
-
     } catch (error) {
       console.error('Error removing item:', error);
     }
-    */
   };
 
 
@@ -224,8 +228,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     borderRadius: 8,
-    padding: 10,
-    marginBottom: 10,
+    padding: 15,
+    marginBottom: 15,
     elevation: 3,
     shadowOffset: { width: 1, height: 1 },
     shadowColor: '#333',
@@ -245,9 +249,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   item: {
-    fontSize: 18,
-    fontWeight: 'bold',
     fontFamily: 'Nunito-Bold',
+    fontSize: 18,
+    color: 'black',
+    textAlign: 'left',
+    paddingLeft: '5%',
   },
   editButtonContainer: {
     //backgroundColor: '#F3D014',

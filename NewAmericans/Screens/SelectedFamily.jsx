@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, ScrollView, Image } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { fetchStudents } from '../components/Students/StudentFetching';
@@ -7,6 +7,8 @@ import { UpdateStudentFamily } from '../components/Families/UpdateStudentFamily'
 import { putFamily } from '../components/Families/PuttingFamily';
 import { deleteFamily } from '../components/Families/DeleteFamily';
 import { fetchTransactions } from '../components/Transactions/TransactionFetching';
+import edit from '../assets/edit.png';
+
 
 
 
@@ -175,14 +177,14 @@ const SelectedFamily = () => {
   return (
     <View style={styles.container}>
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={[styles.filterButton, styles.halfButton, { marginBottom: 10 }]} onPress={() => setAddStudentModal(true)}>
+        <TouchableOpacity style={[styles.filterButton, {width: '100%' }, { marginBottom: 10 }]} onPress={() => setAddStudentModal(true)}>
           <Text style={styles.filterButtonText}>Add Student</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.rowContainer}>
         <Text style={styles.header}>Family: {family.family_name}</Text>
-        <TouchableOpacity style={styles.editButtonContainer} onPress={() => setEditFamilyModal(true)}>
-          <Text style={styles.editButton}>Edit</Text>
+        <TouchableOpacity style={styles.editIconContainer} onPress={() => setEditFamilyModal(true)}>
+          <Image source={edit} style={styles.editIcon} />
         </TouchableOpacity>
       </View>
       {/* Modal to add student */}
@@ -215,15 +217,14 @@ const SelectedFamily = () => {
                 </TouchableOpacity>
               ))}
             </ScrollView>
-            <View style={styles.buttonRow}>
               <TouchableOpacity
-                style={[styles.saveButton, styles.buttonLeft, styles.halfButton]}
+                style={[styles.saveButton]}
                 onPress={handleAddStudent}
               >
                 <Text style={styles.saveButtonText}>Save</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.closeButton, styles.buttonRight, styles.halfButton]}
+                style={[styles.closeButton]}
                 onPress={() => {
                   setAddStudentModal(false);
                   setSelectedStudent(null);
@@ -233,7 +234,6 @@ const SelectedFamily = () => {
               >
                 <Text style={styles.closeButtonText}>Close</Text>
               </TouchableOpacity>
-            </View>
           </View>
         </View>
       </Modal>
@@ -250,15 +250,14 @@ const SelectedFamily = () => {
             <Text style={styles.modalHeader}>
               Remove {selectedStudentDelete ? `${selectedStudentDelete.first_name} ${selectedStudentDelete.last_name}` : 'Student'} from {family.family_name}?
             </Text>
-            <View style={styles.buttonRow}>
               <TouchableOpacity
-                style={[styles.saveButton, styles.buttonLeft, styles.halfButton]}
+                style={[styles.saveButton]}
                 onPress={handleRemoveStudent}
               >
                 <Text style={styles.saveButtonText}>Yes</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.closeButton, styles.buttonRight, styles.halfButton]}
+                style={[styles.closeButton]}
                 onPress={() => {
                   setDeleteStudentModal(false);
                   setSelectedStudentDelete(null);
@@ -266,7 +265,6 @@ const SelectedFamily = () => {
               >
                 <Text style={styles.closeButtonText}>No</Text>
               </TouchableOpacity>
-            </View>
           </View>
         </View>
       </Modal>
@@ -291,21 +289,19 @@ const SelectedFamily = () => {
             <TouchableOpacity style={styles.closeButton} onPress={handleDeleteFamily}>
               <Text style={styles.closeButtonText}>Delete Family</Text>
             </TouchableOpacity>
-            <View style={styles.inputRow}>
               <TouchableOpacity
-                style={[styles.saveButton, styles.halfButton, styles.buttonLeft]}
+                style={[styles.saveButton]}
                 onPress={handleSaveChanges}
               >
                 <Text style={styles.saveButtonText}>Save Changes</Text>
               </TouchableOpacity>
               <View style={{ width: 10 }} />
               <TouchableOpacity
-                style={[styles.closeButton, styles.halfButton, styles.buttonRight]}
+                style={[styles.closeButton]}
                 onPress={() => setEditFamilyModal(false)}
               >
                 <Text style={styles.closeButtonText}>Close</Text>
               </TouchableOpacity>
-            </View>
           </View>
         </View>
       </Modal>
@@ -375,6 +371,7 @@ const styles = StyleSheet.create({
   studentName: {
     fontSize: 18,
     fontWeight: 'bold',
+    fontFamily: 'Nunito-Bold',
   },
   deleteButton: {
     backgroundColor: '#F3D014',
@@ -404,7 +401,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   itemButton: {
-    padding: 10,
+    padding: 8,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
@@ -423,6 +420,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 10,
     marginRight: 15,
+    fontFamily: 'Nunito-Bold',
   },
   modalHeader: {
     fontSize: 20,
@@ -430,6 +428,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 20,
     marginRight: 15,
+    fontFamily: 'Nunito-Bold',
   },
   deleteModalContent: {
     backgroundColor: 'white',
@@ -448,6 +447,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'Nunito-Bold',
   },
   buttonRow: {
     flexDirection: 'row',
@@ -459,30 +459,34 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   closeButton: {
-    marginTop: 20,
+    marginTop: 10,
     backgroundColor: '#FA4616',
     padding: 10,
     borderRadius: 5,
     alignSelf: 'center',
     marginRight: 'auto',
+    width: '100%',
   },
   closeButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'Nunito-Bold',
   },
   saveButton: {
-    marginTop: 20,
+    marginTop: 10,
     backgroundColor: '#F3D014',
     padding: 10,
     borderRadius: 5,
     alignSelf: 'center',
     marginLeft: 'auto',
+    width: '100%',
   },
   saveButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'Nunito-Bold',
   },
   buttonLeft: {
     marginRight: 'auto',
@@ -528,16 +532,28 @@ const styles = StyleSheet.create({
   dateText: {
     color: 'black',
     fontWeight: 'bold',
+    fontFamily: 'Nunito-Bold',
   },
   scrollView: {
     width: '100%',
-    maxHeight: '50%',
+    maxHeight: '60%',
   },
   ordersText: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
     textAlign: 'center',
+    fontFamily: 'Nunito-Bold',
+  },
+  editIcon: {
+    width: 24,
+    height: 24,
+  },
+  editIconContainer: {
+    padding: 5,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 10,
   },
 });
 
