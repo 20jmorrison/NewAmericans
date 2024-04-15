@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
+    fontFamily: 'Nunito-Bold',
   },
   scrollView: {
     width: '100%',
@@ -95,14 +96,17 @@ const styles = StyleSheet.create({
   boldText: {
     fontWeight: 'bold',
     fontSize: 15,
+    fontFamily: 'Nunito-Bold',
   },
   transactionText: {
     marginLeft: 5,
     fontSize: 15,
+    fontFamily: 'Nunito-Bold',
   },
   adminText: {
     fontWeight: 'bold',
     fontSize: 18,
+    fontFamily: 'Nunito-Bold',
   },
 });
 

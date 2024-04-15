@@ -5,7 +5,7 @@ import { fetchCategories } from '../components/Categories/FetchingCategories';
 import { postNewProduct } from '../components/Products/PostingProduct';
 import { putProduct } from '../components/Products/PuttingProduct';
 import { deleteProduct } from '../components/Products/DeleteProduct';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import edit from '../assets/edit.png';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -29,6 +29,8 @@ const Inventory = () => {
   const [refreshDataTrigger, setRefreshDataTrigger] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [searchCategoryQuery, setSearchCategoryQuery] = useState('');
+  const [saveErrorMessage, setSaveErrorMessage] = useState('');
+  const [addErrorMessage, setAddErrorMessage] = useState('');
   const navigation = useNavigation();
 
 
@@ -62,6 +64,25 @@ const Inventory = () => {
     fetchData();
   }, []);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchData = async () => {
+        try {
+          const updatedCategories = await fetchCategories();
+          setAllCategories(updatedCategories);
+        } catch (error) {
+          console.error('Error fetching category data:', error);
+        }
+      };
+
+      fetchData();
+
+      return () => {
+
+      };
+    }, [])
+  );
+
   const handleEdit = (item) => {
     setEditedItem(item);
     setEditedProductName(item.ProductName);
@@ -77,8 +98,13 @@ const Inventory = () => {
   };
 
   const handleSaveChanges = async () => {
-    //implement error checking for categories or option to add new category
     const updatedCategoryID = getCategoryIDByName(editedCategory);
+
+    if (!updatedCategoryID) {
+      setSaveErrorMessage("Choose an existing category.");
+      return;
+    }
+
     const updatedProduct = {
       ...editedItem,
       ProductName: editedProductName !== '' ? editedProductName : editedItem.ProductName,
@@ -96,7 +122,8 @@ const Inventory = () => {
     setEditedProductName('');
     setEditedQuantity('');
     setEditedCategory('');
-    setSelectedImage(null);
+    setSaveErrorMessage('');
+    setSearchCategoryQuery('');
   };
 
   const handleSelectImage = async () => {
@@ -116,8 +143,12 @@ const Inventory = () => {
   };
 
   const handleAddItem = async () => {
-    //implement error checking for categories or option to add new category
     const newCategoryID = getCategoryIDByName(newCategory);
+
+    if (!newCategoryID) {
+      setAddErrorMessage("Choose an existing category.");
+      return;
+    }
 
     const newItem = {
       ProductName: newItemName,
@@ -135,6 +166,8 @@ const Inventory = () => {
     setNewItemName('');
     setNewQuantity('');
     setNewCategory('');
+    setAddErrorMessage('');
+    setSearchCategoryQuery('');
   }
 
   const handleRemoveItem = async () => {
@@ -159,8 +192,8 @@ const Inventory = () => {
 
 
   const renderCategoryItem = ({ item }) => (
-    <TouchableOpacity onPress={() => filterByCategory(item.id)}>
-      <Text style={styles.categoryItem}>{item.name}</Text>
+    <TouchableOpacity style={styles.sortOption} onPress={() => filterByCategory(item.id)}>
+      <Text style={styles.sortOptionText}>{item.name}</Text>
     </TouchableOpacity>
   );
 
@@ -250,8 +283,8 @@ const Inventory = () => {
           visible={categoryModalVisible}
           onRequestClose={() => setCategoryModalVisible(false)}
         >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
+          <View style={[styles.modalContainer]}>
+            <View style={[styles.modalContent, {maxHeight:'50%'}]}>
               <FlatList
                 data={categories}
                 renderItem={renderCategoryItem}
@@ -316,6 +349,7 @@ const Inventory = () => {
                   keyboardType="numeric"
                 />
               </View>
+              {addErrorMessage && <Text style={{ color: 'red' }}>{addErrorMessage}</Text>}
               <View style={styles.inputRow}>
                 <TextInput
                   style={styles.input}
@@ -350,6 +384,7 @@ const Inventory = () => {
                 setNewItemName('')
                 setNewQuantity('')
                 setSearchCategoryQuery('')
+                setAddErrorMessage('')
                 setAddModalVisible(false) }}>
                 <Text style={styles.closeButtonText}>Close</Text>
               </TouchableOpacity>
@@ -384,6 +419,7 @@ const Inventory = () => {
                   keyboardType="numeric"
                 />
               </View>
+              {saveErrorMessage && <Text style={{ color: 'red' }}>{saveErrorMessage}</Text>}
               <View style={styles.inputRow}>
                 <TextInput
                   style={styles.input}
@@ -416,7 +452,10 @@ const Inventory = () => {
                 <Text style={styles.closeButtonText}>Delete Item</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={[styles.closeButton]} onPress={() => setEditModalVisible(false)}>
+              <TouchableOpacity style={[styles.closeButton]} onPress={() => {
+                setSearchCategoryQuery('')
+                setSaveErrorMessage('')
+                setEditModalVisible(false)}}>
                 <Text style={styles.closeButtonText}>Close</Text>
               </TouchableOpacity>
             </View>
@@ -424,9 +463,9 @@ const Inventory = () => {
         </Modal>
 
         {/* Displaying Inventory  */}
-
-        {sortInventory().map((item) => (
-          <View key={item.ProductID} style={styles.card}>
+        {sortInventory().length > 0 ? (
+          sortInventory().map((item) => (
+            <View key={item.ProductID} style={styles.card}>
             <View style={styles.cardContent}>
               <View style={styles.leftContent}>
                 <Text style={styles.item}>{item.ProductName}</Text>
@@ -436,8 +475,10 @@ const Inventory = () => {
                 <Image source={edit} style={styles.editIcon} />
               </TouchableOpacity>
             </View>
-          </View>
-        ))}
+          </View>  ))
+        ) : (
+          <Text style={styles.noItemsText}>No items found in this category.</Text>
+        )}
       </View>
     </ScrollView>
   );
@@ -447,6 +488,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 15,
+    width: '100%',
   },
   input: {
     borderWidth: 1,
@@ -577,7 +619,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    width: '95%',
+    width: '98%',
     backgroundColor: '#FFFFFF',
     borderRadius: 7,
     padding: 20,
@@ -600,7 +642,7 @@ const styles = StyleSheet.create({
   },
   item: {
     fontFamily: 'Nunito-Bold',
-    fontSize: 15,
+    fontSize: 18,
     color: 'black',
     textAlign: 'left',
     paddingLeft: '5%',
@@ -638,17 +680,24 @@ const styles = StyleSheet.create({
   },
   itemButton: {
     padding: 6,
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: '#ccc',
     borderRadius: 5,
-    marginBottom: 5,
+    marginBottom: 3,
   },
   scrollView: {
     width: '100%',
     maxHeight: '16%',
     marginBottom: 10,
   },
-
+  noItemsText: {
+    fontFamily: 'Nunito-Bold',
+    fontSize: 18,
+    color: 'grey',
+    textAlign: 'center',
+    marginTop: 40,
+    alignSelf: 'stretch',
+  },
 });
 
 export default Inventory;

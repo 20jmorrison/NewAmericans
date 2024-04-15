@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Modal, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Modal, ScrollView, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { fetchTransactions } from '../components/Transactions/TransactionFetching';
 import { putStudent } from '../components/Students/PuttingStudent';
 import { deleteStudent } from '../components/Students/DeleteStudent';
+import edit from '../assets/edit.png';
+
 
 
 const StudentOrders = ({ route }) => {
@@ -68,8 +70,8 @@ const StudentOrders = ({ route }) => {
     <View style={styles.container}>
       <View style={styles.rowContainer}>
         <Text style={styles.header}>{student.first_name} {student.last_name}</Text>
-        <TouchableOpacity style={styles.editButtonContainer} onPress={() => setIsEditModalVisible(true)}>
-          <Text style={styles.editButton}>Edit</Text>
+        <TouchableOpacity style={styles.editIconContainer} onPress={() => setIsEditModalVisible(true)}>
+          <Image source={edit} style={styles.editIcon} />
         </TouchableOpacity>
       </View>
       {/* Modal to edit student */}
@@ -99,24 +101,22 @@ const StudentOrders = ({ route }) => {
                   placeholder="Last Name"
                 />
               </View>
-              <TouchableOpacity style={styles.closeButton} onPress={handleDeleteStudent}>
+              <TouchableOpacity style={[styles.closeButton, { width:'100%' }]} onPress={handleDeleteStudent}>
                 <Text style={styles.closeButtonText}>Delete Student</Text>
               </TouchableOpacity>
-              <View style={styles.inputRow}>
                 <TouchableOpacity
-                  style={[styles.saveButton, styles.halfButton, styles.buttonLeft]}
+                  style={[styles.saveButton, { width:'100%' }]}
                   onPress={handleSaveChanges}
                 >
                   <Text style={styles.saveButtonText}>Save Changes</Text>
                 </TouchableOpacity>
                 <View style={{ width: 10 }} />
                 <TouchableOpacity
-                  style={[styles.closeButton, styles.halfButton, styles.buttonRight]}
+                  style={[styles.closeButton, { width:'100%' }]}
                   onPress={() => setIsEditModalVisible(false)}
                 >
                   <Text style={styles.closeButtonText}>Close</Text>
                 </TouchableOpacity>
-              </View>
             </View>
           </View>
         </Modal>
@@ -160,7 +160,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
-    marginRight: 15,
+    marginRight: 10,
+    fontFamily: 'Nunito-Bold',
   },
   dateContainer: {
     alignSelf: 'flex-start',
@@ -173,6 +174,7 @@ const styles = StyleSheet.create({
   dateText: {
     color: 'black',
     fontWeight: 'bold',
+    fontFamily: 'Nunito-Bold',
   },
   editButtonContainer: {
     backgroundColor: '#F3D014',
@@ -185,9 +187,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'Nunito-Bold',
   },
   closeButton: {
-    marginTop: 20,
+    marginTop: 12,
     backgroundColor: '#FA4616',
     padding: 10,
     borderRadius: 5,
@@ -198,9 +201,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'Nunito-Bold',
   },
   saveButton: {
-    marginTop: 20,
+    marginTop: 12,
     backgroundColor: '#F3D014',
     padding: 10,
     borderRadius: 5,
@@ -212,6 +216,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'Nunito-Bold',
   },
   input: {
     borderWidth: 1,
@@ -260,6 +265,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
+    fontFamily: 'Nunito-Bold',
   },
   scrollView: {
     width: '100%',
@@ -268,6 +274,17 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 15,
     fontWeight: 'bold',
+    fontFamily: 'Nunito-Bold',
+  },
+  editIcon: {
+    width: 24,
+    height: 24,
+  },
+  editIconContainer: {
+    padding: 5,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 20,
   },
 });
 

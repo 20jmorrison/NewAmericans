@@ -30,7 +30,7 @@ const Families = () => {
         console.error('Error fetching student data:', error);
       }
     }
-    
+
     fetchStudentData();
   }, [refreshDataTrigger]);
 
@@ -45,9 +45,9 @@ const Families = () => {
           console.error('Error fetching student data:', error);
         }
       };
-  
+
       fetchData();
-  
+
       return () => {
 
       };
@@ -79,7 +79,7 @@ const Families = () => {
     console.log('New Student: ', newStudent);
     postNewStudent(newStudent);
     const updatedStudents = await fetchStudents();
-    setStudents(updatedStudents); 
+    setStudents(updatedStudents);
     setIsAddStudentModalVisible(false);
     setNewStudentFirstName('');
     setNewStudentLastName('');
@@ -175,10 +175,10 @@ const Families = () => {
               <Text style={styles.dropdownOption}>Sort by Last Name</Text>
             </TouchableOpacity>
             <TouchableOpacity
-                style={[styles.closeButton, styles.buttonRight]}
-                onPress={() => setIsSortModalVisible(false)}
-              >
-                <Text style={styles.closeButtonText}>Close</Text>
+              style={[styles.closeButton, styles.buttonRight]}
+              onPress={() => setIsSortModalVisible(false)}
+            >
+              <Text style={styles.closeButtonText}>Close</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -203,10 +203,10 @@ const Families = () => {
           <Text style={styles.saveButtonText}>View Families</Text>
         </TouchableOpacity>
         <View style={styles.buttonRow}>
-          <TouchableOpacity style={[styles.filterButton, styles.halfButton, styles.leftPadding]}  onPress={() => setIsAddStudentModalVisible(true)}>
+          <TouchableOpacity style={[styles.filterButton, styles.halfButton, styles.leftPadding]} onPress={() => setIsAddStudentModalVisible(true)}>
             <Text style={styles.filterButtonText}>Add Student</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.filterButton, styles.halfButton]}  onPress={() => setIsSortModalVisible(true)}>
+          <TouchableOpacity style={[styles.filterButton, styles.halfButton]} onPress={() => setIsSortModalVisible(true)}>
             <Text style={styles.filterButtonText}>Sort</Text>
           </TouchableOpacity>
         </View>
@@ -251,6 +251,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'Nunito-Bold',
   },
   saveButton: {
     marginTop: 20,
@@ -264,6 +265,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'Nunito-Bold',
   },
   searchBarContainer: {
     padding: 10,
@@ -277,9 +279,11 @@ const styles = StyleSheet.create({
   },
   firstName: {
     fontSize: 15,
+    fontFamily: 'Nunito-Bold',
   },
   lastName: {
     fontSize: 15,
+    fontFamily: 'Nunito-Bold',
   },
   modalContainer: {
     flex: 1,
@@ -325,8 +329,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    flexDirection: 'row', 
-    alignItems: 'center', 
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   inputRow: {
     flexDirection: 'row',
@@ -335,13 +339,14 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 16,
     fontWeight: 'bold',
+    fontFamily: 'Nunito-Bold',
   },
   buttonLeft: {
     marginRight: 'auto',
   },
   buttonRight: {
     marginLeft: 'auto',
-  },  
+  },
   halfButton: {
     flex: 0.5,
     marginRight: 5,
@@ -356,13 +361,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'Nunito-Bold',
   },
   buttonRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 5,
   },
-  
+
 });
 
 export default Families;

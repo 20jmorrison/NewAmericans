@@ -92,7 +92,7 @@ const FamilyView = () => {
     setFilteredFamilies(filtered);
   };
 
-  let displayedFamilies = sortedFamilies; 
+  let displayedFamilies = sortedFamilies;
 
   if (searchQuery.trim()) {
     displayedFamilies = filteredFamilies;
@@ -118,20 +118,18 @@ const FamilyView = () => {
               value={newFamilyName}
               onChangeText={(text) => setNewFamilyName(text)}
             />
-            <View style={styles.inputRow}>
-              <TouchableOpacity
-                style={[styles.saveButton, styles.buttonLeft, styles.halfButton]}
-                onPress={handleAddFamily}
-              >
-                <Text style={styles.saveButtonText}>Add Family</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.closeButton, styles.buttonRight, styles.halfButton]}
-                onPress={() => setAddFamilyModal(false)}
-              >
-                <Text style={styles.closeButtonText}>Close</Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              style={[styles.saveButton, { width: '100%' }]}
+              onPress={handleAddFamily}
+            >
+              <Text style={styles.saveButtonText}>Add Family</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.closeButton, { width: '100%' }]}
+              onPress={() => setAddFamilyModal(false)}
+            >
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -172,9 +170,9 @@ const FamilyView = () => {
 
 const styles = StyleSheet.create({
   scrollViewContent: {
-    paddingHorizontal: 5, 
-    paddingTop: 5, 
-    paddingBottom: 10, 
+    paddingHorizontal: 5,
+    paddingTop: 5,
+    paddingBottom: 10,
   },
   container: {
     flex: 1,
@@ -203,6 +201,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'Nunito-Bold',
   },
   buttonRow: {
     flexDirection: 'row',
@@ -232,7 +231,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   closeButton: {
-    marginTop: 20,
+    marginTop: 10,
     backgroundColor: '#FA4616',
     padding: 10,
     borderRadius: 5,
@@ -243,9 +242,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'Nunito-Bold',
   },
   saveButton: {
-    marginTop: 20,
+    marginTop: 10,
     backgroundColor: '#F3D014',
     padding: 10,
     borderRadius: 5,
@@ -256,6 +256,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'Nunito-Bold',
   },
   inputRow: {
     flexDirection: 'row',
@@ -264,6 +265,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 16,
     fontWeight: 'bold',
+    fontFamily: 'Nunito-Bold',
   },
   buttonLeft: {
     marginRight: 'auto',
@@ -291,6 +293,7 @@ const styles = StyleSheet.create({
   familyName: {
     fontSize: 18,
     fontWeight: 'bold',
+    fontFamily: 'Nunito-Bold',
   },
   searchBarContainer: {
     padding: 10,
