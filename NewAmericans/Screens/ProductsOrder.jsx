@@ -5,9 +5,10 @@ import { useNavigation } from '@react-navigation/native';
 import { fetchProducts } from '../components/Products/ProductFetching';
 import { useCart } from '../components/Cart/CartProvider';
 import { Ionicons } from '@expo/vector-icons'; // Import Ionicons for icons
+import checkout from '../assets/checkout.png';
 
 const Item = ({ item }) => {
-  const { addToCart } = useCart(); 
+  const { addToCart } = useCart();
   const [showModal, setShowModal] = useState(false);
 
   const handleAddToCart = () => {
@@ -64,23 +65,46 @@ const ProductsOrder = ({ route }) => {
 
   return (
     <ScrollView contentContainerStyle={[styles.container, styles.scrollViewContent]}>
+      <TouchableOpacity onPress={() => navigation.navigate('CartScreen')} style={styles.checkout}>
+        <Text style={styles.buttonText}>Checkout</Text>
+        <Image source={checkout} style={styles.checkoutIcon} />
+      </TouchableOpacity>
       {items.map(item => (
         <Item key={item.ProductID} item={item} />
       ))}
 
-      <View style={styles.cartIconContainer}>
-        <Ionicons
-          name="cart"
-          size={36}
-          color="black"
-          onPress={() => navigation.navigate('CartScreen')}
-        />
-      </View>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  checkout: {
+    flexDirection: 'row',
+    padding: 10,
+    marginBottom: 10,
+    backgroundColor: '#F3D014',
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 2,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    width: '100%',
+    justifyContent: 'center',
+  },
+  checkoutIcon: {
+    width: 24,
+    height: 24,
+    marginLeft: 20,
+  },
+  buttonText: {
+    fontFamily: 'Nunito-Bold',
+    fontSize: 15,
+    color: 'black',
+    textAlign: 'center',
+  },
   container: {
     flexGrow: 1,
     flexDirection: 'row',
@@ -107,18 +131,22 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   itemText: {
+    fontFamily: 'Nunito-Bold',
+    fontSize: 15,
+    color: 'black',
     textAlign: 'center',
-    fontSize: 16,
   },
   quantityText: {
+    fontFamily: 'Nunito-Bold',
+    fontSize: 15,
+    color: 'black',
     textAlign: 'center',
-    fontSize: 14,
-    marginTop: 'auto',
   },
   scrollViewContent: {
-    paddingTop: 60, // Adjust the padding top to create space for the icons
-    paddingBottom: 100,  },
-    modalContainer: {
+    paddingTop: 10, // Adjust the padding top to create space for the icons
+    paddingBottom: 100,
+  },
+  modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
