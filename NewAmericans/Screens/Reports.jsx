@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, LogBox } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import { fetchReportData } from '../components/Reports/FetchingReportInfo';
@@ -23,6 +23,8 @@ const Reports = () => {
   const [selectedYear, setSelectedYear] = useState('');
   const [selectedFamily, setSelectedFamily] = useState('');
   const navigation = useNavigation();
+
+  LogBox.ignoreLogs(['Found screens with the same name nested inside one another']);
 
   useEffect(() => {
     // Fetch report data when component mounts
@@ -150,7 +152,7 @@ const Reports = () => {
         >
           <Picker.Item label="Select Family" value="" />
           {families.map(family => (
-            <Picker.Item key={family.familyID} label={family.familyName} value={family.familyID} />
+            <Picker.Item key={family.FamilyID} label={family.family_name} value={family.FamilyID} />
           ))}
         </Picker>
       </View>

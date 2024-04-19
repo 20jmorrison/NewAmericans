@@ -212,7 +212,7 @@ const Families = () => {
         </View>
         {/* Mapping over filtered students and displaying them */}
         {filteredStudents.map((student) => (
-          <TouchableOpacity key={student.id} onPress={() => handlePress(student)}>
+          <TouchableOpacity key={student.StudentID} onPress={() => handlePress(student)}>
             <View style={styles.card}>
               <Text style={styles.firstName}>{student.first_name}  </Text>
               <Text style={styles.lastName}>{student.last_name}</Text>
