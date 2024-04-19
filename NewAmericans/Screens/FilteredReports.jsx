@@ -43,6 +43,9 @@ const FilteredReports = ({ route }) => {
           {filteredData.map((item, index) => (
             <View key={index} style={styles.itemContainer}>
               <Text style={{ fontFamily: 'Nunito-Bold' }}>{item.Student_FirstName} {item.Student_LastName}: {item.ProductName} ({item.Quantity}) </Text>
+              <Text style={{ fontFamily: 'Nunito-Bold' }}>
+                Family: {item.Family_Name ? item.Family_Name : 'N/A'}
+              </Text>
               <Text>{formatDate(item.DateCreated)}</Text>
               <Text>Admin: {item.Admin_FirstName} {item.Admin_LastName}</Text>
             </View>
