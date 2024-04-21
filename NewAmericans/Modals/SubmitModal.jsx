@@ -36,10 +36,14 @@ const SubmitModal = ({ visible, onClose, cartItemsWithQuantity }) => {
 
     }, []);
 
+
+
+
+
     useEffect(() => {
         // Map fetched data to options after admins and students states are updated
-        const mappedAdmins = admins.map(admin => ({ item: admin.first_name + " " + admin.last_name, id: admin.AdminID }));
-        const mappedStudents = students.map(student => ({ item: student.first_name + " " + student.last_name, id: student.StudentID }));
+        const mappedAdmins = admins.map(admin => ({ item: admin.first_name + " " + admin.last_name, id: admin.AdminID, AdminID: admin.AdminID, email: admin.email, password: admin.password, first_name: admin.first_name, last_name: admin.last_name }));
+        const mappedStudents = students.map(student => ({ item: student.first_name + " " + student.last_name, id: student.StudentID, StudentID: student.StudentID, first_name: student.first_name, last_name: student.last_name, familyID: student.familyID }));
         setAdminOptions(mappedAdmins);
         setStudentOptions(mappedStudents);
     }, [admins, students]);
@@ -50,6 +54,11 @@ const SubmitModal = ({ visible, onClose, cartItemsWithQuantity }) => {
             Alert.alert('Please make sure to select both a student and an admin.');
             return;
         }
+        if (enteredPassword != selectedAdmin.password) {
+            // Check if entered password matches selected admins password
+            console.log("incorrect password");
+            return;
+        }
         console.log("Cart Items with Quantity:", cartItemsWithQuantity); // Log the cart items with quantity
         SubmitOrder(selectedAdmin, selectedStudent, cartItemsWithQuantity);
         onClose();
@@ -58,36 +67,46 @@ const SubmitModal = ({ visible, onClose, cartItemsWithQuantity }) => {
         Keyboard.dismiss(); // Dismiss the keyboard when user presses outside of the input
     };
     return (
-        
+
         <Modal visible={visible} transparent>
             <TouchableWithoutFeedback onPress={handlePressOutside}>
-            <View style={styles.modalContainer}>
-                <View style={styles.modal}>
-                    <Text style={styles.modalHeaderText}>Submit Order Confirmation</Text>
-                    {/* Student dropdown */}
-                    <View style={styles.selectBox}>
+                <View style={styles.modalContainer}>
+                    <View style={styles.modal}>
+                        <Text style={styles.modalHeaderText}>Submit Order Confirmation</Text>
+                        {/* Student dropdown */}
+                        <View style={styles.selectBox}>
 
-                        <SelectBox
-                            constainerStyle={styles.selectBox}
-                            label="Select Student"
-                            options={studentOptions}
-                            value={selectedStudent}
-                            onChange={studentChange()}
-                            hideInputFilter={false}
-                        />
-                    </View>
+                            <SelectBox
+                                label=""
+                                inputPlaceholder="Select Student"
+                                options={studentOptions}
+                                value={selectedStudent}
+                                onChange={studentChange()}
+                                hideInputFilter={false}
+                                inputFilterStyle={{ fontFamily: 'Nunito-Regular' }}
+                                optionsLabelStyle={{ fontFamily: 'Nunito-Regular' }}
+                                listEmptyLabelStyle={{ fontFamily: 'Nunito-Regular' }}
+                                selectedItemStyle={{ fontFamily: 'Nunito-Regular' }}
+                            />
+                        </View>
 
-                    {/* Admin dropdown */}
-                    <View style={styles.selectBox}>
+                        {/* Admin dropdown */}
+                        <View style={styles.selectBox}>
 
-                        <SelectBox
-                            label="Select Admin"
-                            options={adminOptions}
-                            value={selectedAdmin}
-                            onChange={adminChange()}
-                            hideInputFilter={false}
-                        />
-                    </View>
+                            <SelectBox
+                                label=""
+                                inputPlaceholder="Select Admin"
+                                options={adminOptions}
+                                value={selectedAdmin}
+                                onChange={adminChange()}
+                                hideInputFilter={false}
+                                inputFilterStyle={{ fontFamily: 'Nunito-Regular' }}
+                                optionsLabelStyle={{ fontFamily: 'Nunito-Regular' }}
+                                listEmptyLabelStyle={{ fontFamily: 'Nunito-Regular' }}
+                                selectedItemStyle={{ fontFamily: 'Nunito-Regular' }}
+                            />
+                        </View>
+                        <Text style={styles.subText}>Admin Passcode</Text>
                         <TextInput
                             style={styles.input}
                             placeholder="****"
@@ -97,19 +116,18 @@ const SubmitModal = ({ visible, onClose, cartItemsWithQuantity }) => {
                             secureTextEntry={true}
                         />
 
-                    {/* Buttons */}
-                    <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.button} onPress={onClose}>
-                            <Text>Close</Text>
-                        </TouchableOpacity>
-                        <View style={styles.emptySpace}></View>
-                        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                            <Text>Submit</Text>
-                        </TouchableOpacity>
+                        {/* Buttons */}
+                        <View style={styles.buttonContainer}>
+                            <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+                                <Text style={styles.buttonText}>Close</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                                <Text style={styles.buttonText}>Submit</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
-            </View>
-        </TouchableWithoutFeedback>
+            </TouchableWithoutFeedback>
         </Modal>
 
     );
@@ -122,6 +140,13 @@ const SubmitModal = ({ visible, onClose, cartItemsWithQuantity }) => {
 };
 
 const styles = StyleSheet.create({
+    subText: {
+        fontSize: 12,
+        color: 'grey',
+        fontFamily: 'Nunito-Regular',
+        textAlign: 'left',
+        paddingTop: '5%',
+    },
     selectBox: {
         //backgroundColor: 'red',
         marginBottom: 30,
@@ -149,17 +174,31 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     button: {
-        flex: 1,
-        backgroundColor: 'lightblue',
+        backgroundColor: '#F3D014',
         padding: 10,
         borderRadius: 5,
-        alignSelf: 'stretch',
-        justifyContent: 'center', // Center text vertically
-        alignItems: 'center', // Center text horizontally
+        marginBottom: 10,
+        width: '45%',
+
     },
     buttonText: {
-        fontSize: 14, // Adjust text size as needed
-        color: 'black', // Set text color to black for better visibility
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontFamily: 'Nunito-Bold',
+    },
+    closeButton: {
+        backgroundColor: '#FA4616',
+        padding: 10,
+        borderRadius: 5,
+        marginBottom: 10,
+        width: '45%',
+    },
+    closeButtonText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontFamily: 'Nunito-Bold',
 
     },
     showButton: {
@@ -194,9 +233,6 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-    },
-    emptySpace: {
-        width: 10, // Adjust as needed for spacing
     },
     modalHeaderText: {
         marginBottom: 20, // Add some space between the header and other components
