@@ -110,7 +110,7 @@ const Reports = () => {
     <View style={styles.container}>
       <View style={styles.inputContainer}>
         <TouchableOpacity onPress={handleFilterByUser} style={styles.button}>
-          <Text style={styles.buttonText}>Filter by User</Text>
+          <Text style={styles.buttonText}>Filter by Student</Text>
         </TouchableOpacity>
         <Picker
           style={styles.picker}
