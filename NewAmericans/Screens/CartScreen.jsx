@@ -8,10 +8,18 @@ const CartScreen = () => {
     const { cartItems, clearCart, removeFromCart } = useCart();
     const [modalVisible, setModalVisible] = useState(false);
     const [cartItemsWithQuantity, setCartItemsWithQuantity] = useState([]);
+    const [cartEmpty, setCartEmpty] = useState(true);
 
     // Update cartItemsWithQuantity whenever cartItems changes
     useEffect(() => {
         // Map over cartItems to include Quantity property
+        console.log(Object.entries(cartItems).length);
+        if(Object.entries(cartItems).length > 0){
+            setCartEmpty(false);
+        }
+        else{
+            setCartEmpty(true);
+        }
         const updatedCartItemsWithQuantity = cartItems.map(item => ({
             ...item,
             Quantity: 1 // Default quantity
@@ -77,14 +85,14 @@ const CartScreen = () => {
     };
     
     const cartItemComponents = cartItemsWithQuantity.map(item => (
-        <View key={item.ProductID} style={[styles.itemContainer, { borderColor: '#F3D014', borderWidth: 2 }]}>
+        <View key={item.ProductID} style={styles.itemContainer}>
             <View style={styles.itemInfo}>
                 <View style={styles.itemText}>
                     <Text style={styles.itemName}>{item.ProductName}</Text>
                 </View>
                 <View style={styles.quantity}>
                     <TouchableOpacity style={styles.circularButton} onPress={() => handleDecreaseQuantity(item.ProductID)}>
-                        <Text>-</Text>
+                        <Text style={{fontFamily: 'Nunito-Bold', fontSize: 18}}>-</Text>
                     </TouchableOpacity>
                     <TextInput
                         style={styles.input}
@@ -92,7 +100,7 @@ const CartScreen = () => {
                         editable={false}
                     />
                     <TouchableOpacity style={styles.circularButton} onPress={() => handleIncreaseQuantity(item.ProductID)}>
-                        <Text>+</Text>
+                        <Text style={{fontFamily: 'Nunito-Bold', fontSize: 18}}>+</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -104,7 +112,7 @@ const CartScreen = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}></Text>
+            {cartEmpty && <Text style={styles.subText}>Cart is empty...</Text>}
             <ScrollView>
                 {cartItemComponents}
             </ScrollView>
@@ -123,9 +131,15 @@ const CartScreen = () => {
 };
 
 const styles = StyleSheet.create({
+    subText: {
+        fontSize: 20,
+        color: 'grey',
+        fontFamily: 'Nunito-Regular',
+        textAlign: 'center',
+        paddingTop: '10%',
+      },
     itemText: {
         width: '40%',
-
     },
     quantity: {
         flexDirection: 'row',
@@ -140,7 +154,13 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         alignItems: 'center',
         justifyContent: 'center', // Add this line to vertically center the content
-
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 2,
+          height: 4,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
     },
     container: {
         flex: 1,
@@ -152,37 +172,68 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     itemContainer: {
+        marginTop: 20,
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 10,
-        borderRadius: 8,
-        padding: 10,
-    },
+        width: '100%',
+        backgroundColor: '#FFFFFF',
+        borderRadius: 7,
+        padding: 20,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 2,
+          height: 4,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+    
+      },
     itemInfo: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
     },
     itemName: {
-        fontSize: 16,
+        fontSize: 14,
+        fontFamily: 'Nunito-Bold',
+
     },
     deleteButton: {
         backgroundColor: '#FA4616',
         paddingVertical: 5,
         paddingHorizontal: 10,
         borderRadius: 5,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 2,
+          height: 4,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
     },
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: 20,
+        marginBottom: 20,
+        marginTop: 10,
+        backgroundColor: 'transparent',
     },
     button: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: '#F3D014',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        borderRadius: 5,
+        borderRadius: 30,
+        width: '40%',
+        height: '100%',
+        padding: 12,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 2,
+          height: 4,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
     },
     buttonText: {
         color: 'white',
@@ -198,8 +249,10 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 5,
         paddingHorizontal: 10,
-        marginHorizontal: 20,
+        marginHorizontal: 12,
         textAlign: 'center',
+        fontFamily: 'Nunito-Regular',
+
     },
 });
 

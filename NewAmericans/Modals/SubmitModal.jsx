@@ -176,11 +176,22 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     button: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: '#F3D014',
-        padding: 10,
-        borderRadius: 5,
-        marginBottom: 10,
-        width: '45%',
+        borderRadius: 30,
+        width: '40%',
+        height: '100%',
+    
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 2,
+          height: 4,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+    
 
     },
     buttonText: {
@@ -190,11 +201,21 @@ const styles = StyleSheet.create({
         fontFamily: 'Nunito-Bold',
     },
     closeButton: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: '#FA4616',
+        borderRadius: 30,
+        width: '40%',
+        height: '100%',
         padding: 10,
-        borderRadius: 5,
-        marginBottom: 10,
-        width: '45%',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 2,
+          height: 4,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
     },
     closeButtonText: {
         fontSize: 16,
@@ -239,8 +260,9 @@ const styles = StyleSheet.create({
     modalHeaderText: {
         marginBottom: 20, // Add some space between the header and other components
         fontSize: 18, // Adjust font size as needed
-        fontWeight: 'bold', // Optionally set font weight
         textAlign: 'center',
+        fontFamily: 'Nunito-Bold',
+
     },
 });
 

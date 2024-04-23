@@ -157,8 +157,8 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     alignItems: 'center',
-    width: "60%",
-    height: "auto",
+    height: '20%',
+    width: '60%',
   },
   modalText: {
     fontSize: 18,
@@ -172,20 +172,39 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   addButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#F3D014',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 20,
+    borderRadius: 30,
     width: '100%',
+    height: '35%',
+    margin: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 2,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
 
   },
   closeButton: {
     backgroundColor: '#FA4616',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 30,
     width: '100%',
-    textAlign: 'center',
+    height: '35%',
+
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 2,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   itemImage: {
     width: '100%',
