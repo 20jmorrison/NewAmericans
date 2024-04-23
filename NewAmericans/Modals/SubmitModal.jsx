@@ -1,10 +1,11 @@
 import React, { useState, useEffect, } from 'react';
-import { View, Text, Modal, StyleSheet, TouchableOpacity, ScrollView, TextInput, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, Text, Modal, StyleSheet, TouchableOpacity, ScrollView, TextInput, Alert, Image, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { fetchStudents } from '../components/Students/StudentFetching';
 import { fetchAdminData } from '../components/Admins/FetchingAdmins';
 import { SubmitOrder } from '../components/Orders/SubmitOrder';
 import SelectBox from 'react-native-multi-selectbox'
-
+import checkmark from '../assets/icons8-checkmark.json';
+import LottieView from 'lottie-react-native';
 
 const SubmitModal = ({ visible, onClose, cartItemsWithQuantity }) => {
     const [students, setStudents] = useState([]);
@@ -16,6 +17,7 @@ const SubmitModal = ({ visible, onClose, cartItemsWithQuantity }) => {
     const [selectedAdmin, setSelectedAdmin] = useState({});
 
     const [enteredPassword, setEnteredPassword] = useState('');
+    const [showAnimation, setShowAnimation] = useState(false);
 
 
     useEffect(() => {
@@ -49,9 +51,10 @@ const SubmitModal = ({ visible, onClose, cartItemsWithQuantity }) => {
     }, [admins, students]);
 
     const handleSubmit = async () => {
-        if (!selectedStudent || !selectedAdmin) {
+
+        if (Object.entries(selectedStudent).length === 0 || Object.entries(cartItemsWithQuantity).length === 0) {
             // Alert the user if either selectedStudent or selectedAdmin is null
-            Alert.alert('Please make sure to select both a student and an admin.');
+            console.log('Please make sure to select both a student and have items in the cart.');
             return;
         }
         if (enteredPassword != selectedAdmin.password) {
@@ -59,9 +62,14 @@ const SubmitModal = ({ visible, onClose, cartItemsWithQuantity }) => {
             console.log("incorrect password");
             return;
         }
+
         console.log("Cart Items with Quantity:", cartItemsWithQuantity); // Log the cart items with quantity
         SubmitOrder(selectedAdmin, selectedStudent, cartItemsWithQuantity);
-        onClose();
+        setShowAnimation(true);
+        setTimeout(() => {
+            onClose();
+            setShowAnimation(false);
+        }, 2000);
     };
     const handlePressOutside = () => {
         Keyboard.dismiss(); // Dismiss the keyboard when user presses outside of the input
@@ -73,6 +81,8 @@ const SubmitModal = ({ visible, onClose, cartItemsWithQuantity }) => {
                 <View style={styles.modalContainer}>
                     <View style={styles.modal}>
                         <Text style={styles.modalHeaderText}>Submit Order Confirmation</Text>
+
+
                         {/* Student dropdown */}
                         <View style={styles.selectBox}>
 
@@ -121,6 +131,14 @@ const SubmitModal = ({ visible, onClose, cartItemsWithQuantity }) => {
                             <TouchableOpacity style={styles.closeButton} onPress={onClose}>
                                 <Text style={styles.buttonText}>Close</Text>
                             </TouchableOpacity>
+                            {showAnimation ? (
+                            <LottieView
+                                source={checkmark}
+                                autoPlay
+                                loop={false} // Play animation only once
+                                style={{ width: 50, height: 50 }}
+                            />
+                        ) : null}
                             <TouchableOpacity style={styles.button} onPress={handleSubmit}>
                                 <Text style={styles.buttonText}>Submit</Text>
                             </TouchableOpacity>
@@ -174,11 +192,22 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     button: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: '#F3D014',
-        padding: 10,
-        borderRadius: 5,
-        marginBottom: 10,
-        width: '45%',
+        borderRadius: 30,
+        width: '40%',
+        height: '100%',
+
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 2,
+            height: 4,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+
 
     },
     buttonText: {
@@ -188,11 +217,21 @@ const styles = StyleSheet.create({
         fontFamily: 'Nunito-Bold',
     },
     closeButton: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: '#FA4616',
+        borderRadius: 30,
+        width: '40%',
+        height: '100%',
         padding: 10,
-        borderRadius: 5,
-        marginBottom: 10,
-        width: '45%',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 2,
+            height: 4,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
     },
     closeButtonText: {
         fontSize: 16,
@@ -237,8 +276,9 @@ const styles = StyleSheet.create({
     modalHeaderText: {
         marginBottom: 20, // Add some space between the header and other components
         fontSize: 18, // Adjust font size as needed
-        fontWeight: 'bold', // Optionally set font weight
         textAlign: 'center',
+        fontFamily: 'Nunito-Bold',
+
     },
 });
 

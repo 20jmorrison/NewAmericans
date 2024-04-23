@@ -39,17 +39,17 @@ function OrderStackScreen() {
       <OrderStack.Screen
         name="Categories"
         component={Order}
-        options={{ HeaderTitle: false }}
+        options={{ headerTitle: 'Categories', headerTitleStyle: {fontFamily: 'Nunito-Bold'}, headerBackTitleStyle: {fontFamily: 'Nunito-Bold'} }}
       />
       <OrderStack.Screen
         name="ProductsOrder"
         component={ProductsOrder}
-        options={{ headerTitle: 'Products' }}
+        options={{ headerTitle: 'Products', headerTitleStyle: {fontFamily: 'Nunito-Bold'}, headerBackTitleStyle: {fontFamily: 'Nunito-Bold'} }}
       />
       <OrderStack.Screen
         name= "CartScreen"
         component={CartScreen}
-        options={{headerTitle: 'Cart'}}  
+        options={{headerTitle: 'Cart', headerTitleStyle: {fontFamily: 'Nunito-Bold'}, headerBackTitleStyle: {fontFamily: 'Nunito-Bold'}}}  
       />
 
     </OrderStack.Navigator>

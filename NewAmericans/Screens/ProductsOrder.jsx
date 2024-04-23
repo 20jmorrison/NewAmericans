@@ -26,21 +26,21 @@ const Item = ({ item }) => {
           <Text style={styles.quantityText}>Quantity: {item.ProductQuantity}</Text>
         </View>
       </View>
+
       <Modal visible={showModal} transparent animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalText}>Add this item to cart?</Text>
-            <View style={styles.modalButtonsContainer}>
-              <TouchableOpacity style={styles.modalButton} onPress={handleAddToCart}>
-                <Text style={styles.modalButtonText}>Yes</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.modalButton} onPress={() => setShowModal(false)}>
-                <Text style={styles.modalButtonText}>No</Text>
-              </TouchableOpacity>
-            </View>
+            <Text style={styles.headerText}>{item.ProductName}</Text>
+            <TouchableOpacity style={styles.addButton} onPress={handleAddToCart}>
+              <Text style={styles.buttonText}>Add To Cart</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.closeButton} onPress={() => setShowModal(false)}>
+              <Text style={styles.buttonText}>Cancel</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
+
     </TouchableOpacity>
   );
 };
@@ -78,6 +78,12 @@ const ProductsOrder = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
+  headerText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontFamily: 'Nunito-Bold',
+  },
   checkout: {
     flexDirection: 'row',
     padding: 10,
@@ -98,12 +104,6 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     marginLeft: 20,
-  },
-  buttonText: {
-    fontFamily: 'Nunito-Bold',
-    fontSize: 15,
-    color: 'black',
-    textAlign: 'center',
   },
   container: {
     flexGrow: 1,
@@ -157,24 +157,54 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     alignItems: 'center',
+    height: '20%',
+    width: '60%',
   },
   modalText: {
     fontSize: 18,
     marginBottom: 20,
   },
-  modalButtonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
+
   modalButton: {
     padding: 10,
     marginHorizontal: 10,
     backgroundColor: '#F3D014',
     borderRadius: 5,
   },
-  modalButtonText: {
-    fontSize: 16,
-    color: 'white',
+  addButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F3D014',
+    borderRadius: 30,
+    width: '100%',
+    height: '35%',
+    margin: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 2,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+
+  },
+  closeButton: {
+    backgroundColor: '#FA4616',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 30,
+    width: '100%',
+    height: '35%',
+
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 2,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   itemImage: {
     width: '100%',
@@ -191,6 +221,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent background
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontFamily: 'Nunito-Bold',
   },
 });
 
