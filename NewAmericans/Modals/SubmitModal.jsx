@@ -49,9 +49,10 @@ const SubmitModal = ({ visible, onClose, cartItemsWithQuantity }) => {
     }, [admins, students]);
 
     const handleSubmit = async () => {
-        if (!selectedStudent || !selectedAdmin) {
+
+        if (Object.entries(selectedStudent).length === 0 || Object.entries(cartItemsWithQuantity).length === 0) {
             // Alert the user if either selectedStudent or selectedAdmin is null
-            Alert.alert('Please make sure to select both a student and an admin.');
+            console.log('Please make sure to select both a student and have items in the cart.');
             return;
         }
         if (enteredPassword != selectedAdmin.password) {
@@ -59,6 +60,7 @@ const SubmitModal = ({ visible, onClose, cartItemsWithQuantity }) => {
             console.log("incorrect password");
             return;
         }
+
         console.log("Cart Items with Quantity:", cartItemsWithQuantity); // Log the cart items with quantity
         SubmitOrder(selectedAdmin, selectedStudent, cartItemsWithQuantity);
         onClose();
