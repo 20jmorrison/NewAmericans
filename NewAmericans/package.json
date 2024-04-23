@@ -26,6 +26,7 @@
     "expo-splash-screen": "^0.26.4",
     "expo-status-bar": "~1.11.1",
     "jsonexport": "^3.2.0",
+    "lottie-react-native": "^6.7.2",
     "node": "^21.6.1",
     "primereact": "^10.5.3",
     "react": "18.2.0",
