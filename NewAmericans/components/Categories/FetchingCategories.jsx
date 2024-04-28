@@ -1,7 +1,7 @@
 
 const fetchCategories = async () => {
   try {
-    const response = await fetch('http://50.187.63.220:3000/CategoryData');
+    const response = await fetch('http://34.16.190.141:3000/CategoryData');
     if (response.ok) {
       const data = await response.json();
       return data || []; // Return an empty array if categories data is undefined

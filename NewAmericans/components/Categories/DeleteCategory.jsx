@@ -1,6 +1,6 @@
 const deleteCategory = async (category) => {
     try {
-        const response = await fetch(`http://50.187.63.220:3000/DeleteCategory/${category.CategoryID}`, {
+        const response = await fetch(`http://34.16.190.141:3000/DeleteCategory/${category.CategoryID}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',

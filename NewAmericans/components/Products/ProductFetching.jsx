@@ -1,6 +1,6 @@
 const fetchProducts = async (categoryID) => {
   try {
-    const response = await fetch(`http://50.187.63.220:3000/ProductData?categoryID=${categoryID}`);
+    const response = await fetch(`http://34.16.190.141:3000/ProductData?categoryID=${categoryID}`);
     if (response.ok) {
       const data = await response.json();
       return data || []; 

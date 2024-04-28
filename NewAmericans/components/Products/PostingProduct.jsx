@@ -1,6 +1,6 @@
 const postNewProduct = async (productData) => {
     try {
-        const response = await fetch('http://50.187.63.220:3000/PostProductData', {
+        const response = await fetch('http://34.16.190.141:3000/PostProductData', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

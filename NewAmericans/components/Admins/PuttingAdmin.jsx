@@ -1,6 +1,6 @@
 const putAdmin = async (updatedAdmin) => {
     try {
-        const response = await fetch(`http://50.187.63.220:3000/PutAdminData/${updatedAdmin.AdminID}`, {
+        const response = await fetch(`http://34.16.190.141:3000/PutAdminData/${updatedAdmin.AdminID}`, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',

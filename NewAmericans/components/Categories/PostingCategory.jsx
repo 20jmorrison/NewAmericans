@@ -1,6 +1,6 @@
 const postNewCategory = async (category) => {
     try {
-        const response = await fetch('http://50.187.63.220:3000/PostNewCategory', {
+        const response = await fetch('http://34.16.190.141:3000/PostNewCategory', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

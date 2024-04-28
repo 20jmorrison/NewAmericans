@@ -1,6 +1,6 @@
 const removeAdmin = async (admin) => {
     try {
-        const response = await fetch(`http://50.187.63.220:3000/RemoveAdmin/${admin.AdminID}`, {
+        const response = await fetch(`http://34.16.190.141:3000/RemoveAdmin/${admin.AdminID}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',

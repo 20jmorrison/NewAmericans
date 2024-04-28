@@ -1,6 +1,6 @@
 const postNewAdmin = async (adminData) => {
     try {
-        const response = await fetch('http://50.187.63.220:3000/PostAdminData', {
+        const response = await fetch('http://34.16.190.141:3000/PostAdminData', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

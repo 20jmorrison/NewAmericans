@@ -8,7 +8,7 @@ const SubmitOrder = async (selectedAdmin, selectedStudent, cartItemsWithQuantity
     console.log(orderItems)
 
     try {
-        const response = await fetch('http://50.187.63.220:3000/SubmitOrder', {
+        const response = await fetch('http://34.16.190.141:3000/SubmitOrder', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

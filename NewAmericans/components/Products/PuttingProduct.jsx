@@ -1,6 +1,6 @@
 const putProduct = async (updatedProduct) => {
     try {
-        const response = await fetch(`http://50.187.63.220:3000/PutProductData/${updatedProduct.ProductID}`, {
+        const response = await fetch(`http://34.16.190.141:3000/PutProductData/${updatedProduct.ProductID}`, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',

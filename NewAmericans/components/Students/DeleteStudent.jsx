@@ -1,6 +1,6 @@
 const deleteStudent = async (student) => {
     try {
-        const response = await fetch(`http://50.187.63.220:3000/DeleteStudent/${student.StudentID}`, {
+        const response = await fetch(`http://34.16.190.141:3000/DeleteStudent/${student.StudentID}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
