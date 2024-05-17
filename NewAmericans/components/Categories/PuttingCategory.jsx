@@ -1,6 +1,6 @@
 const putCategory = async (updatedCategory) => {
     try {
-        const response = await fetch(`http://34.16.190.141:3000/PutCategory/${updatedCategory.CategoryID}`, {
+        const response = await fetch(`http://34.16.206.128:3000/PutCategory/${updatedCategory.CategoryID}`, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',

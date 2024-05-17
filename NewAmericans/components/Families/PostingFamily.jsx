@@ -1,6 +1,6 @@
 const postNewFamily = async (family) => {
     try {
-        const response = await fetch('http://34.16.190.141:3000/postNewFamily', {
+        const response = await fetch('http://34.16.206.128:3000/postNewFamily', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

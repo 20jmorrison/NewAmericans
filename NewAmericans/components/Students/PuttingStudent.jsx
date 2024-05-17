@@ -1,6 +1,6 @@
 const putStudent = async (updatedStudent) => {
     try {
-        const response = await fetch(`http://34.16.190.141:3000/PutStudentData/${updatedStudent.StudentID}`, {
+        const response = await fetch(`http://34.16.206.128:3000/PutStudentData/${updatedStudent.StudentID}`, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',

@@ -1,6 +1,6 @@
 const fetchReportData = async () => {
     try {
-      const response = await fetch('http://34.16.190.141:3000/ReportData');
+      const response = await fetch('http://34.16.206.128:3000/ReportData');
       if (response.ok) {
         const data = await response.json();
         return data || []; // Ensure we have a fallback for empty or missing data

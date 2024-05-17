@@ -1,6 +1,6 @@
 const fetchFamilyData = async () => {
     try {
-      const response = await fetch('http://34.16.190.141:3000/FamilyData');
+      const response = await fetch('http://34.16.206.128:3000/FamilyData');
       if (response.ok) {
         const data = await response.json();
         return data || [];
