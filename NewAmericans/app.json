@@ -15,13 +15,18 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.myselflohith.NewAmericans"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.myselflohith.NewAmericans"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -30,7 +35,9 @@
       [
         "expo-font",
         {
-          "asset": ["./assets/Fonts/Nunito/static/Nunito-Regular.ttf"],
+          "asset": [
+            "./assets/Fonts/Nunito/static/Nunito-Regular.ttf"
+          ],
           "fontName": "Nunito-Regular"
         }
       ],
@@ -40,7 +47,12 @@
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ]
-    ]
-
+    ],
+    "owner": "myselflohith",
+    "extra": {
+      "eas": {
+        "projectId": "0dba7a58-6a90-4312-a564-e4f1277144c9"
+      }
+    }
   }
 }
