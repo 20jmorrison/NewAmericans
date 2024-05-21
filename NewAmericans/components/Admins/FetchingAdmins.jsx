@@ -1,7 +1,7 @@
 // Function to fetch admin data
 const fetchAdminData = async () => {
   try {
-    const response = await fetch('http://34.16.190.141:3000/AdminData');
+    const response = await fetch('http://34.16.206.128:3000/AdminData');
     if (response.ok) {
       const data = await response.json();
       return data || [];

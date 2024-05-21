@@ -1,6 +1,6 @@
 const deleteFamily = async (family) => {
     try {
-        const response = await fetch(`http://34.16.190.141:3000/DeleteFamily/${family.FamilyID}`, {
+        const response = await fetch(`http://34.16.206.128:3000/DeleteFamily/${family.FamilyID}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',

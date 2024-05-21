@@ -1,6 +1,6 @@
 const deleteProduct = async (product) => {
     try {
-        const response = await fetch(`http://34.16.190.141:3000/DeleteProduct/${product.ProductID}`, {
+        const response = await fetch(`http://34.16.206.128:3000/DeleteProduct/${product.ProductID}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
